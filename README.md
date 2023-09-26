@@ -10,6 +10,10 @@ Install the dependencies in `client` and `server`: run `npm install`
 ### Client
 Make sure you have the Android or iOS SDK.
 
+### Server
+Compile typescript code: `npx tsc`
+Start the server: `npm start`
+
 ## Short-term TO-DO
 Front-end
 * Design the UI for the app 
