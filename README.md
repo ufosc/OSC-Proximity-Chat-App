@@ -5,7 +5,8 @@
 
 Run `git clone https://github.com/h1divp/OSC-Proximity-Chat-App`
 
+Install the dependencies in `client` and `server`: run `npm install`
+
 ### Client
 Make sure you have the Android or iOS SDK.
 
-Install the dependencies: run `npm install`
