@@ -5,7 +5,22 @@
 
 Run `git clone https://github.com/h1divp/OSC-Proximity-Chat-App`
 
+Install the dependencies in `client` and `server`: run `npm install`
+
 ### Client
 Make sure you have the Android or iOS SDK.
 
-Install the dependencies: run `npm install`
+### Server
+Compile typescript code: `npx tsc`
+Start the server: `npm start`
+
+## Short-term TO-DO
+Front-end
+* Design the UI for the app 
+    * Message view
+    * User settings view
+* Save user location via expo-location
+
+Back-end
+* Set up Firebase project and database schema
+* Set up app communication with back-end server
