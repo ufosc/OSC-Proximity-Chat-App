@@ -1,10 +1,10 @@
 import { StyleSheet, View } from "react-native";
-import DisplayLocation from "./src/components/DisplayLocation";
+import ProximityChat from "./src/components/ProximityChat";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <DisplayLocation />
+      <ProximityChat />
     </View>
   );
 }
