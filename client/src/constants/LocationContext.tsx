@@ -1,11 +1,5 @@
 import React from "react";
-import { LocationGeocodedAddress, LocationObject } from "expo-location";
-
-type LocationContextType = {
-  location: LocationObject | undefined;
-  address: LocationGeocodedAddress[] | undefined;
-  errorMsg: string | undefined;
-};
+import { LocationContextType } from "./types";
 
 export const LocationContext = React.createContext<LocationContextType>({
   location: undefined,

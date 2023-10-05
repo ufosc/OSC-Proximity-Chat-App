@@ -8,7 +8,9 @@ import {
   LocationObject,
 } from "expo-location";
 import { LocationContext } from "../constants/LocationContext";
-import { DisplayLocation } from "./DisplayLocation";
+import { MessageBox } from "./MessageBox";
+import { UserContext } from "../constants/UserContext";
+import { generateName, generateUniqueId } from "../constants/scripts";
 
 export default () => {
   const [location, setLocation] = useState<LocationObject>();
@@ -49,11 +51,19 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <LocationContext.Provider
-        value={{ location: location, address: address, errorMsg: errorMsg }}
+      <UserContext.Provider
+        value={{
+          displayName: generateName(),
+          userId: generateUniqueId().toString(),
+          avatar: undefined,
+        }}
       >
-        <DisplayLocation />
-      </LocationContext.Provider>
+        <LocationContext.Provider
+          value={{ location: location, address: address, errorMsg: errorMsg }}
+        >
+          <MessageBox />
+        </LocationContext.Provider>
+      </UserContext.Provider>
     </View>
   );
 };
