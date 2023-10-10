@@ -9,6 +9,7 @@ export const generateName = (): string => {
   const colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"];
   const animals = [
     "Aardvark",
+    "Poggers",
     "Albatross",
     "Alligator",
     "Alpaca",
