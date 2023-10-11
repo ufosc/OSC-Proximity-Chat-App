@@ -18,11 +18,8 @@ Start the server: `npm start`
 
 ## Short-term TO-DO
 Front-end
-* Design the UI for the app 
-    * Message view
-    * User settings view
-* Save user location via expo-location
+* Work on what is not checked in DesignChecklist.md
 
 Back-end
-* Set up Firebase project and database schema
 * Set up app communication with back-end server
+* Set up Firebase project and database schema
