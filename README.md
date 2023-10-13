@@ -7,14 +7,24 @@
 
 Run `git clone https://github.com/h1divp/OSC-Proximity-Chat-App`
 
-Install the dependencies in `client` and `server`: run `npm install`
-
 ### Client
-Make sure you have the Android or iOS SDK.
+Make sure you have the latest stable version of Node.js installed on you system
+#### Linux
+Install `nvm` with `pacman -S nvm` for Arch linux or by following [this tutorial](https://tecadmin.net/how-to-install-nvm-on-ubuntu-20-04/) for Debian/Ubuntu
+
+After `nvm` is installed run `nvm install node` and then `nvm use node`
+
+#### Windows
+Install Linux immediately
+
+
+After you have the latest version of node installed, `cd` into the client and install the dependencies in `client` and `server`: run `npm install`
 
 ### Server
 Compile typescript code: `npx tsc`
 Start the server: `npm start`
+
+`cd` into the client and install the dependencies in `client` and `server`: run `npm install`
 
 ## Short-term TO-DO
 Front-end
