@@ -7,7 +7,7 @@
 
 Install the ExpoGo app from the Google Play Store or App Store on your phone
 
-Run `git clone https://github.com/h1divp/OSC-Proximity-Chat-App`
+Fork this repository and run `git clone <url of forked repo>` on your system.
 
 ### Client
 Make sure you have the latest stable version of Node.js installed on you system
