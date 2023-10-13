@@ -5,6 +5,8 @@
 
 ## Developer instructions
 
+Install the ExpoGo app from the Google Play Store or App Store on your phone
+
 Run `git clone https://github.com/h1divp/OSC-Proximity-Chat-App`
 
 ### Client
@@ -14,11 +16,13 @@ Install `nvm` with `pacman -S nvm` for Arch linux or by following [this tutorial
 
 After `nvm` is installed run `nvm install node` and then `nvm use node`
 
+Use `cd` to enter the client directory and install the dependencies using `npm install`
+
+Use `npm start` to start the program and scan the QR code using the ExpoGo App (Android) or the Camera App (iOS)
+
 #### Windows
 Install Linux immediately
 
-
-After you have the latest version of node installed, `cd` into the client and install the dependencies in `client` and `server`: run `npm install`
 
 ### Server
 Compile typescript code: `npx tsc`
