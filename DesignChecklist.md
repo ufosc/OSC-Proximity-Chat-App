@@ -14,7 +14,7 @@
     * Properties:
         * (int) NearbyUserCount
 
-- [ ] Message
+- [x] Message
     * Child components:
         * UserProfilePicture
     * Properties:
