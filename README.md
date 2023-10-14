@@ -25,10 +25,11 @@ Install Linux immediately
 
 
 ### Server
-Compile typescript code: `npx tsc`
+While working, run `npx tsc` to compile the typescript code into the `build` directory as Javascript.
 Start the server: `npm start`
 
 `cd` into the client and install the dependencies in `client` and `server`: run `npm install`
+
 
 ## Short-term TO-DO
 Front-end
