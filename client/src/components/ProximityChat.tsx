@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   requestForegroundPermissionsAsync,
@@ -11,6 +11,7 @@ import { LocationContext } from "../constants/LocationContext";
 import { MessageBox } from "./MessageBox";
 import { UserContext } from "../constants/UserContext";
 import { generateName, generateUniqueId } from "../constants/scripts";
+import { MessageList } from "./MessageList";
 
 export default () => {
   const [location, setLocation] = useState<LocationObject>();
@@ -50,21 +51,22 @@ export default () => {
   }
 
   return (
-    <View style={styles.container}>
-      <UserContext.Provider
-        value={{
-          displayName: generateName(),
-          userId: generateUniqueId().toString(),
-          avatar: undefined,
-        }}
+    <UserContext.Provider
+      value={{
+        displayName: generateName(),
+        userId: generateUniqueId().toString(),
+        avatar: undefined,
+      }}
+    >
+      <LocationContext.Provider
+        value={{ location: location, address: address, errorMsg: errorMsg }}
       >
-        <LocationContext.Provider
-          value={{ location: location, address: address, errorMsg: errorMsg }}
-        >
+        <View style={styles.container}>
+          <MessageList />
           <MessageBox />
-        </LocationContext.Provider>
-      </UserContext.Provider>
-    </View>
+        </View>
+      </LocationContext.Provider>
+    </UserContext.Provider>
   );
 };
 
@@ -73,6 +75,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "column",
   },
 });
