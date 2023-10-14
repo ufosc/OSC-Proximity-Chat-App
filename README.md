@@ -26,6 +26,7 @@ Install Linux immediately
 
 ### Server
 While working, run `npx tsc` to compile the typescript code into the `build` directory as Javascript.
+
 Start the server: `npm start`
 
 `cd` into the client and install the dependencies in `client` and `server`: run `npm install`
@@ -36,5 +37,4 @@ Front-end
 * Work on what is not checked in DesignChecklist.md
 
 Back-end
-* Set up app communication with back-end server
 * Set up Firebase project and database schema
