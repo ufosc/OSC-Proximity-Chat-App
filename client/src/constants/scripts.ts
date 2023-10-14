@@ -6,9 +6,13 @@ export const generateUniqueId = (): bigint => {
 };
 
 export const generateName = (): string => {
-  const colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"];
+
+  const adjectives = ["Absurd", "Amusing", "Attractive", "Awesome", "Bizarre", "Boisterous", "Bizarre", "Blue", "Comical", "Curious", "Daft", "Dapper", "Droll", "Eccentric", "Entertaining", "Farcical", "Flippant", "Goofy", "Grotesque", "Green", "Hilarious", "Hodgepodge", "Ironic", "Improbable", "Jocular", "Jumbled", "Kooky", "Knuckleheaded", "Ludicrous", "Loopy", "Mirthful", "Muddled", "Nonsensical", "Nutty", "Oddball", "Orange", "Outlandish", "Peculiar", "Preposterous", "Pogging", "Purple", "Quirky", "Quacking", "Red", "Ridiculous", "Random", "Silly", "Strange", "Topsy-turvy", "Twisted", "Unusual", "Unpredictable", "Wacky", "Whimsical", "Yellow", "Zany", "Zealous"];
+
+
   const animals = [
     "Aardvark",
+    "Poggers",
     "Albatross",
     "Alligator",
     "Alpaca",
@@ -137,6 +141,7 @@ export const generateName = (): string => {
     "Mantis",
     "Marten",
     "Meerkat",
+    "Messi",
     "Mink",
     "Mole",
     "Mongoose",
@@ -165,9 +170,11 @@ export const generateName = (): string => {
     "Pheasant",
     "Pig",
     "Pigeon",
+    "Potato",
     "Pony",
     "Porcupine",
     "Porpoise",
+    "Pug",
     "Quail",
     "Quelea",
     "Quetzal",
@@ -235,6 +242,6 @@ export const generateName = (): string => {
   ];
 
   return `${animals[Math.floor(Math.random() * animals.length)]}${
-    colors[Math.floor(Math.random() * colors.length)]
+    adjectives[Math.floor(Math.random() * adjectives.length)]
   }`;
 };
