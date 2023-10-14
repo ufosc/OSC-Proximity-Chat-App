@@ -1,14 +1,21 @@
 import { getDocs } from '@firebase/firestore'
-import { messages } from '../scripts/firebaseInit'
+import { messages } from '../utilities/firebaseInit'
 
 export const getMessages = async () => {
   const messageDocs = await getDocs(messages)
+  const messageObjs = [];
 
-  messageDocs.docs.forEach((messageDoc) => {
-    const message = messageDoc.data()
-    console.log(messageDoc)
-    // console.log(messageDoc.userId)
-    // console.log(messageDoc.msgId)
-    // console.log(messageDoc.msgContent)
+  messageDocs.docs.forEach((doc) => {
+    const data = doc.data()
+    const messageObj = {
+        userId: data.userId,
+        msgId: data.msgId,
+        msgContent: data.msgContent,
+        recievingUserIds: data.recievingUserIds
+        
+    }
+    messageObjs.push(messageObj);
   })
+
+  return messageObjs;
 }

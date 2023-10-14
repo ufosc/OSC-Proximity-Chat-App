@@ -3,7 +3,6 @@ import { getFirestore, CollectionReference, collection, DocumentData } from 'fir
 import 'dotenv/config'
 
 // Make sure that config is up to date in /.env
-console.log(process.env.apiKey)
 export const firebaseApp = initializeApp({
   apiKey: process.env.apiKey,
   authDomain: process.env.authDomain,
@@ -23,7 +22,7 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 // Import types
 import { Message } from '../types/Message'
 
-// export all your collections
+// Export collections
 export const messages = createCollection<Message>('messages')
 
-console.log("Database initated.")
+console.log("Database synced")

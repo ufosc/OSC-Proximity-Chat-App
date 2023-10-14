@@ -8,10 +8,10 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/messages', (req, res) => {
+app.get('/messages', async (req, res) => {
     // get messages from fb
-    getMessages()
-    res.send("messages path")
+    const messages = await getMessages()
+    res.send(messages)
 })
 
 app.listen(port, () => {
