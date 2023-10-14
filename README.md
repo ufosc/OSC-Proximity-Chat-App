@@ -25,7 +25,7 @@ Install Linux immediately
 
 
 ### Server
-While working, run `npx tsc` to compile the typescript code into the `build` directory as Javascript.
+While working, run `npx tsc` to compile the typescript code into the `build` directory as Javascript. Or run `npx tsc -w` in a seperate terminal to recompile on file changes.
 
 Start the server: `npm start`
 
