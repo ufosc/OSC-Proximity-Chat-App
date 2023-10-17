@@ -30,14 +30,12 @@ Document attributes
 * avatarUrl
 
 
-## Functionality
+## Contributing
+Code for routes is stored in `/server/src/index.ts`
 
-Get messages
-* Particularly for people in a similar location
-Send messages
-* Add to the Messages collection
-Delete messages
-* Remove a Message docment
+Functions for routes, like `createMessage` or `getMessage` are stored in `/server/src/actions`
+
+Please reference one of these when creating a new *action*.
 
 ## Routes
 
