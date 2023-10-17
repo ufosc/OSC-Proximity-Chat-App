@@ -70,5 +70,5 @@ Delete messages
 - [ ] POST /users
 * add a user docment to the Users collection in Firestore
 
-- [ ] DELETE /users?userId=<userId>
+- [ ] DELETE /users?userId=\<userId\>
 * Delete a user document with the corresponding userId 
