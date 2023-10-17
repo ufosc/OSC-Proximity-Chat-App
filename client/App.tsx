@@ -1,3 +1,4 @@
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import ProximityChat from "./src/components/ProximityChat";
 

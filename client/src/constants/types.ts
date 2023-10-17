@@ -3,7 +3,8 @@ import { LocationGeocodedAddress, LocationObject } from "expo-location";
 export type MessageType = {
   author: string;
   timestamp: Date;
-  message: string;
+  messageContent: string;
+  messageId: string;
 };
 
 export type UserContextType = {
