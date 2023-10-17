@@ -5,3 +5,6 @@
 3. Make your changes.
 5. Push your changes to your fork.
 6. Submit a pull request through GitHub.
+
+# What do I work on?
+See `DesignChecklist.md` if you'd like to work on the frontend, or `ApiChecklist.md` if you'd like to work on the backend.
