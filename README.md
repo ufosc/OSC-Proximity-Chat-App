@@ -31,10 +31,6 @@ Start the server: `npm start`
 
 `cd` into the client and install the dependencies in `client` and `server`: run `npm install`
 
+## Contributing
 
-## Short-term TO-DO
-Front-end
-* Work on what is not checked in DesignChecklist.md
-
-Back-end
-* Set up Firebase project and database schema
+Please see `CONTRIBUTING.md`
