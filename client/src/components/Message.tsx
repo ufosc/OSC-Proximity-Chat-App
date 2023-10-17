@@ -1,4 +1,3 @@
-
 import React from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import { MessageType } from "../constants/types";
@@ -63,3 +62,4 @@ const styles = StyleSheet.create({
     marginLeft: 80,
     marginTop: -20,
   },
+});
