@@ -46,25 +46,25 @@ Delete messages
 - [ ] GET /messages
 * return the 100 newest messages from Firestore
 
-- [ ] GET /messages?msgId=<msgId>
+- [ ] GET /messages?msgId=\<msgId\>
 * return a message document with a matching msgId
 
-- [ ] GET /messages?broadLat=<broadLat>&broadLon=<broadLon>
+- [ ] GET /messages?broadLat=\<broadLat\>&broadLon=\<broadLon\>
 * return all messages with matching broadLat and broadLon attributes
 
-- [ ] GET /messages?broadLat=<broadLat>&broadLon=<broadLon>&secondsSinceCreation=<seconds since creation>
+- [ ] GET /messages?broadLat=\<broadLat\>&broadLon=\<broadLon\>&secondsSinceCreation=\<seconds since creation\>
 * return all messages with matching broadLat and broadLon attributes, and
 * has a timeCreated attribute that is with the bounds of secondsSinceCreation
 
 - [ ] POST /messages
 * add a Message document to the Messages collection in Firestore
 
-- [ ] DELETE /messages?msgId=<msgId>
+- [ ] DELETE /messages?msgId=\<msgId\>
 * Delete a message document with the corresponding msgId
 
 ### Users
 
-- [ ] GET /users?userId=<userId>
+- [ ] GET /users?userId=\<userId\>
 * return a user document with a matching userId 
 
 - [ ] POST /users
