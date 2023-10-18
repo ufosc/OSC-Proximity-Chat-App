@@ -1,7 +1,7 @@
 ## Database schema
 Cloud Firestore, a Firebase product, is a NoSQL (Not-Only-SQL) database. Data is stored in documents, which are kept inside of collections. A reference can be made to a document on our server's end to manipulate it. Every document is identifiable by a value (a string), though we have not yet finalized how we will be generating this in each of our collections.
 
-To get a better understanding, please skim through Firestore's documentation here.
+To get a better understanding, please skim through Firestore's documentation [here](https://firebase.google.com/docs/firestore/).
 
 ### Messages collection
 Identifier:
