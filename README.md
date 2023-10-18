@@ -33,4 +33,4 @@ While working, run `npx tsc` to compile the typescript code into the `build` dir
 Start the server: `npm start`.
 
 ## Contributing
-Please see `CONTRIBUTING.md`.
+Please read [CONTRIBUTING.md](https://github.com/ufosc/OSC-Proximity-Chat-App/blob/main/CONTRIBUTING.md).
