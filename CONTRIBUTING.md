@@ -7,4 +7,4 @@
 6. Submit a pull request through GitHub.
 
 # What do I work on?
-See `DesignChecklist.md` if you'd like to work on the frontend, or `ApiChecklist.md` if you'd like to work on the backend.
+See [DesignChecklist.md](https://github.com/ufosc/OSC-Proximity-Chat-App/blob/main/DesignChecklist.md) if you'd like to work on the frontend, or [ApiChecklist.md](https://github.com/ufosc/OSC-Proximity-Chat-App/blob/main/ApiChecklist.md) if you'd like to work on the backend.
