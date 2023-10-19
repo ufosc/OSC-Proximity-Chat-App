@@ -7,7 +7,6 @@ const port = 3000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -17,7 +16,6 @@ app.get('/messages', async (req, res) => {
     const messages = await getMessages()
     res.json(messages)
 })
-
 
 app.post('/messages/new', async (req, res) => {
     try {
@@ -29,26 +27,13 @@ app.post('/messages/new', async (req, res) => {
         )
         // Send back "true" if message was successfully created.
         res.json(true)
-
     } catch (e) {
         console.log("/messages/new: request sent with incorrect data format.")
         res.json(false)
-
     }
-
 })
 
-
-
-
-
-
-
-
-
-
-// ------------------ TESTING ENDPOINTS ----------------------
-
+// ### TESTING ENDPOINTS ###
 
 // Get a message by msgID
 app.get('/messages/:msgID', (req, res) => {
@@ -56,16 +41,14 @@ app.get('/messages/:msgID', (req, res) => {
     res.json(msgId)
 })
 
-
 // Get a message by longitude and latitude
 app.get('/messages/:lon/:lat', (req, res) => {
     let coordinates = [req.params.lon, req.params.lat]
     res.json(coordinates)
 })
 
-
+// ######
 
 app.listen(port, () => {
   return console.log(`Listening at http://localhost:${port}`)
 })
-
