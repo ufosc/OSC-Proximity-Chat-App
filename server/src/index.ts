@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import { getMessages } from './actions/getMessages'
 import { createMessage } from './actions/createMessage'
 
@@ -18,6 +18,7 @@ app.get('/messages', async (req, res) => {
     res.json(messages)
 })
 
+
 app.post('/messages/new', async (req, res) => {
     try {
         await createMessage(
@@ -36,6 +37,33 @@ app.post('/messages/new', async (req, res) => {
     }
 
 })
+
+
+
+
+
+
+
+
+
+
+// ------------------ TESTING ENDPOINTS ----------------------
+
+
+// Get a message by msgID
+app.get('/messages/:msgID', (req, res) => {
+    let msgId = req.params.msgID;
+    res.json(msgId)
+})
+
+
+// Get a message by longitude and latitude
+app.get('/messages/:lon/:lat', (req, res) => {
+    let coordinates = [req.params.lon, req.params.lat]
+    res.json(coordinates)
+})
+
+
 
 app.listen(port, () => {
   return console.log(`Listening at http://localhost:${port}`)
