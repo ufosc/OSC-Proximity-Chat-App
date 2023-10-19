@@ -10,12 +10,12 @@ First, make sure you have the latest stable version of Node.js installed on you 
 
 Then, fork this repository and run `git clone <url of forked repo>`.
 
-#### Linux
+**Linux**
 Install [Node Version Manager](https://github.com/nvm-sh/nvm#installing-and-updating) (Github) and follow the installation instructions. Check to see if your distro's package manager carries nvm before this, though.
 
 After `nvm` is installed run `nvm install node` and then `nvm use node`.
 
-#### Windows
+**Windows**
 Install Linux immediately
 
 ### Client
