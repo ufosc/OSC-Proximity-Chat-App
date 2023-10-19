@@ -19,3 +19,29 @@ export const getMessages = async () => {
 
   return messageObjs;
 }
+
+
+
+
+
+
+
+
+
+// -------------------------- TESTING ACTIONS ---------------------- refer to bottom of index.ts
+
+export const getMessagesbyID = async (msgID: number) => {
+  let printMsgId = `Your msgID is ${msgID}`
+  return printMsgId
+}
+
+export const getMessagesbyCoordinates = async (coords: Array<number>) => {
+  let lon = coords[0]
+  let lat = coords[1]
+  let searchingCoords = `Looking for messages at LON: ${lon}, LAT: ${lat}`
+  return searchingCoords
+}
+
+export const getMessagesBroadCoordinates = async (coords: Array<number>) => {
+  
+}
