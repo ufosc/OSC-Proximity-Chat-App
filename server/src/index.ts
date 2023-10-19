@@ -1,5 +1,5 @@
 import express from 'express'
-import { getMessages } from './actions/getMessages'
+import { getMessages, getMessagesbyID, getMessagesbyCoordinates } from './actions/getMessages'
 import { createMessage } from './actions/createMessage'
 
 const app = express()
@@ -36,15 +36,17 @@ app.post('/messages/new', async (req, res) => {
 // ### TESTING ENDPOINTS ###
 
 // Get a message by msgID
-app.get('/messages/:msgID', (req, res) => {
-    let msgId = req.params.msgID;
-    res.json(msgId)
+app.get('/messages/:msgID', async (req, res) => {
+    const response = await getMessagesbyID(Number(req.params.msgID))
+    res.json(response)
 })
 
 // Get a message by longitude and latitude
-app.get('/messages/:lon/:lat', (req, res) => {
-    let coordinates = [req.params.lon, req.params.lat]
-    res.json(coordinates)
+app.get('/messages/:lon/:lat', async (req, res) => {
+    let coordinates = [Number(req.params.lon), Number(req.params.lat)]
+    const response = await getMessagesbyCoordinates(coordinates)
+    res.json(response)
+
 })
 
 // ######
