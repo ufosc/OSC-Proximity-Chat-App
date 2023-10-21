@@ -1,6 +1,7 @@
 import express from 'express'
 import { getMessages, getMessagesbyID, getMessagesbyCoordinates } from './actions/getMessages'
 import { createMessage } from './actions/createMessage'
+import { calculateBroadCoordinates } from './utilities/broadCoordsCalculation'
 
 const app = express()
 const port = 3000
@@ -47,6 +48,11 @@ app.get('/messages/:lon/:lat', async (req, res) => {
     const response = await getMessagesbyCoordinates(coordinates)
     res.json(response)
 
+})
+
+// Testing broadCoordsCalculation
+app.get("/messages/calc/:lon/:lat", async (req, res) => {
+    res.send(calculateBroadCoordinates(Number(req.params.lat), Number(req.params.lon)))
 })
 
 // ######
