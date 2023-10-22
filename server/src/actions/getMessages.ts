@@ -36,17 +36,9 @@ export const getMessagesbyID = async (msgID: number) => {
   return printMsgId
 }
 
-export const getMessagesbyCoordinates = async (coords: Array<number>) => {
-  let lat = coords[0]
-  let lon = coords[1]
-  let searchingCoords = `Looking for messages at LON: ${lon}, LAT: ${lat}`
-  return searchingCoords
-}
 
 export const getMessagesSpecificCoordinates = async (coords: Array<number>) => {
   let response = await coordinateBoundariesCalculation(coords[0], coords[1])
-  let message = `Looking for messages in SPECIFIC range: ${response}`
-  return message
 
 }
 
