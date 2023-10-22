@@ -1,7 +1,6 @@
 import express from 'express'
-import { getMessages, getMessagesbyID, getMessagesbyCoordinates } from './actions/getMessages'
+import { getMessages, getMessagesbyID, getMessagesbyCoordinates, getMessagesSpecificCoordinates, getMessagesbyBroadCoordinates } from './actions/getMessages'
 import { createMessage } from './actions/createMessage'
-import { coordinateBoundariesCalculation } from './utilities/coordinateBoundariesCalculation'
 
 const app = express()
 const port = 3000
@@ -43,16 +42,27 @@ app.get('/messages/:msgID', async (req, res) => {
 })
 
 // Get a message by longitude and latitude
-app.get('/messages/:lon/:lat', async (req, res) => {
-    let coordinates = [Number(req.params.lon), Number(req.params.lat)]
+app.get('/messages/:lat/:lon', async (req, res) => {
+    let coordinates = [Number(req.params.lat), Number(req.params.lon)]
     const response = await getMessagesbyCoordinates(coordinates)
     res.json(response)
 
 })
 
 // Testing coordinateBoundariesCalculation
-app.get("/messages/calc/:lon/:lat", async (req, res) => {
-    res.send(coordinateBoundariesCalculation(Number(req.params.lat), Number(req.params.lon)))
+app.get("/messages/specific/:lat/:lon", async (req, res) => {
+    let lat = Number(req.params.lat)
+    let lon = Number(req.params.lon)
+    const specificCoords = await getMessagesSpecificCoordinates([lat, lon])
+    res.json(specificCoords)
+})
+
+app.get("/messages/broad/:lat/:lon", async (req, res) => {
+    let lat = Number(req.params.lat)
+    let lon = Number(req.params.lon)
+
+    const response = await getMessagesbyBroadCoordinates([lat, lon])
+    res.json(response)
 })
 
 // ######
