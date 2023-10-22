@@ -1,7 +1,7 @@
 import express from 'express'
-import { getMessages, getMessagesbyID, getMessagesbyCoordinates } from './actions/getMessages'
+import { getMessages, getMessagesbyID, getMessagesbyBroadCoordinates } from './actions/getMessages'
+import { getNearbyUsers } from './actions/getUsers'
 import { createMessage } from './actions/createMessage'
-import { coordinateBoundariesCalculation } from './utilities/coordinateBoundariesCalculation'
 
 const app = express()
 const port = 3000
@@ -12,13 +12,13 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.get('/messages', async (req, res) => {
+app.get('/messages/get', async (req, res) => {
     // get messages from fb
     const messages = await getMessages()
     res.json(messages)
 })
 
-app.post('/messages/new', async (req, res) => {
+app.post('/messages/create/new', async (req, res) => {
     try {
         await createMessage(
             req.body.userId,
@@ -37,23 +37,44 @@ app.post('/messages/new', async (req, res) => {
 // ### TESTING ENDPOINTS ###
 
 // Get a message by msgID
-app.get('/messages/:msgID', async (req, res) => {
+app.get('/messages/get/:msgID', async (req, res) => {
     const response = await getMessagesbyID(Number(req.params.msgID))
     res.json(response)
 })
 
-// Get a message by longitude and latitude
-app.get('/messages/:lon/:lat', async (req, res) => {
-    let coordinates = [Number(req.params.lon), Number(req.params.lat)]
-    const response = await getMessagesbyCoordinates(coordinates)
+
+app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
+    let lat = Number(req.params.lat)
+    let lon = Number(req.params.lon)
+
+    const response = await getMessagesbyBroadCoordinates([lat, lon])
     res.json(response)
-
 })
 
-// Testing coordinateBoundariesCalculation
-app.get("/messages/calc/:lon/:lat", async (req, res) => {
-    res.send(coordinateBoundariesCalculation(Number(req.params.lat), Number(req.params.lon)))
+// ---------------- Endpoints for User methods ----------------------
+
+app.get("/users/get/specificRange/:lat/:lon", async (req, res) => {
+    let lat = Number(req.params.lat)
+    let lon = Number(req.params.lon)
+
+    const response = await getNearbyUsers([lat, lon])
+
+    res.json(response)
 })
+
+
+
+// Error handling
+app.get('*', (req, res) => {
+    res.json("404: Endpoint could not be found! COULD NOT {GET}")
+})
+
+app.post('*', (req, res) => {
+    res.json("404: Endpoint could not be found! COULD NOT {POST}")
+})
+
+
+
 
 // ######
 
