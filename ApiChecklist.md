@@ -23,7 +23,7 @@ Document attributes:
 Description:
 
 - Every message created will be related to the user that created it and store its content.
-- Two geolocation identifiers are store, which are called Specific and Broad. We want to be able to easily query Firestore for potential nearby users for efficency reasons, so broad coordinates (with say, only 2 decimal points) are kept for this reason. Specific coordinates will be used to determine users within a set radius.
+- Two geolocation identifiers are stored, which are called Specific and Broad. We want to be able to easily query Firestore for potential nearby users for efficency reasons, so broad coordinates (with say, only 2 decimal points) are kept for this reason. Specific coordinates will be used to determine users within a set radius.
 - timeCreated:
 
 ### Users collection
