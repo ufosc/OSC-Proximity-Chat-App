@@ -44,7 +44,7 @@ Set up a Firestore instance
 12. Select the nam5 server, and click next
 13. Start in test mode, click enable
 14. Create two collections, one named `messages` and another named `users`
-  * Make a document with random information to create the collection. The fields won't matter as the correct ones will be added via the functions of our app itself
+  * Make a document with random information to create the collections. The fields won't matter as the correct ones will be added via the functions of our app itself
 15. While running the server, the database should be connected and good to go! For more information on how our database works, look at [ApiChecklist.md](https://github.com/ufosc/OSC-Proximity-Chat-App/blob/main/ApiChecklist.md) and see the Firestore documentation at https://firebase.google.com/docs/firestore/
 
 Installing dependancies
