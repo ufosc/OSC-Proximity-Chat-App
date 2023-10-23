@@ -34,15 +34,26 @@ app.post('/messages/create/new', async (req, res) => {
     }
 })
 
+// Error handling
+app.get('*', (req, res) => {
+    res.json("404: Path could not be found! COULD NOT {GET}")
+})
+
+app.post('*', (req, res) => {
+    res.json("404: Path could not be found! COULD NOT {POST}")
+})
+
 // ### TESTING ENDPOINTS ###
 
-// Get a message by msgID
+// For message objects
+
+// Get message obj by msgID
 app.get('/messages/get/:msgID', async (req, res) => {
     const response = await getMessagesbyID(Number(req.params.msgID))
     res.json(response)
 })
 
-
+// Get message obj by broad coordinates
 app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
     let lat = Number(req.params.lat)
     let lon = Number(req.params.lon)
@@ -51,7 +62,7 @@ app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
     res.json(response)
 })
 
-// ---------------- Endpoints for User methods ----------------------
+// For user objects
 
 app.get("/users/get/specificRange/:lat/:lon", async (req, res) => {
     let lat = Number(req.params.lat)
@@ -62,21 +73,7 @@ app.get("/users/get/specificRange/:lat/:lon", async (req, res) => {
     res.json(response)
 })
 
-
-
-// Error handling
-app.get('*', (req, res) => {
-    res.json("404: Endpoint could not be found! COULD NOT {GET}")
-})
-
-app.post('*', (req, res) => {
-    res.json("404: Endpoint could not be found! COULD NOT {POST}")
-})
-
-
-
-
-// ######
+// ####
 
 app.listen(port, () => {
   return console.log(`Listening at http://localhost:${port}`)

@@ -21,28 +21,20 @@ export const getMessages = async () => {
   return messageObjs;
 }
 
-
-
-
-
-
-
-
-
-// -------------------------- TESTING ACTIONS ---------------------- refer to bottom of index.ts
+// ## TESTING ACTIONS (refer to bottom of index.ts) ##
 
 export const getMessagesbyID = async (msgID: number) => {
   let printMsgId = `Your msgID is ${msgID}`
   return printMsgId
 }
 
-
-export const getMessagesSpecificCoordinates = async (coords: Array<number>) => {
+// getMessagesBySpecificCoordinates and getMessagesByBroadCoordinates currently just return coordinates,
+// however these will be modified to return messages, per their function signitures.
+export const getMessagesBySpecificCoordinates = async (coords: Array<number>) => {
   let response = await coordinateBoundariesCalculation(coords[0], coords[1])
-
 }
 
-export const getMessagesbyBroadCoordinates = async (coords: Array<number>) => {
+export const getMessagesByBroadCoordinates = async (coords: Array<number>) => {
   let lat = coords[0]
   let lon = coords[1]
 

@@ -15,18 +15,10 @@ export const getNearbyUsers = async (coords: Array<number>) => {
     const lowerY = coordBoundries[0][1]
     const upperY = coordBoundries[1][1]
 
-    // ---------- Place Firebase Query HERE ---------
-
-
-
-
+    // ## Place Firebase Query HERE ## 
 
     // PLACEHOLDER RESPONSE
     const response = `Looking in X range ${lowerX} to ${upperX} and Y range ${lowerY} to ${upperY}`
 
     return response
-
-
-
-
 }
