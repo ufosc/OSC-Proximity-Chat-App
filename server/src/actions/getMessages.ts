@@ -1,4 +1,4 @@
-import { getDocs } from '@firebase/firestore'
+import { doc, getDoc, getDocs } from '@firebase/firestore'
 import { messages } from '../utilities/firebaseInit'
 import { coordinateBoundariesCalculation } from '../utilities/coordinateBoundariesCalculation'
 
@@ -21,12 +21,19 @@ export const getMessages = async () => {
   return messageObjs;
 }
 
-// ## TESTING ACTIONS (refer to bottom of index.ts) ##
+export const getMessageById = async (msgId) => {
+  const msgRef = doc(messages, msgId)
+  const msgDoc = await getDoc(msgRef)
 
-export const getMessagesbyID = async (msgID: number) => {
-  let printMsgId = `Your msgID is ${msgID}`
-  return printMsgId
+  if (msgDoc.exists()) {
+      return msgDoc.data()
+  } else {
+      // This is false return is caught in index.ts to send an error back to the requesting client.
+      return false
+  }
 }
+
+// ## TESTING ACTIONS (refer to bottom of index.ts) ##
 
 // getMessagesBySpecificCoordinates and getMessagesByBroadCoordinates currently just return coordinates,
 // however these will be modified to return messages, per their function signitures.
