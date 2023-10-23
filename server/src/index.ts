@@ -14,23 +14,30 @@ app.get('/', (req, res) => {
 
 app.get('/messages', async (req, res) => {
     // Get messages from Firestore
+    let returnData = null
 
     if (req.query.msgId) {
         // Request path: '/messages?msgId=<msgId>'
         // Return message object with matching Id
-        const message = await getMessageById(req.query.msgId)
-        if (message === false) {
-            // Return error to client
-            res.json(false)
-        } else {
-            res.json(message)
-        }
+        returnData = await getMessageById(req.query.msgId)
+    } else if (req.query.broadLat && req.query.broadLon) {
+        // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
+        const broadLat = req.query.broadLat
+        const broadLon = req.query.broadLon
+        returnData = await getMessagesByBroadCoordinates(broadLat, broadLon)
     } else {
         // Request path: '/messages'
-        const messages = await getMessages()
-        res.json(messages)
+        const returnData = await getMessages()
+        // Return here to prevent error check for other paths.
     }
 
+    // Error checking for all paths. Client will recognize 'false' and act accordingly.
+    if (returnData === null) {
+        // Return error to client
+        res.json(false)
+    } else {
+        res.json(returnData)
+    }
     return
 })
 
