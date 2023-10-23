@@ -53,7 +53,7 @@ Please reference one of these when creating a new _action_.
 
 * return the 100 newest messages from Firestore
 
-- [ ] GET /messages?msgId=\<msgId\>
+- [x] GET /messages?msgId=\<msgId\>
 
 * return a message document with a matching msgId
 
