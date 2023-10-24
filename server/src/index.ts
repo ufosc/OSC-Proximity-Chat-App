@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { json } from 'express'
 import { getMessages, getMessageById, getMessagesByBroadCoordinates } from './actions/getMessages'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyUsers } from './actions/getUsers'

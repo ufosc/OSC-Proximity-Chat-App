@@ -49,7 +49,7 @@ Please reference one of these when creating a new _action_.
 
 ### Messages
 
-- [ ] GET /messages
+- [x] GET /messages
 
 * return the 100 newest messages from Firestore
 
@@ -57,7 +57,7 @@ Please reference one of these when creating a new _action_.
 
 * return a message document with a matching msgId
 
-- [X] GET /messages?broadLat=\<broadLat\>&broadLon=\<broadLon\>
+- [x] GET /messages?broadLat=\<broadLat\>&broadLon=\<broadLon\>
 
 * return all messages with matching broadLat and broadLon attributes
 
