@@ -4,6 +4,7 @@ import { calculateCoordinateBoundaries } from '../utilities/calculateCoordinateB
 
 export const getMessages = async () => {
   const messageDocs = await getDocs(messages)
+  let messagesReceived = 0
   const messageObjs = [];
 
   messageDocs.docs.forEach((doc) => {
@@ -15,6 +16,13 @@ export const getMessages = async () => {
         recievingUserIds: data.recievingUserIds
     }
     messageObjs.push(messageObj);
+
+    // This section adds to the message counter and returns if 100 messages have been received!
+    messagesReceived++
+    if (messagesReceived >= 100) {
+      return messageObjs;
+    }
+
   })
 
   return messageObjs;
