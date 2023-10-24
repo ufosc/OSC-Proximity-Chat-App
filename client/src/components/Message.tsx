@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-import { MessageType } from "../constants/types";
+import { MessageType } from "../../../shared/types";
 
 export const Message = (props: MessageType) => {
   return (
@@ -20,7 +20,7 @@ export const Message = (props: MessageType) => {
         </View>
         <View style={{ flex: 1, marginLeft: 5 }}>
           <Text style={styles.timestamp}>
-            {props.timestamp.toLocaleTimeString([], {
+            {new Date(props.timestamp).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             })}
