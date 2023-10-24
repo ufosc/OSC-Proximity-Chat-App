@@ -35,8 +35,7 @@ app.get('/messages', async (req, res) => {
         }
     } else {
         // Request path: '/messages'
-        const returnData = await getMessages()
-        // Return here to prevent error check for other paths.
+        returnData = await getMessages()
     }
 
     // Error checking for all queries under /messages. Client should recognize 'false' and act accordingly.
