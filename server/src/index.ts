@@ -19,19 +19,26 @@ app.get('/messages', async (req, res) => {
     if (req.query.msgId) {
         // Request path: '/messages?msgId=<msgId>'
         // Return message object with matching Id
-        returnData = await getMessageById(req.query.msgId)
+        const msgId = req.query.msgId
+        if (typeof msgId === "string") {
+            returnData = await getMessageById(msgId)
+        }
     } else if (req.query.broadLat && req.query.broadLon) {
         // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
         const broadLat = req.query.broadLat
         const broadLon = req.query.broadLon
-        returnData = await getMessagesByBroadCoordinates(broadLat, broadLon)
+        if (typeof broadLat === "string" && typeof broadLon === "string") {
+            returnData = await getMessagesByBroadCoordinates(broadLat, broadLon)
+            // If no data is returned, return null for error checks
+            if (returnData.length === 0) returnData = null
+        }
     } else {
         // Request path: '/messages'
         const returnData = await getMessages()
         // Return here to prevent error check for other paths.
     }
 
-    // Error checking for all paths. Client will recognize 'false' and act accordingly.
+    // Error checking for all queries under /messages. Client should recognize 'false' and act accordingly.
     if (returnData === null) {
         // Return error to client
         res.json(false)
@@ -71,13 +78,13 @@ app.post('*', (req, res) => {
 // For message objects
 
 // Get message obj by broad coordinates
-app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
-    let lat = Number(req.params.lat)
-    let lon = Number(req.params.lon)
-
-    const response = await getMessagesByBroadCoordinates([lat, lon])
-    res.json(response)
-})
+// app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
+//     let lat = Number(req.params.lat)
+//     let lon = Number(req.params.lon)
+//
+//     const response = await getMessagesByBroadCoordinates([lat, lon])
+//     res.json(response)
+// })
 
 // For user objects
 
