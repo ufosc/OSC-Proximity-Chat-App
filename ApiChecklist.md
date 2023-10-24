@@ -57,7 +57,7 @@ Please reference one of these when creating a new _action_.
 
 * return a message document with a matching msgId
 
-- [ ] GET /messages?broadLat=\<broadLat\>&broadLon=\<broadLon\>
+- [X] GET /messages?broadLat=\<broadLat\>&broadLon=\<broadLon\>
 
 * return all messages with matching broadLat and broadLon attributes
 
