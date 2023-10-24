@@ -1,6 +1,5 @@
-
 //Calculates latitude/longitude boundaries for who will appear in your messages
-export const coordinateBoundariesCalculation = (latitude: number, longitude: number) => {
+export const calculateCoordinateBoundaries = (latitude: number, longitude: number) => {
     // TODO: Add comments explaining formula
     let radiusEarth = 6371000
     let metersPerDegree = 180/(1000 * Math.PI * radiusEarth)
