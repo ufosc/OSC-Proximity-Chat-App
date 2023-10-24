@@ -24,6 +24,8 @@ app.get('/messages', async (req, res) => {
         if (typeof msgId === "string") {
             returnData = await getMessageById(msgId)
         }
+
+        // timeFrame should be in milliseconds (ex. 5000 = 5 seconds)
     } else if (req.query.broadLat && req.query.broadLon && req.query.timeFrame) {
         const broadLat = req.query.broadLat
         const broadLon = req.query.broadLon

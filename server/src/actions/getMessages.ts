@@ -70,7 +70,6 @@ export const getMessagesByBroadCoordsandTime = async (broadLat: string, broadLon
   const q = query(msgsRef, 
     where("broadLat", "==", broadLat), 
     where("broadLon", "==", broadLon),
-    where("timeSent", ">=", timeNow - timeFrame)
   )
 
   const matches = await getDocs(q)
@@ -78,7 +77,8 @@ export const getMessagesByBroadCoordsandTime = async (broadLat: string, broadLon
 
   matches.forEach((doc) => {
     const data = doc.data()
-    const messageObj = {
+    if (data.timeSent >= timeNow - timeFrame) {
+      const messageObj = {
         userId: data.userId,
         msgId: data.msgId,
         msgContent: data.msgContent,
@@ -88,8 +88,10 @@ export const getMessagesByBroadCoordsandTime = async (broadLat: string, broadLon
         specificLat: data.specificLat,
         specificLon: data.specificLon,
         timeSent: data.timeSent
+      }
+      messageObjs.push(messageObj)
     }
-    messageObjs.push(messageObj)
+
 })
 return messageObjs
   
