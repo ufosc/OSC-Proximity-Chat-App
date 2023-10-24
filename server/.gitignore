@@ -132,5 +132,6 @@ dist
 # Build files
 build
 
+# Other
 .env
 build/
