@@ -1,11 +1,11 @@
 import { getDocs } from '@firebase/firestore'
 import { messages } from '../utilities/firebaseInit'
-import { coordinateBoundariesCalculation } from '../utilities/coordinateBoundariesCalculation'
+import { calculateCoordinateBoundaries } from '../utilities/calculateCoordinateBoundaries'
 
 export const getNearbyUsers = async (coords: Array<number>) => {
     const lat = coords[0]
     const lon = coords[1]
-    const coordBoundries = await coordinateBoundariesCalculation(lat, lon)
+    const coordBoundries = await calculateCoordinateBoundaries(lat, lon)
 
     // Upper and Lower x bounds
     const lowerX = coordBoundries[0][0]
@@ -15,18 +15,10 @@ export const getNearbyUsers = async (coords: Array<number>) => {
     const lowerY = coordBoundries[0][1]
     const upperY = coordBoundries[1][1]
 
-    // ---------- Place Firebase Query HERE ---------
-
-
-
-
+    // ## Place Firebase Query HERE ## 
 
     // PLACEHOLDER RESPONSE
     const response = `Looking in X range ${lowerX} to ${upperX} and Y range ${lowerY} to ${upperY}`
 
     return response
-
-
-
-
 }
