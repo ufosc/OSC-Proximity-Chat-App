@@ -1,5 +1,6 @@
 import express from 'express'
 import { getMessages, getMessageById, getMessagesByBroadCoordinates } from './actions/getMessages'
+import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyUsers } from './actions/getUsers'
 import { createMessage } from './actions/createMessage'
 
@@ -78,13 +79,13 @@ app.post('*', (req, res) => {
 // For message objects
 
 // Get message obj by broad coordinates
-// app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
-//     let lat = Number(req.params.lat)
-//     let lon = Number(req.params.lon)
-//
-//     const response = await getMessagesByBroadCoordinates([lat, lon])
-//     res.json(response)
-// })
+app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
+    let lat = Number(req.params.lat)
+    let lon = Number(req.params.lon)
+
+    const response = await convertToBroadCoordinates([lat, lon])
+    res.json(response)
+})
 
 // For user objects
 
