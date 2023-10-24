@@ -44,7 +44,7 @@ export const getMessagesByBroadCoordinates = async (broadLat: string, broadLon: 
   const msgsRef = collection(firestore, "messages")
   const q = query(msgsRef, where("broadLat", "==", broadLat), where("broadLon", "==", broadLon))
   const matches = await getDocs(q)
-  const messageObjs = [];
+  const messageObjs = []
 
   matches.forEach((doc) => {
       const data = doc.data()
@@ -57,10 +57,42 @@ export const getMessagesByBroadCoordinates = async (broadLat: string, broadLon: 
           broadLon: data.broadLon,
           specificLat: data.specificLat,
           specificLon: data.specificLon,
+          timeSent: data.timeSent
       }
       messageObjs.push(messageObj)
   })
   return messageObjs
+}
+
+export const getMessagesByBroadCoordsandTime = async (broadLat: string, broadLon: string, timeFrame: number) => {
+  const msgsRef = collection(firestore, "messages")
+  const timeNow = Date.now()
+  const q = query(msgsRef, 
+    where("broadLat", "==", broadLat), 
+    where("broadLon", "==", broadLon),
+    where("timeSent", ">=", timeNow - timeFrame)
+  )
+
+  const matches = await getDocs(q)
+  const messageObjs = []
+
+  matches.forEach((doc) => {
+    const data = doc.data()
+    const messageObj = {
+        userId: data.userId,
+        msgId: data.msgId,
+        msgContent: data.msgContent,
+        recievingUserIds: data.recievingUserIds,
+        broadLat: data.broadLat,
+        broadLon: data.broadLon,
+        specificLat: data.specificLat,
+        specificLon: data.specificLon,
+        timeSent: data.timeSent
+    }
+    messageObjs.push(messageObj)
+})
+return messageObjs
+  
 }
 
 // ## TESTING ACTIONS (refer to bottom of index.ts) ##

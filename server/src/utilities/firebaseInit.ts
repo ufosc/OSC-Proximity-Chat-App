@@ -21,8 +21,10 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 
 // Import types
 import { Message } from '../types/Message'
+import { User } from '../types/User'
 
 // Export collections
 export const messages = createCollection<Message>('messages')
+export const users = createCollection<User>('users')
 
 console.log("Database synced")
