@@ -16,7 +16,7 @@ export const Message = (props: MessageType) => {
           />
         </View>
         <View style={{ flex: 2 }}>
-          <Text style={styles.author}>{props.author} </Text>
+          <Text style={styles.author}>{props.authorId} </Text>
         </View>
         <View style={{ flex: 1, marginLeft: 5 }}>
           <Text style={styles.timestamp}>
