@@ -11,6 +11,7 @@ export const createMessage = async (userId, msgId, msgContent, recievingUserIds)
        broadLat: "0",
        broadLon: "0",
        specificLat: "0",
-       specificLon: "0"
+       specificLon: "0",
+       timeSent: Date.now()
    })
 }

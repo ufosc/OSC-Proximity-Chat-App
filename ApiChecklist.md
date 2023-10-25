@@ -61,12 +61,12 @@ Please reference one of these when creating a new _action_.
 
 * return all messages with matching broadLat and broadLon attributes
 
-- [ ] GET /messages?broadLat=\<broadLat\>&broadLon=\<broadLon\>&secondsSinceCreation=\<seconds since creation\>
+- [x] GET /messages?broadLat=\<broadLat\>&broadLon=\<broadLon\>&secondsSinceCreation=\<seconds since creation\>
 
 * return all messages with matching broadLat and broadLon attributes, and
 * has a timeCreated attribute that is with the bounds of secondsSinceCreation
 
-- [ ] POST /messages/new
+- [x] POST /messages/new
 
 * add a Message document to the Messages collection in Firestore
 

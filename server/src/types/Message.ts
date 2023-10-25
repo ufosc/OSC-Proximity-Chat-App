@@ -7,4 +7,5 @@ export interface Message {
     broadLon: string
     specificLat: string
     specificLon: string
+    timeSent: Number
 }

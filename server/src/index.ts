@@ -1,5 +1,5 @@
 import express, { json } from 'express'
-import { getMessages, getMessageById, getMessagesByBroadCoordinates } from './actions/getMessages'
+import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsandTime } from './actions/getMessages'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyUsers } from './actions/getUsers'
 import { createMessage } from './actions/createMessage'
@@ -24,6 +24,20 @@ app.get('/messages', async (req, res) => {
         if (typeof msgId === "string") {
             returnData = await getMessageById(msgId)
         }
+
+        // timeFrame should be in milliseconds (ex. 5000 = 5 seconds)
+    } else if (req.query.broadLat && req.query.broadLon && req.query.timeFrame) {
+        const broadLat = req.query.broadLat
+        const broadLon = req.query.broadLon
+        const timeFrame = req.query.timeFrame
+        if (typeof broadLat === "string" && typeof broadLon === "string" && typeof req.query.timeFrame) {
+            returnData = await getMessagesByBroadCoordsandTime(broadLat, broadLon, Number(timeFrame))
+            // If no data is returned, return null for error checks
+            if (returnData.length === 0) returnData = null
+        }
+
+
+
     } else if (req.query.broadLat && req.query.broadLon) {
         // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
         const broadLat = req.query.broadLat
