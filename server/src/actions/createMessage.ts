@@ -13,5 +13,6 @@ export const createMessage = async (userId, msgId, msgContent, recievingUserIds)
        specificLat: "0",
        specificLon: "0",
        timeSent: Date.now()
+       // FIXME: Time should be passed in by client
    })
 }

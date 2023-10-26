@@ -26,7 +26,6 @@ app.get('/messages', async (req, res) => {
         if (typeof msgId === "string") {
             returnData = await getMessageById(msgId)
         }
-
         // timeFrame should be in milliseconds (ex. 5000 = 5 seconds)
     } else if (req.query.broadLat && req.query.broadLon && req.query.timeFrame) {
         const broadLat = req.query.broadLat
@@ -37,9 +36,6 @@ app.get('/messages', async (req, res) => {
             // If no data is returned, return null for error checks
             if (returnData.length === 0) returnData = null
         }
-
-
-
     } else if (req.query.broadLat && req.query.broadLon) {
         // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
         const broadLat = req.query.broadLat
@@ -64,7 +60,7 @@ app.get('/messages', async (req, res) => {
     return
 })
 
-app.post('/messages/new', async (req, res) => {
+app.post('/messages', async (req, res) => {
     try {
         await createMessage(
             req.body.userId,
@@ -80,10 +76,7 @@ app.post('/messages/new', async (req, res) => {
     }
 })
 
-// --------------- Users Endpoints ----------------------
-
 app.post('/users', async (req, res) => {
-
     if (req.body) {
         try {
             await createUser(
@@ -101,10 +94,8 @@ app.post('/users', async (req, res) => {
     }
 })
 
-
 // Updates user location so far, going to add updating and checking messages in next push
 app.put('/users', async (req, res) => {
-
     // /users?userId=<userId>&specificLat=<specificLat>&specificLon=<specificLon>
     if (req.query.userId && req.query.specificLat && req.query.specificLon) {
         try {
