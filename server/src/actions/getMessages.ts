@@ -71,6 +71,7 @@ export const getMessagesByBroadCoordsandTime = async (broadLat: string, broadLon
     where("broadLat", "==", broadLat), 
     where("broadLon", "==", broadLon),
   )
+  // There should be less total messages stored within a certain time frame vs. ones with matching broad coordinates
 
   const matches = await getDocs(q)
   const messageObjs = []
@@ -91,10 +92,9 @@ export const getMessagesByBroadCoordsandTime = async (broadLat: string, broadLon
       }
       messageObjs.push(messageObj)
     }
-
 })
+
 return messageObjs
-  
 }
 
 // ## TESTING ACTIONS (refer to bottom of index.ts) ##
