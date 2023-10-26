@@ -3,6 +3,8 @@ import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessages
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyUsers } from './actions/getUsers'
 import { createMessage } from './actions/createMessage'
+import { createUser } from './actions/createUsers'
+import { updateUserLocation } from './actions/updateUser'
 
 const app = express()
 const port = 3000
@@ -78,6 +80,52 @@ app.post('/messages/new', async (req, res) => {
     }
 })
 
+// --------------- Users Endpoints ----------------------
+
+app.post('/users', async (req, res) => {
+
+    if (req.body) {
+        try {
+            await createUser(
+                req.body.userId,
+                req.body.userDisplayName
+            )
+            // Sends back true if new user was created!
+            res.json(true)
+        } catch (error) {
+            console.log(error)
+            res.json(false)
+        }
+    } else {
+        console.log('Body doesnt exist LOL')
+    }
+})
+
+
+// Updates user location so far, going to add updating and checking messages in next push
+app.put('/users', async (req, res) => {
+
+    // /users?userId=<userId>&specificLat=<specificLat>&specificLon=<specificLon>
+    if (req.query.userId && req.query.specificLat && req.query.specificLon) {
+        try {
+            const successUserUpdate = await updateUserLocation(
+                String(req.query.userId),
+                String(req.query.specificLat),
+                String(req.query.specificLon)
+            )
+
+            if (successUserUpdate) {
+                res.json(true)
+            } else {
+                res.json('User not found, try again!')
+            }
+        } catch (error) {
+            console.log(error)
+            res.json(false)
+        }
+    }
+})
+
 // Error handling
 app.get('*', (req, res) => {
     res.json("404: Path could not be found! COULD NOT {GET}")
@@ -85,6 +133,10 @@ app.get('*', (req, res) => {
 
 app.post('*', (req, res) => {
     res.json("404: Path could not be found! COULD NOT {POST}")
+})
+
+app.put('*', (req, res) => {
+    res.json("404: Path could not be found! COULD NOT {PUT}")
 })
 
 // ### TESTING ENDPOINTS ###
