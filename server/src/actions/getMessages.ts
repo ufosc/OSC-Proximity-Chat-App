@@ -64,7 +64,7 @@ export const getMessagesByBroadCoordinates = async (broadLat: string, broadLon: 
   return messageObjs
 }
 
-export const getMessagesByBroadCoordsandTime = async (broadLat: string, broadLon: string, timeFrame: number) => {
+export const getMessagesByBroadCoordsAndTime = async (broadLat: string, broadLon: string, timeFrame: number) => {
   const msgsRef = collection(firestore, "messages")
   const timeNow = Date.now()
   const q = query(msgsRef, 

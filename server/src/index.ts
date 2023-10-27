@@ -1,5 +1,5 @@
 import express, { json } from 'express'
-import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsandTime } from './actions/getMessages'
+import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyUsers } from './actions/getUsers'
 import { createMessage } from './actions/createMessage'
@@ -32,7 +32,7 @@ app.get('/messages', async (req, res) => {
         const broadLon = req.query.broadLon
         const timeFrame = req.query.timeFrame
         if (typeof broadLat === "string" && typeof broadLon === "string" && typeof req.query.timeFrame) {
-            returnData = await getMessagesByBroadCoordsandTime(broadLat, broadLon, Number(timeFrame))
+            returnData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(timeFrame))
             // If no data is returned, return null for error checks
             if (returnData.length === 0) returnData = null
         }
