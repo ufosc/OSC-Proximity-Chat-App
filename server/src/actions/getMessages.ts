@@ -13,7 +13,6 @@ export const getMessages = async () => {
         userId: data.userId,
         msgId: data.msgId,
         msgContent: data.msgContent,
-        recievingUserIds: data.recievingUserIds
     }
     messageObjs.push(messageObj);
 
@@ -52,7 +51,6 @@ export const getMessagesByBroadCoordinates = async (broadLat: string, broadLon: 
           userId: data.userId,
           msgId: data.msgId,
           msgContent: data.msgContent,
-          recievingUserIds: data.recievingUserIds,
           broadLat: data.broadLat,
           broadLon: data.broadLon,
           specificLat: data.specificLat,

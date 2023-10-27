@@ -7,7 +7,6 @@ export const createMessage = async (userId, msgId, msgContent, recievingUserIds)
        userId: userId,
        msgId: msgId,
        msgContent: msgContent,
-       recievingUserIds: recievingUserIds,
        broadLat: "0",
        broadLon: "0",
        specificLat: "0",
