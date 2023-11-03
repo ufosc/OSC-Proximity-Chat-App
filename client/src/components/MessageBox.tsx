@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#3333ff", // Background color to match the button
     borderRadius: 25, // Border radius for the outer corners of the oval
     overflow: 'hidden', // Ensures inner elements don't overflow rounded corners
+    width: '90%'
   },
   button: {
     height: 40,
