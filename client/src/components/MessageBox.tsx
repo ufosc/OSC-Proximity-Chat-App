@@ -37,7 +37,7 @@ export const MessageBox = () => {
                     style={styles.input}
                     onChangeText={setMessageContent}
                     value={messageContent}
-                    placeholder="Send a Message"
+                    placeholder="Say Something"
                   />
                   <TouchableOpacity style={styles.button} onPress={onPress}>
                     <Text style={{ color: "#ffffff" }}>{"Send"}</Text>
@@ -56,21 +56,29 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "flex-end",
+    backgroundColor: "#3333ff", // Background color to match the button
+    borderRadius: 25, // Border radius for the outer corners of the oval
+    overflow: 'hidden', // Ensures inner elements don't overflow rounded corners
+    width: '90%'
   },
   button: {
     height: 40,
     width: 50,
-    margin: 5,
     backgroundColor: "#3333ff",
+    //backgroundColor: "#F3F2F2",
     alignItems: "center",
     justifyContent: "center",
+    borderTopLeftRadius: 0, // Removes border radius on the side adjoining the input
+    borderBottomLeftRadius: 0, // Removes border radius on the side adjoining the input
   },
   input: {
+    backgroundColor: "#F3F2F2",
     flexGrow: 1,
     height: 40,
-    borderWidth: 1,
+    borderWidth: 0,
     padding: 5,
-    margin: 5,
-    marginRight: 0,
+    borderTopRightRadius: 0, // Removes border radius on the side adjoining the button
+    borderBottomRightRadius: 0, // Removes border radius on the side adjoining the button
   },
 });
+
