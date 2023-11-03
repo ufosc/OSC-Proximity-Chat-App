@@ -62,20 +62,21 @@ export const MessageBox = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: 'center',
-    borderRadius: 25, // Border radius for the outer corners of the oval
+    display: "flex",
     overflow: 'hidden', // Ensures inner elements don't overflow rounded corners
-    width: '90%',
-    height: 45
+    height: 45,
+    maxWidth: '90%',
+    minWidth: '90%',
+    borderRadius: 25
   },
   button: {
     backgroundColor: '#3333ff',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    flexGrow: 8,
     borderTopLeftRadius: 0, // Removes border radius on the side adjoining the input
     borderBottomLeftRadius: 0, // Removes border radius on the side adjoining the input
+    width: '13%'
   },
 
   button_text: {
@@ -85,11 +86,11 @@ const styles = StyleSheet.create({
 
   input: {
     backgroundColor: '#F3F2F2',
-    flexGrow: 100,
     padding: 15,
     borderWidth: 0,
     borderTopRightRadius: 0, // Removes border radius on the side adjoining the button
     borderBottomRightRadius: 0, // Removes border radius on the side adjoining the button
+    width: '87%'
   },
 });
 
