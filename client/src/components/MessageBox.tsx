@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   View,
   Text,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import { LocationContext } from "../constants/LocationContext";
 import { UserContext } from "../constants/UserContext";
@@ -13,6 +15,8 @@ import { UserContextType } from "../constants/types";
 
 export const MessageBox = () => {
   const [messageContent, setMessageContent] = useState<string>("");
+  const keyboardVerticalOffest = Platform.OS === 'ios' ? 65 : 0;
+  const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
 
   return (
     <LocationContext.Consumer>
@@ -32,17 +36,20 @@ export const MessageBox = () => {
               };
 
               return (
-                <View style={styles.container}>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setMessageContent}
-                    value={messageContent}
-                    placeholder="Send a Message"
-                  />
-                  <TouchableOpacity style={styles.button} onPress={onPress}>
-                    <Text style={{ color: "#ffffff" }}>{"Send"}</Text>
-                  </TouchableOpacity>
-                </View>
+                <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={keyboardVerticalOffest}>
+                  <View style={styles.container}>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={setMessageContent}
+                      value={messageContent}
+                      placeholder="Say Something..."
+                      placeholderTextColor={'gray'}
+                    />
+                    <TouchableOpacity style={styles.button} onPress={onPress}>
+                      <Text style={ styles.button_text }>{"Send"}</Text>
+                    </TouchableOpacity>
+                  </View>
+                </KeyboardAvoidingView>
               );
             }}
           </UserContext.Consumer>
@@ -55,22 +62,35 @@ export const MessageBox = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "flex-end",
+    display: "flex",
+    overflow: 'hidden', // Ensures inner elements don't overflow rounded corners
+    height: 45,
+    maxWidth: '90%',
+    minWidth: '90%',
+    borderRadius: 25
   },
   button: {
-    height: 40,
-    width: 50,
-    margin: 5,
-    backgroundColor: "#3333ff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#3333ff',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopLeftRadius: 0, // Removes border radius on the side adjoining the input
+    borderBottomLeftRadius: 0, // Removes border radius on the side adjoining the input
+    width: '13%'
   },
+
+  button_text: {
+    color: 'white',
+    marginRight: 3
+  },
+
   input: {
-    flexGrow: 1,
-    height: 40,
-    borderWidth: 1,
-    padding: 5,
-    margin: 5,
-    marginRight: 0,
+    backgroundColor: '#F3F2F2',
+    padding: 15,
+    borderWidth: 0,
+    borderTopRightRadius: 0, // Removes border radius on the side adjoining the button
+    borderBottomRightRadius: 0, // Removes border radius on the side adjoining the button
+    width: '87%'
   },
 });
+

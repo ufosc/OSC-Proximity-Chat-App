@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, SafeAreaView, Keyboard, TouchableWithoutFeedback } from "react-native";
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
@@ -51,22 +51,26 @@ export default () => {
   }
 
   return (
-    <UserContext.Provider
-      value={{
-        displayName: generateName(),
-        userId: generateUniqueId().toString(),
-        avatar: undefined,
-      }}
-    >
-      <LocationContext.Provider
-        value={{ location: location, address: address, errorMsg: errorMsg }}
-      >
-        <View style={styles.container}>
-          <MessageList />
-          <MessageBox />
-        </View>
-      </LocationContext.Provider>
-    </UserContext.Provider>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView>
+        <UserContext.Provider
+          value={{
+            displayName: generateName(),
+            userId: generateUniqueId().toString(),
+            avatar: undefined,
+          }}
+        >
+          <LocationContext.Provider
+            value={{ location: location, address: address, errorMsg: errorMsg }}
+          >
+            <View style={styles.container}>
+              <MessageList />
+              <MessageBox />
+            </View>
+          </LocationContext.Provider>
+        </UserContext.Provider>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
