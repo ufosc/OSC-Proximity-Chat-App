@@ -80,5 +80,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     flexDirection: "column",
+    width: '100%'
   },
 });

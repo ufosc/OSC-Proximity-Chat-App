@@ -1,12 +1,15 @@
 import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions} from "react-native";
 import { MessageType } from "../constants/types";
+
+const windowHeight = Dimensions.get('window').height
+const windowWidth = Dimensions.get('window').width
 
 export const Message = (props: MessageType) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <View style={{ flex: 1 }}>
+        <View style={ styles.image_row }>
           <Image
             style={styles.image}
             source={{
@@ -15,51 +18,78 @@ export const Message = (props: MessageType) => {
             resizeMode="cover"
           />
         </View>
-        <View style={{ flex: 2 }}>
-          <Text style={styles.author}>{props.author} </Text>
-        </View>
-        <View style={{ flex: 1, marginLeft: 5 }}>
-          <Text style={styles.timestamp}>
-            {props.timestamp.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </Text>
+        <View style={ styles.content_column }>
+          <View style={styles.header_row}>
+            <Text style={styles.author}>{props.author} </Text>
+
+            <Text style={styles.timestamp}>
+              {props.timestamp.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </Text>
+
+          </View>
+
+          <View style={styles.message_container}>
+            <Text style={styles.messageContent}>{props.messageContent}</Text>
+          </View>
         </View>
       </View>
-      <Text style={styles.messageContent}>{props.messageContent}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    minWidth: "100%",
+    maxWidth: windowWidth,
     paddingVertical: 5,
+    paddingTop: 7,
+    paddingBottom: 7
   },
   row: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 4,
+    paddingLeft: 4
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     borderRadius: 150,
     backgroundColor: "black",
     justifyContent: "center",
   },
   author: {
-    fontWeight: "bold",
-    marginLeft: -10,
+    fontWeight: 'bold',
+    fontSize: 15
   },
   timestamp: {
-    color: "darkgray",
-    fontWeight: "bold",
+    fontWeight: '500'
   },
+
   messageContent: {
-    marginLeft: 80,
-    marginTop: -20,
+    flexWrap: 'wrap'
   },
+
+  message_container: {
+  },
+
+  image_row: {
+    width: '15%',
+    alignItems: 'center',
+    minWidth: 55
+  },
+
+  content_column: {
+    width: '85%',
+    paddingLeft: 6
+  },
+
+  header_row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 10,
+    marginBottom: 5
+  }
 });

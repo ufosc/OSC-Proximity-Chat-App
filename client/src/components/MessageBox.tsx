@@ -18,7 +18,7 @@ const sendIcon = require('../../assets/paper-plane.png')
 
 export const MessageBox = () => {
   const [messageContent, setMessageContent] = useState<string>("");
-  const keyboardVerticalOffest = Platform.OS === 'ios' ? 65 : 0;
+  const keyboardVerticalOffest = Platform.OS === 'ios' ? 50 : 0;
   const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
   const inputBoxStyles = Platform.OS === 'ios' ? styles.ios_specific_text : styles.android_specific_text;
 
@@ -77,18 +77,18 @@ const styles = StyleSheet.create({
     overflow: 'hidden', // Ensures inner elements don't overflow rounded corners
     maxWidth: '90%',
     minWidth: '90%',
-    marginBottom: 15,
     justifyContent: 'space-between',
     minHeight: 45,
     alignItems: 'flex-end',
-    paddingLeft: 5
+    paddingLeft: 5,
+    marginBottom: 15
   },
   button: {
     backgroundColor: '#3333ff',
     flexDirection: 'column',
-    width: '13%',
     borderRadius: 25,
     height: 45,
+    width: 45,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
     paddingRight: 18,
     width: '84%',
     borderRadius: 25,
-    maxHeight: 200
+    maxHeight: 200,
+    minHeight: 45
   },
 
   ios_specific_text: {
@@ -117,7 +118,8 @@ const styles = StyleSheet.create({
     paddingRight: 18,
     width: '84%',
     borderRadius: 25,
-    maxHeight: 200
+    maxHeight: 200,
+    minHeight: 45
   }
 });
 
