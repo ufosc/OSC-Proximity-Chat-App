@@ -26,6 +26,13 @@ export const MessageList = () => {
       author: "Jack Doe",
       messageId: generateUniqueId().toString(),
     },
+    {
+      messageContent:
+        "YOOOOOOOOO!",
+      timestamp: new Date(2 * 60 * 60 * 1000),
+      author: "adi",
+      messageId: generateUniqueId().toString(),
+    },
   ]);
 
   return (
