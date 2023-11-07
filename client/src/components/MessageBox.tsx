@@ -7,16 +7,20 @@ import {
   View,
   Text,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Image
 } from "react-native";
 import { LocationContext } from "../constants/LocationContext";
 import { UserContext } from "../constants/UserContext";
 import { UserContextType } from "../constants/types";
 
+const sendIcon = require('../../assets/paper-plane.png')
+
 export const MessageBox = () => {
   const [messageContent, setMessageContent] = useState<string>("");
-  const keyboardVerticalOffest = Platform.OS === 'ios' ? 65 : 0;
+  const keyboardVerticalOffest = Platform.OS === 'ios' ? 50 : 0;
   const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
+  const inputBoxStyles = Platform.OS === 'ios' ? styles.ios_specific_text : styles.android_specific_text;
 
   return (
     <LocationContext.Consumer>
@@ -25,28 +29,35 @@ export const MessageBox = () => {
           <UserContext.Consumer>
             {(UserContext) => {
               const onPress = () => {
-                console.log({
-                  message: messageContent,
-                  latitude: locationContext.location?.coords.latitude,
-                  longitude: locationContext.location?.coords.longitude,
-                  timestamp: new Date().getTime(),
-                  authorId: UserContext.userId,
-                });
-                setMessageContent("");
+                if (messageContent === '') {
+                  console.log('Empty string entered...')
+                } else {
+                  console.log({
+                    message: messageContent,
+                    latitude: locationContext.location?.coords.latitude,
+                    longitude: locationContext.location?.coords.longitude,
+                    timestamp: new Date().getTime(),
+                    authorId: UserContext.userId,
+                  });
+                  setMessageContent("");
+                }
+
               };
 
               return (
                 <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={keyboardVerticalOffest}>
                   <View style={styles.container}>
                     <TextInput
-                      style={styles.input}
+                      style={inputBoxStyles}
                       onChangeText={setMessageContent}
                       value={messageContent}
                       placeholder="Say Something..."
                       placeholderTextColor={'gray'}
+                      multiline={true}
+                      maxLength={500}
                     />
                     <TouchableOpacity style={styles.button} onPress={onPress}>
-                      <Text style={ styles.button_text }>{"Send"}</Text>
+                      <Image source={sendIcon} style={styles.sendIcon}/>
                     </TouchableOpacity>
                   </View>
                 </KeyboardAvoidingView>
@@ -64,33 +75,51 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     display: "flex",
     overflow: 'hidden', // Ensures inner elements don't overflow rounded corners
-    height: 45,
     maxWidth: '90%',
     minWidth: '90%',
-    borderRadius: 25
+    justifyContent: 'space-between',
+    minHeight: 45,
+    alignItems: 'flex-end',
+    paddingLeft: 5,
+    marginBottom: 15
   },
   button: {
     backgroundColor: '#3333ff',
     flexDirection: 'column',
-    alignItems: 'center',
+    borderRadius: 25,
+    height: 45,
+    width: 45,
     justifyContent: 'center',
-    borderTopLeftRadius: 0, // Removes border radius on the side adjoining the input
-    borderBottomLeftRadius: 0, // Removes border radius on the side adjoining the input
-    width: '13%'
+    alignItems: 'center'
   },
 
-  button_text: {
-    color: 'white',
+  sendIcon: {
+    height: 20,
+    width: 20,
+    resizeMode: 'contain',
     marginRight: 3
   },
-
-  input: {
+  android_specific_text: {
     backgroundColor: '#F3F2F2',
-    padding: 15,
-    borderWidth: 0,
-    borderTopRightRadius: 0, // Removes border radius on the side adjoining the button
-    borderBottomRightRadius: 0, // Removes border radius on the side adjoining the button
-    width: '87%'
+    padding: 8,
+    paddingLeft: 18,
+    paddingRight: 18,
+    width: '84%',
+    borderRadius: 25,
+    maxHeight: 200,
+    minHeight: 45
   },
+
+  ios_specific_text: {
+    backgroundColor: '#F3F2F2',
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 18,
+    paddingRight: 18,
+    width: '84%',
+    borderRadius: 25,
+    maxHeight: 200,
+    minHeight: 45
+  }
 });
 

@@ -51,5 +51,6 @@ const styles = StyleSheet.create({
     flexGrow: 2,
     justifyContent: "flex-end",
     padding: 5,
+    marginBottom: 15
   },
 });
