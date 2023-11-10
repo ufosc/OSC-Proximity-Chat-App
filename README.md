@@ -45,6 +45,13 @@ Set up a Firestore instance
 13. Start in test mode, click enable
 14. Create two collections, one named `messages` and another named `users`
   * Make a document with random information to create the collections. The fields won't matter as the correct ones will be added via the functions of our app itself
+15. Set up composite indexing
+  * Go to the Indexes tab in Cloud Firestore
+  * Click "Add index"
+  * set `Collection ID` to `messages`
+  * Add a field, and set the three field paths to `broadLat`, `broadLon`, and `timeSent`
+  * Set the Query scope to `Collection` and click "Create index"
+  * After the index finishes building, all endpoints related to querying messages will work
 15. While running the server, the database should be connected and good to go! For more information on how our database works, look at [ApiChecklist.md](https://github.com/ufosc/OSC-Proximity-Chat-App/blob/main/ApiChecklist.md) and see the Firestore documentation at https://firebase.google.com/docs/firestore/
 
 Installing dependancies
