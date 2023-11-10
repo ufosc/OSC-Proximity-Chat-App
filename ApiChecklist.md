@@ -4,6 +4,8 @@ Cloud Firestore, a Firebase product, is a NoSQL (Not-Only-SQL) database. Data is
 
 To get a better understanding, please skim through Firestore's documentation [here](https://firebase.google.com/docs/firestore/).
 
+A clear description of many function parameters can be found in the [Firestore Reference](https://firebase.google.com/docs/reference/js/firestore_.md#@firebase/Firestore).
+
 ### Messages collection
 
 Identifier:
@@ -18,13 +20,13 @@ Document attributes:
 - specificLon (string)
 - broadLat (string)
 - broadLon (string)
-- timeCreated (string)
+- timeCreated (number)
 
 Description:
 
 - Every message created will be related to the user that created it and store its content.
 - Two geolocation identifiers are stored, which are called Specific and Broad. We want to be able to easily query Firestore for potential nearby users for efficency reasons, so broad coordinates (with say, only 2 decimal points) are kept for this reason. Specific coordinates will be used to determine users within a set radius.
-- timeCreated:
+- timeCreated: this is a Unix timestamp, which is the number of seconds elapsed since 1/1/1970.
 
 ### Users collection
 

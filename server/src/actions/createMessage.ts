@@ -1,18 +1,18 @@
 import { doc, setDoc } from '@firebase/firestore'
 import { messages } from '../utilities/firebaseInit'
 
-export const createMessage = async (userId, msgId, msgContent, recievingUserIds) => {
+export const createMessage = async (userId: string, msgId: string, msgContent: string, broadLat: string, broadLon: string, specificLat: string, specificLon: string, timeSent: Number) => {
    const newMsgRef = doc(messages, msgId) 
-   setDoc(newMsgRef, {
+   const docData = {
        userId: userId,
        msgId: msgId,
        msgContent: msgContent,
-       recievingUserIds: recievingUserIds,
-       broadLat: "0",
-       broadLon: "0",
-       specificLat: "0",
-       specificLon: "0",
-       timeSent: Date.now()
-       // FIXME: Time should be passed in by client
-   })
+       broadLat: broadLat,
+       broadLon: broadLon,
+       specificLat: specificLat,
+       specificLon: specificLon,
+       timeSent: timeSent
+   }
+
+   setDoc(newMsgRef, docData)
 }

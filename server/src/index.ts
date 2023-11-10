@@ -1,5 +1,5 @@
 import express, { json } from 'express'
-import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsandTime } from './actions/getMessages'
+import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyUsers } from './actions/getUsers'
 import { createMessage } from './actions/createMessage'
@@ -22,22 +22,30 @@ app.get('/messages', async (req, res) => {
     if (req.query.msgId) {
         // Request path: '/messages?msgId=<msgId>'
         // Return message object with matching Id
+
         const msgId = req.query.msgId
         if (typeof msgId === "string") {
             returnData = await getMessageById(msgId)
         }
-        // timeFrame should be in milliseconds (ex. 5000 = 5 seconds)
-    } else if (req.query.broadLat && req.query.broadLon && req.query.timeFrame) {
+    } else if (req.query.broadLat && req.query.broadLon && req.query.secondsSinceCreation) {
+        // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
+
         const broadLat = req.query.broadLat
         const broadLon = req.query.broadLon
-        const timeFrame = req.query.timeFrame
-        if (typeof broadLat === "string" && typeof broadLon === "string" && typeof req.query.timeFrame) {
-            returnData = await getMessagesByBroadCoordsandTime(broadLat, broadLon, Number(timeFrame))
-            // If no data is returned, return null for error checks
-            if (returnData.length === 0) returnData = null
+        const secondsSinceCreation = req.query.secondsSinceCreation
+        if (typeof broadLat === "string" && typeof broadLon === "string" && typeof req.query.secondsSinceCreation === "string") {
+            // It's possible that secondsSinceCreation cannot be converted to a number, so a try/catch is used here.
+            try {
+                returnData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
+                // If no data is returned, return null for error checks
+                if (returnData.length === 0) returnData = null
+            } catch (e) {
+                returnData = null
+            }
         }
     } else if (req.query.broadLat && req.query.broadLon) {
         // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
+
         const broadLat = req.query.broadLat
         const broadLon = req.query.broadLon
         if (typeof broadLat === "string" && typeof broadLon === "string") {
@@ -62,16 +70,24 @@ app.get('/messages', async (req, res) => {
 
 app.post('/messages', async (req, res) => {
     try {
+        // Make sure time is valid before attempting to create message.
+        const timeSent = Number(req.body.timeSent)
+        if(isNaN(timeSent)) throw Error;
+
         await createMessage(
             req.body.userId,
             req.body.msgId,
             req.body.msgContent,
-            req.body.recievingUserIds
+            req.body.broadLat,
+            req.body.broadLon,
+            req.body.specificLat,
+            req.body.specificLon,
+            timeSent
         )
         // Send back "true" if message was successfully created.
         res.json(true)
     } catch (e) {
-        console.log("/messages/new: request sent with incorrect data format.")
+        console.log("POST /messages: request sent with incorrect data format.")
         res.json(false)
     }
 })
