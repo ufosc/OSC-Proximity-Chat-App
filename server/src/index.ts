@@ -29,15 +29,19 @@ app.get('/messages', async (req, res) => {
         }
     } else if (req.query.broadLat && req.query.broadLon && req.query.secondsSinceCreation) {
         // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
-        // secondsSinceCreation should be in seconds, however this will be converted to miliseconds to work with Unix time (ex. 1000 = 1 second)
 
         const broadLat = req.query.broadLat
         const broadLon = req.query.broadLon
         const secondsSinceCreation = req.query.secondsSinceCreation
         if (typeof broadLat === "string" && typeof broadLon === "string" && typeof req.query.secondsSinceCreation === "string") {
-            returnData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
-            // If no data is returned, return null for error checks
-            if (returnData.length === 0) returnData = null
+            // It's possible that secondsSinceCreation cannot be converted to a number, so a try/catch is used here.
+            try {
+                returnData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
+                // If no data is returned, return null for error checks
+                if (returnData.length === 0) returnData = null
+            } catch (e) {
+                returnData = null
+            }
         }
     } else if (req.query.broadLat && req.query.broadLon) {
         // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
@@ -66,6 +70,10 @@ app.get('/messages', async (req, res) => {
 
 app.post('/messages', async (req, res) => {
     try {
+        // Make sure time is valid before attempting to create message.
+        const timeSent = Number(req.body.timeSent)
+        if(isNaN(timeSent)) throw Error;
+
         await createMessage(
             req.body.userId,
             req.body.msgId,
@@ -74,7 +82,7 @@ app.post('/messages', async (req, res) => {
             req.body.broadLon,
             req.body.specificLat,
             req.body.specificLon,
-            req.body.timeSent
+            timeSent
         )
         // Send back "true" if message was successfully created.
         res.json(true)

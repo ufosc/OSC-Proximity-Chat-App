@@ -1,9 +1,9 @@
 import { doc, setDoc } from '@firebase/firestore'
 import { messages } from '../utilities/firebaseInit'
 
-export const createMessage = async (userId, msgId, msgContent, broadLat, broadLon, specificLat, specificLon, timeSent) => {
+export const createMessage = async (userId: string, msgId: string, msgContent: string, broadLat: string, broadLon: string, specificLat: string, specificLon: string, timeSent: Number) => {
    const newMsgRef = doc(messages, msgId) 
-   setDoc(newMsgRef, {
+   const docData = {
        userId: userId,
        msgId: msgId,
        msgContent: msgContent,
@@ -12,5 +12,7 @@ export const createMessage = async (userId, msgId, msgContent, broadLat, broadLo
        specificLat: specificLat,
        specificLon: specificLon,
        timeSent: timeSent
-   })
+   }
+
+   setDoc(newMsgRef, docData)
 }
