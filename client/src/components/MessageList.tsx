@@ -26,6 +26,13 @@ export const MessageList = () => {
       author: "Jack Doe",
       messageId: generateUniqueId().toString(),
     },
+    {
+      messageContent:
+        "YOOOOOOOOO!",
+      timestamp: new Date(2 * 60 * 60 * 1000),
+      author: "adi",
+      messageId: generateUniqueId().toString(),
+    },
   ]);
 
   return (
@@ -51,5 +58,6 @@ const styles = StyleSheet.create({
     flexGrow: 2,
     justifyContent: "flex-end",
     padding: 5,
+    marginBottom: 15
   },
 });
