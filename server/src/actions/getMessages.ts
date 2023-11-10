@@ -63,16 +63,16 @@ export const getMessagesByBroadCoordinates = async (broadLat: string, broadLon: 
 }
 
 export const getMessagesByBroadCoordsAndTime = async (broadLat: string, broadLon: string, secondsSinceCreation: number) => {
-    // Retrive new messages that are within a user's broad area
-    // TODO: See if the backend can handle retriving specific messages efficently.
+  // Retrive messages that are of a specified recency, and within a user's broad area
+  // TODO: See if the backend can handle retriving specific messages efficently.
 
   const msgsRef = collection(firestore, "messages")
-  const timeFrame = Date.now() - (secondsSinceCreation * 1000);
+  const timeFrame = (Date.now() / 1000) - secondsSinceCreation; // Convert Date.now() to milliseconds so it can be compared to Unix timestamps.
   // Find all messages created after secondsSinceCreation. secondsSinceCreation is converted to milliseconds to work with Unix time.
   const q = query(msgsRef, 
-    where("timeSent", ">=", timeFrame),
     where("broadLat", "==", broadLat),
-    where("broadLon", "==", broadLon)
+    where("broadLon", "==", broadLon),
+    where("timeSent", ">=", timeFrame)
   )
 
   const matches = await getDocs(q)
