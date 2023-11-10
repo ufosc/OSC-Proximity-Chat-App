@@ -62,34 +62,36 @@ export const getMessagesByBroadCoordinates = async (broadLat: string, broadLon: 
   return messageObjs
 }
 
-export const getMessagesByBroadCoordsAndTime = async (broadLat: string, broadLon: string, timeFrame: number) => {
+export const getMessagesByBroadCoordsAndTime = async (broadLat: string, broadLon: string, secondsSinceCreation: number) => {
+    // Retrive new messages that are within a user's broad area
+    // TODO: See if the backend can handle retriving specific messages efficently.
+
   const msgsRef = collection(firestore, "messages")
-  const timeNow = Date.now()
+  const timeFrame = Date.now() - (secondsSinceCreation * 1000);
+  // Find all messages created after secondsSinceCreation. secondsSinceCreation is converted to milliseconds to work with Unix time.
   const q = query(msgsRef, 
-    where("broadLat", "==", broadLat), 
-    where("broadLon", "==", broadLon),
+    where("timeSent", ">=", timeFrame),
+    where("broadLat", "==", broadLat),
+    where("broadLon", "==", broadLon)
   )
-  // There should be less total messages stored within a certain time frame vs. ones with matching broad coordinates
 
   const matches = await getDocs(q)
   const messageObjs = []
 
   matches.forEach((doc) => {
     const data = doc.data()
-    if (data.timeSent >= timeNow - timeFrame) {
-      const messageObj = {
-        userId: data.userId,
-        msgId: data.msgId,
-        msgContent: data.msgContent,
-        recievingUserIds: data.recievingUserIds,
-        broadLat: data.broadLat,
-        broadLon: data.broadLon,
-        specificLat: data.specificLat,
-        specificLon: data.specificLon,
-        timeSent: data.timeSent
-      }
-      messageObjs.push(messageObj)
+    const messageObj = {
+      userId: data.userId,
+      msgId: data.msgId,
+      msgContent: data.msgContent,
+      recievingUserIds: data.recievingUserIds,
+      broadLat: data.broadLat,
+      broadLon: data.broadLon,
+      specificLat: data.specificLat,
+      specificLon: data.specificLon,
+      timeSent: data.timeSent
     }
+    messageObjs.push(messageObj)
 })
 
 return messageObjs

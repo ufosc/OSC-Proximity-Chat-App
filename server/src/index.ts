@@ -22,22 +22,26 @@ app.get('/messages', async (req, res) => {
     if (req.query.msgId) {
         // Request path: '/messages?msgId=<msgId>'
         // Return message object with matching Id
+
         const msgId = req.query.msgId
         if (typeof msgId === "string") {
             returnData = await getMessageById(msgId)
         }
-        // timeFrame should be in milliseconds (ex. 5000 = 5 seconds)
-    } else if (req.query.broadLat && req.query.broadLon && req.query.timeFrame) {
+    } else if (req.query.broadLat && req.query.broadLon && req.query.secondsSinceCreation) {
+        // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
+        // secondsSinceCreation should be in seconds, however this will be converted to miliseconds to work with Unix time (ex. 1000 = 1 second)
+
         const broadLat = req.query.broadLat
         const broadLon = req.query.broadLon
-        const timeFrame = req.query.timeFrame
-        if (typeof broadLat === "string" && typeof broadLon === "string" && typeof req.query.timeFrame) {
-            returnData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(timeFrame))
+        const secondsSinceCreation = req.query.secondsSinceCreation
+        if (typeof broadLat === "string" && typeof broadLon === "string" && typeof req.query.secondsSinceCreation === "string") {
+            returnData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
             // If no data is returned, return null for error checks
             if (returnData.length === 0) returnData = null
         }
     } else if (req.query.broadLat && req.query.broadLon) {
         // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
+
         const broadLat = req.query.broadLat
         const broadLon = req.query.broadLon
         if (typeof broadLat === "string" && typeof broadLon === "string") {
@@ -66,12 +70,16 @@ app.post('/messages', async (req, res) => {
             req.body.userId,
             req.body.msgId,
             req.body.msgContent,
-            req.body.recievingUserIds
+            req.body.broadLat,
+            req.body.broadLon,
+            req.body.specificLat,
+            req.body.specificLon,
+            req.body.timeSent
         )
         // Send back "true" if message was successfully created.
         res.json(true)
     } catch (e) {
-        console.log("/messages/new: request sent with incorrect data format.")
+        console.log("POST /messages: request sent with incorrect data format.")
         res.json(false)
     }
 })
