@@ -8,15 +8,22 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
-  Image
+  Image,
+  Keyboard
 } from "react-native";
 import { LocationContext } from "../constants/LocationContext";
 import { UserContext } from "../constants/UserContext";
 import { UserContextType } from "../constants/types";
+import { MessageType } from "../constants/types";
+import { generateUniqueId } from "../constants/scripts";
 
 const sendIcon = require('../../assets/paper-plane.png')
 
-export const MessageBox = () => {
+interface MessageBoxProps {
+  onSendMessage: (message: MessageType) => void
+}
+
+export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   const [messageContent, setMessageContent] = useState<string>("");
   const keyboardVerticalOffest = Platform.OS === 'ios' ? 50 : 0;
   const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
@@ -32,13 +39,16 @@ export const MessageBox = () => {
                 if (messageContent === '') {
                   console.log('Empty string entered...')
                 } else {
-                  console.log({
-                    message: messageContent,
-                    latitude: locationContext.location?.coords.latitude,
-                    longitude: locationContext.location?.coords.longitude,
-                    timestamp: new Date().getTime(),
-                    authorId: UserContext.userId,
-                  });
+                  const newMessage: MessageType = {
+                    author: UserContext.displayName!,
+                    timestamp: new Date(2 * 60 * 60 * 1000),
+                    messageContent: messageContent,
+                    messageId: String(generateUniqueId())
+                  }
+
+                  console.log(newMessage)
+
+                  onSendMessage(newMessage)
                   setMessageContent("");
                 }
 

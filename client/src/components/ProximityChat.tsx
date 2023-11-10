@@ -12,6 +12,7 @@ import { MessageBox } from "./MessageBox";
 import { UserContext } from "../constants/UserContext";
 import { generateName, generateUniqueId } from "../constants/scripts";
 import { MessageList } from "./MessageList";
+import { MessageWrapper } from "./MessageWrapper"
 
 export default () => {
   const [location, setLocation] = useState<LocationObject>();
@@ -64,9 +65,9 @@ export default () => {
             value={{ location: location, address: address, errorMsg: errorMsg }}
           >
             <View style={styles.container}>
-              <MessageList />
-              <MessageBox />
-            </View>
+              <MessageWrapper />
+            </View>  
+
           </LocationContext.Provider>
         </UserContext.Provider>
       </SafeAreaView>
