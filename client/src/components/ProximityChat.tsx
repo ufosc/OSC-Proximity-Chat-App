@@ -8,10 +8,8 @@ import {
   LocationObject,
 } from "expo-location";
 import { LocationContext } from "../constants/LocationContext";
-import { MessageBox } from "./MessageBox";
 import { UserContext } from "../constants/UserContext";
 import { generateName, generateUniqueId } from "../constants/scripts";
-import { MessageList } from "./MessageList";
 import { MessageWrapper } from "./MessageWrapper"
 
 export default () => {

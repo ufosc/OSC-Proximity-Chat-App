@@ -1,10 +1,8 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { MessageList } from "./MessageList";
-import { Message } from "./Message";
 import { MessageBox } from "./MessageBox";
 import { useState } from "react";
-import { generateUniqueId } from "../constants/scripts";
 import { MessageType } from "../constants/types";
 
 
@@ -14,7 +12,7 @@ export const MessageWrapper: React.FC = () => {
   const handleSendMessage = (message: MessageType) => {
     setMessages([...messages, message])
   }
-  
+
   return(
       <View style={styles.container}>
           <MessageList messages={messages}/>

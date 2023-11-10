@@ -1,9 +1,7 @@
 import React from "react";
-import { useState } from "react";
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import { Text, View, StyleSheet} from "react-native";
 import { MessageType } from "../constants/types";
 import { Message } from "./Message";
-import { generateUniqueId } from "../constants/scripts";
 
 interface MessageListProps {
   messages: MessageType[]
@@ -12,20 +10,6 @@ interface MessageListProps {
 export const MessageList: React.FC<MessageListProps> = ({ messages }) => {
 
   return (
-    // <View style={styles.container}>
-    //   {messages.map((message) => {
-    //     return (
-    //       <Message
-    //         key={message.messageId}
-    //         messageContent={message.messageContent}
-    //         timestamp={message.timestamp}
-    //         author={message.author}
-    //         messageId={message.messageId}
-    //       />
-    //     );
-    //   })}
-    // </View>
-
     <View style={styles.container}>
       {
         messages.map((item) => {
