@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, SafeAreaView, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+} from "react-native";
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
@@ -8,10 +14,9 @@ import {
   LocationObject,
 } from "expo-location";
 import { LocationContext } from "../constants/LocationContext";
-import { MessageBox } from "./MessageBox";
 import { UserContext } from "../constants/UserContext";
 import { generateName, generateUniqueId } from "../constants/scripts";
-import { MessageList } from "./MessageList";
+import { MessageWrapper } from "./MessageWrapper";
 
 export default () => {
   const [location, setLocation] = useState<LocationObject>();
@@ -51,7 +56,7 @@ export default () => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <View style={styles.container_wrapper}>
       <SafeAreaView>
         <UserContext.Provider
           value={{
@@ -64,13 +69,12 @@ export default () => {
             value={{ location: location, address: address, errorMsg: errorMsg }}
           >
             <View style={styles.container}>
-              <MessageList />
-              <MessageBox />
+              <MessageWrapper />
             </View>
           </LocationContext.Provider>
         </UserContext.Provider>
       </SafeAreaView>
-    </TouchableWithoutFeedback>
+    </View>
   );
 };
 
@@ -80,6 +84,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     flexDirection: "column",
-    width: '100%'
+    width: "100%",
+  },
+  container_wrapper: {
+    width: "100%",
+    height: "100%",
+    alignItems: "flex-end",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });
