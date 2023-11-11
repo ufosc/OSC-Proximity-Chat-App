@@ -68,7 +68,7 @@ Please reference one of these when creating a new _action_.
 * return all messages with matching broadLat and broadLon attributes, and
 * has a timeCreated attribute that is with the bounds of secondsSinceCreation
 
-- [x] POST /messages/new
+- [x] POST /messages
 
 * add a Message document to the Messages collection in Firestore
 
@@ -82,9 +82,13 @@ Please reference one of these when creating a new _action_.
 
 * return a user document with a matching userId
 
-- [ ] POST /users
+- [x] POST /users
 
 * add a user docment to the Users collection in Firestore
+
+- [x] PUT /users?userId=\<userId\>&specificLat=\<specificLat\>&specificLon=\<specificLon\>
+
+*  update specificLat and specificLon location attributes of a user with matching userId to values specified in the query
 
 - [ ] DELETE /users?userId=\<userId\>
 
