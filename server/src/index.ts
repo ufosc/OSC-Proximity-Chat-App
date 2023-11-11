@@ -1,8 +1,9 @@
 import express, { json } from 'express'
 import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
+import { createMessage } from './actions/createMessage'
+import { deleteMessageById } from './actions/deleteMessages'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyUsers } from './actions/getUsers'
-import { createMessage } from './actions/createMessage'
 import { createUser } from './actions/createUsers'
 import { updateUserLocation } from './actions/updateUser'
 
@@ -69,6 +70,8 @@ app.get('/messages', async (req, res) => {
 })
 
 app.post('/messages', async (req, res) => {
+    let returnData = null
+
     try {
         // Make sure time is valid before attempting to create message.
         const timeSent = Number(req.body.timeSent)
@@ -90,6 +93,30 @@ app.post('/messages', async (req, res) => {
         console.log("Error: (POST /messages) request sent with incorrect data format.")
         res.json(false)
     }
+})
+
+app.delete('/messages', async (req, res) => {
+    let returnData = null
+
+    if (req.query.msgId) {
+        try {
+            const msgId = req.query.msgId
+            if (typeof msgId === "string") {
+                returnData = await deleteMessageById(msgId)
+            }
+        } catch(e) {
+            console.log("Error:")
+            console.log(e)
+        }
+    }
+
+    if (returnData === null) {
+        // Return error to client
+        res.json(false)
+    } else {
+        res.json(returnData)
+    }
+    return
 })
 
 app.post('/users', async (req, res) => {
