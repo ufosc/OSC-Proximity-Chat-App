@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Dimensions } from "react-native";
+import { StyleSheet, FlatList, Dimensions } from "react-native";
 import { MessageType } from "../constants/types";
 import { Message } from "./Message";
 
@@ -11,20 +11,6 @@ interface MessageListProps {
 
 export const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   return (
-    // <View style={styles.container}>
-    //   {messages.map((item: MessageType) => {
-    //     return (
-    //       <Message
-    //         key={item.messageId}
-    //         messageContent={item.messageContent}
-    //         timestamp={item.timestamp}
-    //         author={item.author}
-    //         messageId={item.messageId}
-    //       />
-    //     );
-    //   })}
-    // </View>
-
     <FlatList
       contentContainerStyle={{
         flexGrow: 1,
