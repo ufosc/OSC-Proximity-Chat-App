@@ -146,32 +146,6 @@ app.put('*', (req, res) => {
     res.json("404: Path could not be found! COULD NOT {PUT}")
 })
 
-// ### TESTING ENDPOINTS ###
-
-// For message objects
-
-// Get message obj by broad coordinates
-app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
-    let lat = Number(req.params.lat)
-    let lon = Number(req.params.lon)
-
-    const response = await convertToBroadCoordinates([lat, lon])
-    res.json(response)
-})
-
-// For user objects
-
-app.get("/users/get/specificRange/:lat/:lon", async (req, res) => {
-    let lat = Number(req.params.lat)
-    let lon = Number(req.params.lon)
-
-    const response = await getNearbyUsers([lat, lon])
-
-    res.json(response)
-})
-
-// ######
-
 app.listen(port, () => {
   return console.log(`Listening at http://localhost:${port}`)
 })
