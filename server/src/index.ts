@@ -87,7 +87,7 @@ app.post('/messages', async (req, res) => {
         // Send back "true" if message was successfully created.
         res.json(true)
     } catch (e) {
-        console.log("POST /messages: request sent with incorrect data format.")
+        console.log("Error: (POST /messages) request sent with incorrect data format.")
         res.json(false)
     }
 })
