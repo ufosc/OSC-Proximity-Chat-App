@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+} from "react-native";
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
@@ -51,7 +57,7 @@ export default () => {
 
   return (
     <View style={styles.container_wrapper}>
-      <SafeAreaView style={styles.container_wrapper}>
+      <SafeAreaView>
         <UserContext.Provider
           value={{
             displayName: generateName(),
@@ -84,5 +90,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     alignItems: "flex-end",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });
