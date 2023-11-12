@@ -72,13 +72,13 @@ Please reference one of these when creating a new _action_.
 
 * add a Message document to the Messages collection in Firestore
 
-- [ ] DELETE /messages?msgId=\<msgId\>
+- [x] DELETE /messages?msgId=\<msgId\>
 
 * Delete a message document with the corresponding msgId
 
 ### Users
 
-- [ ] GET /users?userId=\<userId\>
+- [x] GET /users?userId=\<userId\>
 
 * return a user document with a matching userId
 

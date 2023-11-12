@@ -1,5 +1,5 @@
 import { doc, getDoc, deleteDoc} from '@firebase/firestore'
-import { messages, firestore } from '../utilities/firebaseInit'
+import { messages } from '../utilities/firebaseInit'
 
 export const deleteMessageById = async (msgId: string) => {
   const msgRef = doc(messages, msgId)

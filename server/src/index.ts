@@ -1,11 +1,12 @@
 import express, { json } from 'express'
 import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
 import { createMessage } from './actions/createMessage'
-import { deleteMessageById } from './actions/deleteMessages'
-import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
-import { getNearbyUsers } from './actions/getUsers'
-import { createUser } from './actions/createUsers'
+import { deleteMessageById } from './actions/deleteMessage'
+
+import { getUserById } from './actions/getUsers'
+import { createUser } from './actions/createUser'
 import { updateUserLocation } from './actions/updateUser'
+import { deleteUserById } from './actions/deleteUser'
 
 const app = express()
 const port = 3000
@@ -61,7 +62,7 @@ app.get('/messages', async (req, res) => {
 
     // Error checking for all queries under /messages. Client should recognize 'false' and act accordingly.
     if (returnData === null) {
-        // Return error to client
+        // Returnfalse error to client
         res.json(false)
     } else {
         res.json(returnData)
@@ -70,8 +71,6 @@ app.get('/messages', async (req, res) => {
 })
 
 app.post('/messages', async (req, res) => {
-    let returnData = null
-
     try {
         // Make sure time is valid before attempting to create message.
         const timeSent = Number(req.body.timeSent)
@@ -119,21 +118,43 @@ app.delete('/messages', async (req, res) => {
     return
 })
 
-app.post('/users', async (req, res) => {
-    if (req.body) {
+app.get('/users', async (req, res) => {
+    let returnData = null
+
+    if (req.query.userId) {
+        // Request path: '/users?userId=<userId>'
         try {
-            await createUser(
-                req.body.userId,
-                req.body.userDisplayName
-            )
-            // Sends back true if new user was created!
-            res.json(true)
-        } catch (error) {
-            console.log(error)
-            res.json(false)
+            const userId = req.query.userId
+            if (typeof userId === "string") {
+                returnData = await getUserById(userId)
+            } 
+        } catch(e) {
+            console.log("Error:")
+            console.log(e)
         }
+    }
+
+    if (returnData === null) {
+        // Return error to client
+        res.json(false)
     } else {
-        console.log('Body doesnt exist LOL')
+        res.json(returnData)
+    }
+    return
+})
+
+app.post('/users', async (req, res) => {
+    try {
+        await createUser(
+            req.body.userId,
+            req.body.displayName,
+            req.body.avatarUrl
+        )
+        // Sends back true if new user was created!
+        res.json(true)
+    } catch (error) {
+        console.log("Error: (POST /users) request sent with incorrect data format.")
+        res.json(false)
     }
 })
 
@@ -160,17 +181,47 @@ app.put('/users', async (req, res) => {
     }
 })
 
+app.delete('/users', async (req, res) => {
+    let returnData = null
+
+    if (req.query.userId) {
+        try {
+            const userId = req.query.userId
+            if (typeof userId === "string") {
+                returnData = await deleteUserById(userId)
+            }
+        } catch(e) {
+            console.log("Error:")
+            console.log(e)
+        }
+    }
+
+    if (returnData === null) {
+        // Return error to client
+        res.json(false)
+    } else {
+        res.json(returnData)
+    }
+    return
+})
+
 // Error handling
 app.get('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {GET}")
+    // res.json("404: Path could not be found! COULD NOT {GET}")
+    res.json(false)
+    res.status(404)
 })
 
 app.post('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {POST}")
+    // res.json("404: Path could not be found! COULD NOT {POST}")
+    res.json(false)
+    res.status(404)
 })
 
 app.put('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {PUT}")
+    // res.json("404: Path could not be found! COULD NOT {PUT}")
+    res.json(false)
+    res.status(404)
 })
 
 app.listen(port, () => {
