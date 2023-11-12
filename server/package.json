@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon build/index.js",
     "build": "npx tsc",
-    "build:watch": "npx tsc -w"
+    "build:watch": "npx tsc -w",
+    "start:watch": "nodemon build/index.js"
   },
   "author": "",
   "license": "ISC",

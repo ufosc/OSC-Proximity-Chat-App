@@ -5,14 +5,14 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Text,
   KeyboardAvoidingView,
   Platform,
-  Image
+  Image,
 } from "react-native";
 import * as Crypto from "expo-crypto";
 import { LocationContext } from "../constants/LocationContext";
 import { UserContext } from "../constants/UserContext";
+import { UserContextType, LocationContextType } from "../constants/types";
 import { MessageDataType } from "../constants/types";
 
 const sendIcon = require('../../assets/paper-plane.png')
@@ -60,13 +60,13 @@ export const MessageBox = () => {
 
   return (
     <LocationContext.Consumer>
-      {(locationContext) => {
+      {(locationContext: LocationContextType) => {
         return (
           <UserContext.Consumer>
-            {(UserContext) => {
+            {(UserContext: UserContextType) => {
               const onPress = () => {
-                if (messageContent === '') {
-                  console.log('Empty string entered...')
+                if (messageContent === "") {
+                  console.log("Empty string entered...");
                 } else {
                   const messageData: MessageDataType = {
                     userId: UserContext.userId,
@@ -82,19 +82,22 @@ export const MessageBox = () => {
               };
 
               return (
-                <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={keyboardVerticalOffest}>
+                <KeyboardAvoidingView
+                  behavior={keyboardBehavior}
+                  keyboardVerticalOffset={keyboardVerticalOffest}
+                >
                   <View style={styles.container}>
                     <TextInput
                       style={inputBoxStyles}
                       onChangeText={setMessageContent}
                       value={messageContent}
                       placeholder="Say Something..."
-                      placeholderTextColor={'gray'}
+                      placeholderTextColor={"gray"}
                       multiline={true}
                       maxLength={500}
                     />
                     <TouchableOpacity style={styles.button} onPress={onPress}>
-                      <Image source={sendIcon} style={styles.sendIcon}/>
+                      <Image source={sendIcon} style={styles.sendIcon} />
                     </TouchableOpacity>
                   </View>
                 </KeyboardAvoidingView>
@@ -111,52 +114,52 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     display: "flex",
-    overflow: 'hidden', // Ensures inner elements don't overflow rounded corners
-    maxWidth: '90%',
-    minWidth: '90%',
-    justifyContent: 'space-between',
+    overflow: "hidden", // Ensures inner elements don't overflow rounded corners
+    maxWidth: "90%",
+    minWidth: "90%",
+    justifyContent: "space-between",
     minHeight: 45,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     paddingLeft: 5,
-    marginBottom: 15
+    marginBottom: 15,
+    paddingTop: 15,
   },
   button: {
-    backgroundColor: '#3333ff',
-    flexDirection: 'column',
+    backgroundColor: "#3333ff",
+    flexDirection: "column",
     borderRadius: 25,
     height: 45,
     width: 45,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   sendIcon: {
     height: 20,
     width: 20,
-    resizeMode: 'contain',
-    marginRight: 3
+    resizeMode: "contain",
+    marginRight: 3,
   },
   android_specific_text: {
-    backgroundColor: '#F3F2F2',
+    backgroundColor: "#F3F2F2",
     padding: 8,
     paddingLeft: 18,
     paddingRight: 18,
-    width: '84%',
+    width: "84%",
     borderRadius: 25,
     maxHeight: 200,
-    minHeight: 45
+    minHeight: 45,
   },
 
   ios_specific_text: {
-    backgroundColor: '#F3F2F2',
+    backgroundColor: "#F3F2F2",
     paddingTop: 15,
     paddingBottom: 15,
     paddingLeft: 18,
     paddingRight: 18,
-    width: '84%',
+    width: "84%",
     borderRadius: 25,
     maxHeight: 200,
-    minHeight: 45
-  }
+    minHeight: 45,
+  },
 });
-
