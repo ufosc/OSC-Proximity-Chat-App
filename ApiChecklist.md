@@ -90,6 +90,6 @@ Please reference one of these when creating a new _action_.
 
 *  update specificLat and specificLon location attributes of a user with matching userId to values specified in the query
 
-- [ ] DELETE /users?userId=\<userId\>
+- [x] DELETE /users?userId=\<userId\>
 
 * Delete a user document with the corresponding userId
