@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Button,
   StyleSheet,
@@ -10,17 +10,53 @@ import {
   Platform,
   Image
 } from "react-native";
+import * as Crypto from "expo-crypto";
 import { LocationContext } from "../constants/LocationContext";
 import { UserContext } from "../constants/UserContext";
-import { UserContextType } from "../constants/types";
+import { MessageDataType } from "../constants/types";
 
 const sendIcon = require('../../assets/paper-plane.png')
 
+const postMessage = async (messageData: MessageDataType) => {
+  const URL = `${process.env.EXPO_PUBLIC_API_URL}/messages`;
+  const response = await fetch(URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    referrerPolicy: "same-origin",
+    body: JSON.stringify(messageData)
+  })
+  return response.json();
+}
+
 export const MessageBox = () => {
   const [messageContent, setMessageContent] = useState<string>("");
+  const isMounted = useRef(false);
+  const [messageData, setMessageData] = useState<MessageDataType>({
+    userId: "",
+    msgId: "",
+    msgContent: "",
+    specificLat: 0.0,
+    specificLon: 0.0,
+    timeSent: new Date(0).getTime()
+  });
   const keyboardVerticalOffest = Platform.OS === 'ios' ? 50 : 0;
   const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
   const inputBoxStyles = Platform.OS === 'ios' ? styles.ios_specific_text : styles.android_specific_text;
+
+  useEffect(() => {
+    if (isMounted.current) {
+      postMessage(messageData).then((data) => {
+        console.log(data);
+      }).catch((err) => {
+        console.error(err)
+      });
+    } else {
+      isMounted.current = true;
+    }
+  }, [messageData]);
 
   return (
     <LocationContext.Consumer>
@@ -32,16 +68,17 @@ export const MessageBox = () => {
                 if (messageContent === '') {
                   console.log('Empty string entered...')
                 } else {
-                  console.log({
-                    message: messageContent,
-                    latitude: locationContext.location?.coords.latitude,
-                    longitude: locationContext.location?.coords.longitude,
-                    timestamp: new Date().getTime(),
-                    authorId: UserContext.userId,
-                  });
+                  const messageData: MessageDataType = {
+                    userId: UserContext.userId,
+                    msgId: Crypto.randomUUID(),
+                    msgContent: messageContent,
+                    specificLat: locationContext.location?.coords.latitude,
+                    specificLon: locationContext.location?.coords.longitude,
+                    timeSent: new Date().getTime(),
+                  };
+                  setMessageData(messageData);
                   setMessageContent("");
                 }
-
               };
 
               return (

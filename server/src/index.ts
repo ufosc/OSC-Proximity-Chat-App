@@ -1,4 +1,6 @@
-import express, { json } from 'express'
+import express from 'express'
+import ngrok from '@ngrok/ngrok'
+import 'dotenv/config';
 import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyUsers } from './actions/getUsers'
@@ -10,7 +12,7 @@ const app = express()
 const port = 3000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
+  
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -74,20 +76,24 @@ app.post('/messages', async (req, res) => {
         const timeSent = Number(req.body.timeSent)
         if(isNaN(timeSent)) throw Error;
 
+        const broadCoordinates: number[] = convertToBroadCoordinates([req.body.specificLat, req.body.specificLon]);
+        const broadLat = `${broadCoordinates[0]}`; 
+        const broadLon = `${broadCoordinates[1]}`;
+
         await createMessage(
             req.body.userId,
             req.body.msgId,
             req.body.msgContent,
-            req.body.broadLat,
-            req.body.broadLon,
-            req.body.specificLat,
-            req.body.specificLon,
+            broadLat,
+            broadLon,
+            `${req.body.specificLat}`,
+            `${req.body.specificLon}`,
             timeSent
         )
         // Send back "true" if message was successfully created.
         res.json(true)
     } catch (e) {
-        console.log("POST /messages: request sent with incorrect data format.")
+        console.error(e.message);
         res.json(false)
     }
 })
@@ -173,5 +179,20 @@ app.get("/users/get/specificRange/:lat/:lon", async (req, res) => {
 // ######
 
 app.listen(port, () => {
-  return console.log(`Listening at http://localhost:${port}`)
+  // Create a domain using ngrok that the frontend can access but that
+ // isn't a public domain where our backend is deployed.   
+    const start_ngrok = async () => {
+        // Establish connectivity
+        const listener = await ngrok.connect({
+            addr: port,
+            authtoken: process.env.NGROK_AUTH_TOKEN,
+            domain: process.env.NGROK_DOMAIN
+        });
+        return listener;
+    };
+
+    start_ngrok().then((listener) => {
+        // Output ngrok url to console
+        console.log(`Ingress established at: ${listener.url()}`);
+    }).catch((error) => console.error(error));
 })
