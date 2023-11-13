@@ -1,6 +1,7 @@
 export interface User {
-    userDisplayName: string
+    displayName: string
     userId: string
+    avatarUrl: string
     broadLat: string
     broadLon: string
     specificLat: string

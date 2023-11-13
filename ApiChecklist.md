@@ -72,13 +72,13 @@ Please reference one of these when creating a new _action_.
 
 * add a Message document to the Messages collection in Firestore
 
-- [ ] DELETE /messages?msgId=\<msgId\>
+- [x] DELETE /messages?msgId=\<msgId\>
 
 * Delete a message document with the corresponding msgId
 
 ### Users
 
-- [ ] GET /users?userId=\<userId\>
+- [x] GET /users?userId=\<userId\>
 
 * return a user document with a matching userId
 
@@ -90,6 +90,6 @@ Please reference one of these when creating a new _action_.
 
 *  update specificLat and specificLon location attributes of a user with matching userId to values specified in the query
 
-- [ ] DELETE /users?userId=\<userId\>
+- [x] DELETE /users?userId=\<userId\>
 
 * Delete a user document with the corresponding userId

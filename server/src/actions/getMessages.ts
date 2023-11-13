@@ -16,6 +16,7 @@ export const getMessages = async () => {
     }
     messageObjs.push(messageObj);
 
+    // TODO: use Firestore limiter when requesting messages
     // This section adds to the message counter and returns if 100 messages have been received!
     messagesReceived++
     if (messagesReceived >= 100) {
