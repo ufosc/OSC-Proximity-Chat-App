@@ -12,13 +12,16 @@ import {
 import * as Crypto from "expo-crypto";
 import { LocationContext } from "../constants/LocationContext";
 import { UserContext } from "../constants/UserContext";
-import { UserContextType, LocationContextType } from "../constants/types";
-import { MessageDataType } from "../constants/types";
-
+import { UserContextType, LocationContextType, MessageType, MessageDataType } from "../constants/types";
 const sendIcon = require('../../assets/paper-plane.png')
 
+interface MessageBoxProps {
+  onSendMessage: (message: MessageType) => void;
+}
+
 const postMessage = async (messageData: MessageDataType) => {
-  const URL = `${process.env.EXPO_PUBLIC_LOCALHOST_ADDRESS}/messages`;
+  // TODO: Make the port used below (3000) part of a PORT environment variable in the .env file.
+  const URL = `http://${process.env.EXPO_PUBLIC_LOCALHOST_ADDRESS}:3000/messages`;
   const response = await fetch(URL, {
     method: "POST",
     mode: "no-cors",
@@ -31,9 +34,10 @@ const postMessage = async (messageData: MessageDataType) => {
   return response.json();
 }
 
-export const MessageBox = () => {
+export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   const [messageContent, setMessageContent] = useState<string>("");
   const isMounted = useRef(false);
+  // TODO: Make sure date(0).getTime() returns a Unix Epoch in seconds
   const [messageData, setMessageData] = useState<MessageDataType>({
     userId: "",
     msgId: "",
@@ -42,6 +46,7 @@ export const MessageBox = () => {
     specificLon: 0.0,
     timeSent: new Date(0).getTime()
   });
+  const [newMessage, setNewMessage] = useState<MessageType>()
   const keyboardVerticalOffest = Platform.OS === 'ios' ? 50 : 0;
   const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
   const inputBoxStyles = Platform.OS === 'ios' ? styles.ios_specific_text : styles.android_specific_text;
@@ -49,7 +54,13 @@ export const MessageBox = () => {
   useEffect(() => {
     if (isMounted.current) {
       postMessage(messageData).then((data) => {
-        console.log(data);
+        if (data) {
+          if (newMessage) {
+            onSendMessage(newMessage)
+          } else {
+            console.log('How the fuck did this throw an error')
+          }
+        }
       }).catch((err) => {
         console.error(err)
       });
@@ -68,14 +79,24 @@ export const MessageBox = () => {
                 if (messageContent === "") {
                   console.log("Empty string entered...");
                 } else {
+                  const date = new Date()
                   const messageData: MessageDataType = {
                     userId: UserContext.userId,
                     msgId: Crypto.randomUUID(),
                     msgContent: messageContent,
                     specificLat: locationContext.location?.coords.latitude,
                     specificLon: locationContext.location?.coords.longitude,
-                    timeSent: new Date().getTime(),
+                    timeSent: date.getTime(),
                   };
+              
+
+                  const newMessage: MessageType = {
+                    author: String(UserContext.displayName),
+                    timestamp: date,
+                    messageContent: messageData.msgContent,
+                    msgId: messageData.msgId
+                  }
+                  setNewMessage(newMessage);
                   setMessageData(messageData);
                   setMessageContent("");
                 }
