@@ -18,7 +18,7 @@ import { MessageDataType } from "../constants/types";
 const sendIcon = require('../../assets/paper-plane.png')
 
 const postMessage = async (messageData: MessageDataType) => {
-  const URL = `${process.env.EXPO_PUBLIC_API_URL}/messages`;
+  const URL = `${process.env.EXPO_PUBLIC_LOCALHOST_ADDRESS}/messages`;
   const response = await fetch(URL, {
     method: "POST",
     mode: "no-cors",
