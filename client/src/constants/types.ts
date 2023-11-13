@@ -4,7 +4,7 @@ export type MessageType = {
   author: string;
   timestamp: Date;
   messageContent: string;
-  messageId: string;
+  msgId: string;
 };
 
 export type MessageDataType = {
