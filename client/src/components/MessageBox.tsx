@@ -36,6 +36,7 @@ const postMessage = async (messageData: MessageDataType) => {
 export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   const [messageContent, setMessageContent] = useState<string>("");
   const isMounted = useRef(false);
+  // TODO: Make sure date(0).getTime() returns a Unix Epoch in seconds
   const [messageData, setMessageData] = useState<MessageDataType>({
     userId: "",
     msgId: "",
@@ -86,6 +87,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
                     specificLon: locationContext.location?.coords.longitude,
                     timeSent: date.getTime(),
                   };
+              
 
                   const newMessage: MessageType = {
                     author: String(UserContext.displayName),
