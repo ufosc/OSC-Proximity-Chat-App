@@ -19,7 +19,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@ngrok/ngrok": "^0.9.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "firebase": "^10.5.0"
