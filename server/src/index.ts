@@ -8,6 +8,7 @@ import { getUserById } from './actions/getUsers'
 import { createUser } from './actions/createUser'
 import { updateUserLocation } from './actions/updateUser'
 import { deleteUserById } from './actions/deleteUser'
+import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates';
 
 const app = express()
 const port = 3000
