@@ -26,6 +26,8 @@ Install the ExpoGo app from the Google Play Store or App Store on your phone.
 
 `cd` into `client` and install the dependencies: `npm install`.
 
+Create a `.env` file from the `config_example.md` by obtaining the IP address of your local machine (you can either use https://whatismyipaddress.com/ or the bash command `ifconfig en0 | awk '$1 == "inet" { print $2 }'` to obtain it)
+
 Use `npm start` to start the program and scan the QR code using the ExpoGo App (Android) or the Camera App (iOS).
 
 ### Server
@@ -54,7 +56,7 @@ Set up a Firestore instance
   * After the index finishes building, all endpoints related to querying messages will work
 15. While running the server, the database should be connected and good to go! For more information on how our database works, look at [ApiChecklist.md](https://github.com/ufosc/OSC-Proximity-Chat-App/blob/main/ApiChecklist.md) and see the Firestore documentation at https://firebase.google.com/docs/firestore/
 
-Installing dependancies
+Installing dependencies
 
 `cd` into `server` and install the dependencies: `npm install`.
 
