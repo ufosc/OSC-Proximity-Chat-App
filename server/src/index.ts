@@ -1,10 +1,12 @@
 import express, { json } from 'express'
 import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
-import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
-import { getNearbyUsers } from './actions/getUsers'
 import { createMessage } from './actions/createMessage'
-import { createUser } from './actions/createUsers'
+import { deleteMessageById } from './actions/deleteMessage'
+
+import { getUserById } from './actions/getUsers'
+import { createUser } from './actions/createUser'
 import { updateUserLocation } from './actions/updateUser'
+import { deleteUserById } from './actions/deleteUser'
 
 const app = express()
 const port = 3000
@@ -60,7 +62,7 @@ app.get('/messages', async (req, res) => {
 
     // Error checking for all queries under /messages. Client should recognize 'false' and act accordingly.
     if (returnData === null) {
-        // Return error to client
+        // Returnfalse error to client
         res.json(false)
     } else {
         res.json(returnData)
@@ -87,26 +89,72 @@ app.post('/messages', async (req, res) => {
         // Send back "true" if message was successfully created.
         res.json(true)
     } catch (e) {
-        console.log("POST /messages: request sent with incorrect data format.")
+        console.log("Error: (POST /messages) request sent with incorrect data format.")
         res.json(false)
     }
 })
 
-app.post('/users', async (req, res) => {
-    if (req.body) {
+app.delete('/messages', async (req, res) => {
+    let returnData = null
+
+    if (req.query.msgId) {
         try {
-            await createUser(
-                req.body.userId,
-                req.body.userDisplayName
-            )
-            // Sends back true if new user was created!
-            res.json(true)
-        } catch (error) {
-            console.log(error)
-            res.json(false)
+            const msgId = req.query.msgId
+            if (typeof msgId === "string") {
+                returnData = await deleteMessageById(msgId)
+            }
+        } catch(e) {
+            console.log("Error:")
+            console.log(e)
         }
+    }
+
+    if (returnData === null) {
+        // Return error to client
+        res.json(false)
     } else {
-        console.log('Body doesnt exist LOL')
+        res.json(returnData)
+    }
+    return
+})
+
+app.get('/users', async (req, res) => {
+    let returnData = null
+
+    if (req.query.userId) {
+        // Request path: '/users?userId=<userId>'
+        try {
+            const userId = req.query.userId
+            if (typeof userId === "string") {
+                returnData = await getUserById(userId)
+            } 
+        } catch(e) {
+            console.log("Error:")
+            console.log(e)
+        }
+    }
+
+    if (returnData === null) {
+        // Return error to client
+        res.json(false)
+    } else {
+        res.json(returnData)
+    }
+    return
+})
+
+app.post('/users', async (req, res) => {
+    try {
+        await createUser(
+            req.body.userId,
+            req.body.displayName,
+            req.body.avatarUrl
+        )
+        // Sends back true if new user was created!
+        res.json(true)
+    } catch (error) {
+        console.log("Error: (POST /users) request sent with incorrect data format.")
+        res.json(false)
     }
 })
 
@@ -133,44 +181,48 @@ app.put('/users', async (req, res) => {
     }
 })
 
+app.delete('/users', async (req, res) => {
+    let returnData = null
+
+    if (req.query.userId) {
+        try {
+            const userId = req.query.userId
+            if (typeof userId === "string") {
+                returnData = await deleteUserById(userId)
+            }
+        } catch(e) {
+            console.log("Error:")
+            console.log(e)
+        }
+    }
+
+    if (returnData === null) {
+        // Return error to client
+        res.json(false)
+    } else {
+        res.json(returnData)
+    }
+    return
+})
+
 // Error handling
 app.get('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {GET}")
+    // res.json("404: Path could not be found! COULD NOT {GET}")
+    res.json(false)
+    res.status(404)
 })
 
 app.post('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {POST}")
+    // res.json("404: Path could not be found! COULD NOT {POST}")
+    res.json(false)
+    res.status(404)
 })
 
 app.put('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {PUT}")
+    // res.json("404: Path could not be found! COULD NOT {PUT}")
+    res.json(false)
+    res.status(404)
 })
-
-// ### TESTING ENDPOINTS ###
-
-// For message objects
-
-// Get message obj by broad coordinates
-app.get("/messages/get/broad/:lat/:lon", async (req, res) => {
-    let lat = Number(req.params.lat)
-    let lon = Number(req.params.lon)
-
-    const response = await convertToBroadCoordinates([lat, lon])
-    res.json(response)
-})
-
-// For user objects
-
-app.get("/users/get/specificRange/:lat/:lon", async (req, res) => {
-    let lat = Number(req.params.lat)
-    let lon = Number(req.params.lon)
-
-    const response = await getNearbyUsers([lat, lon])
-
-    res.json(response)
-})
-
-// ######
 
 app.listen(port, () => {
   return console.log(`Listening at http://localhost:${port}`)
