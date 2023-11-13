@@ -231,4 +231,4 @@ app.put('*', (req, res) => {
 
 app.listen(port, () => {
   return console.log(`Listening at http://localhost:${port}`)
-});
+})
