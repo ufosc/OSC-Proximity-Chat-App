@@ -10,6 +10,8 @@ import { updateUserLocation } from './actions/updateUser'
 import { deleteUserById } from './actions/deleteUser'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates';
 
+import { Message } from './types/Message';
+
 const app = express()
 const port = 3000
 app.use(express.json())
@@ -20,56 +22,46 @@ app.get('/', (req, res) => {
 })
 
 app.get('/messages', async (req, res) => {
-    // Get messages from Firestore
-    let returnData = null
-
-    if (req.query.msgId) {
-        // Request path: '/messages?msgId=<msgId>'
-        // Return message object with matching Id
-
-        const msgId = req.query.msgId
-        if (typeof msgId === "string") {
-            returnData = await getMessageById(msgId)
-        }
-    } else if (req.query.broadLat && req.query.broadLon && req.query.secondsSinceCreation) {
-        // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
-
-        const broadLat = req.query.broadLat
-        const broadLon = req.query.broadLon
-        const secondsSinceCreation = req.query.secondsSinceCreation
-        if (typeof broadLat === "string" && typeof broadLon === "string" && typeof req.query.secondsSinceCreation === "string") {
-            // It's possible that secondsSinceCreation cannot be converted to a number, so a try/catch is used here.
-            try {
-                returnData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
-                // If no data is returned, return null for error checks
-                if (returnData.length === 0) returnData = null
-            } catch (e) {
-                returnData = null
+    try {
+        // Get messages from Firestore
+        let messages: Message[] | Partial<Message>[] = [];
+        // List of regular expression to parse different types of queries sent to GET API
+        const regexps = [
+            /messages\?msgId=(.*)/,
+            /messages\?broadLat=(\d+\.?\d*)&broadLon=(\d+\.?\d?)/,
+            /messages\?broadLat=(\d+\.?\d*)&broadLon=(\d+\.?\d?)&secondsSinceCreation=(\d+)/
+        ]
+        if (req.originalUrl === '/messages') {
+            // Request path: '/messages'
+            messages = await getMessages()
+        } else if (regexps[0].test(req.originalUrl)) {
+            // Request path: '/messages?msgId=<msgId>'
+            const msgId = /messages?msgId=/
+            if (typeof msgId === "string") {
+                const message: Message = await getMessageById(msgId);
+                if (message) messages.push(message);
             }
+        } else if (regexps[1].test(req.originalUrl)) {
+            // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
+            const broadLat = regexps[1].exec(req.originalUrl)[1]
+            const broadLon = regexps[1].exec(req.originalUrl)[2]
+            messages = await getMessagesByBroadCoordinates(broadLat, broadLon)
+        } else if (regexps[2].test(req.originalUrl)) {
+            // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
+            const broadLat = regexps[2].exec(req.originalUrl)[1]
+            const broadLon = regexps[2].exec(req.originalUrl)[2]
+            const secondsSinceCreation = regexps[2].exec(req.originalUrl)[3]
+            messages = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
+        } else {
+            console.error("The request path is in incorrect format");
+            res.json(false)
+            return
         }
-    } else if (req.query.broadLat && req.query.broadLon) {
-        // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
-
-        const broadLat = req.query.broadLat
-        const broadLon = req.query.broadLon
-        if (typeof broadLat === "string" && typeof broadLon === "string") {
-            returnData = await getMessagesByBroadCoordinates(broadLat, broadLon)
-            // If no data is returned, return null for error checks
-            if (returnData.length === 0) returnData = null
-        }
-    } else {
-        // Request path: '/messages'
-        returnData = await getMessages()
-    }
-
-    // Error checking for all queries under /messages. Client should recognize 'false' and act accordingly.
-    if (returnData === null) {
-        // Returnfalse error to client
+        res.json(messages)
+    } catch (err) {
+        console.error(`Error sending (GET /messages) request: ${err.message}`)
         res.json(false)
-    } else {
-        res.json(returnData)
     }
-    return
 })
 
 app.post('/messages', async (req, res) => {
@@ -92,63 +84,43 @@ app.post('/messages', async (req, res) => {
             `${req.body.specificLon}`,
             timeSent
         )
-        // Send back "true" if message was successfully created.
-        console.log('Created!')
         res.json(true)
-    } catch (e) {
-        console.log(e)
-        console.log("Error: (POST /messages) request sent with incorrect data format.")
+    } catch (err) {
+        console.error(`Error sending (POST /messages) request: ${err.message}`)
         res.json(false)
     }
 })
 
 app.delete('/messages', async (req, res) => {
-    let returnData = null
-
-    if (req.query.msgId) {
-        try {
+    try {
+        if (req.query.msgId) {
             const msgId = req.query.msgId
             if (typeof msgId === "string") {
-                returnData = await deleteMessageById(msgId)
-            }
-        } catch(e) {
-            console.log("Error:")
-            console.log(e)
+                let messageDeletedSuccessfully = await deleteMessageById(msgId)
+                res.json(messageDeletedSuccessfully)
+            } 
         }
-    }
-
-    if (returnData === null) {
-        // Return error to client
+    } catch(err) {
+        console.error(`Error sending (DELETe /messages) request: ${err.message}`)
         res.json(false)
-    } else {
-        res.json(returnData)
     }
-    return
 })
 
 app.get('/users', async (req, res) => {
-    let returnData = null
-
-    if (req.query.userId) {
-        // Request path: '/users?userId=<userId>'
-        try {
-            const userId = req.query.userId
-            if (typeof userId === "string") {
-                returnData = await getUserById(userId)
-            } 
-        } catch(e) {
-            console.log("Error:")
-            console.log(e)
+    const regexps = [
+        /users\?userId=(.*)/
+    ]
+    try {
+        if (regexps[0].test(req.originalUrl)) {
+            // Request path: '/users?userId=<userId>'
+            const userId = regexps[0].exec(req.originalUrl)
+            const returnData = await getUserById(userId);
+            res.json(returnData)
         }
-    }
-
-    if (returnData === null) {
-        // Return error to client
+    } catch(err) {
+        console.error(`Error sending (GET /users) request: ${err.message}`)
         res.json(false)
-    } else {
-        res.json(returnData)
     }
-    return
 })
 
 app.post('/users', async (req, res) => {
@@ -160,21 +132,27 @@ app.post('/users', async (req, res) => {
         )
         // Sends back true if new user was created!
         res.json(true)
-    } catch (error) {
-        console.log("Error: (POST /users) request sent with incorrect data format.")
+    } catch (e) {
+        console.error(`Error sending (POST /users) request: ${e.message}`)
         res.json(false)
     }
 })
 
 // Updates user location so far, going to add updating and checking messages in next push
 app.put('/users', async (req, res) => {
-    // /users?userId=<userId>&specificLat=<specificLat>&specificLon=<specificLon>
-    if (req.query.userId && req.query.specificLat && req.query.specificLon) {
-        try {
+    try {
+        // /users?userId=<userId>&specificLat=<specificLat>&specificLon=<specificLon>
+        const regexps = [
+            /users\?userId=(.*)&broadLon=(\d+\.?\d?)&specificLon=(\d+\.?\d?)/
+        ]
+        if (regexps[0].test(req.originalUrl)) {
+            const userId = regexps[0].exec(req.originalUrl)[0];
+            const specificLat = regexps[0].exec(req.originalUrl)[0];
+            const specificLon = regexps[0].exec(req.originalUrl)[0];
             const successUserUpdate = await updateUserLocation(
-                String(req.query.userId),
-                String(req.query.specificLat),
-                String(req.query.specificLon)
+                    String(userId),
+                    String(specificLat),
+                    String(specificLon)
             )
 
             if (successUserUpdate) {
@@ -182,35 +160,26 @@ app.put('/users', async (req, res) => {
             } else {
                 res.json('User not found, try again!')
             }
-        } catch (error) {
-            console.log(error)
-            res.json(false)
-        }
+        } 
+    } catch (error) {
+        console.error(`Error sending (PUT /users) request: ${error.message}`)
+        res.json(false)
     }
 })
 
 app.delete('/users', async (req, res) => {
-    let returnData = null
-
-    if (req.query.userId) {
-        try {
+    try {
+        if (/users\?userId=(.*)/.test(req.originalUrl)) {
             const userId = req.query.userId
             if (typeof userId === "string") {
-                returnData = await deleteUserById(userId)
+                const returnData = await deleteUserById(userId)
+                res.json(returnData)
             }
-        } catch(e) {
-            console.log("Error:")
-            console.log(e)
         }
-    }
-
-    if (returnData === null) {
-        // Return error to client
+    } catch (error) {
+        console.log(`Error sending (DELETE /users) request: ${error.message}`)
         res.json(false)
-    } else {
-        res.json(returnData)
     }
-    return
 })
 
 // Error handling
