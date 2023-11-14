@@ -1,15 +1,16 @@
 import { doc, getDoc, getDocs, collection, query, where } from '@firebase/firestore'
 import { messages, firestore } from '../utilities/firebaseInit'
 import { calculateCoordinateBoundaries } from '../utilities/calculateCoordinateBoundaries'
+import { Message } from '../types/Message'
 
 export const getMessages = async () => {
   const messageDocs = await getDocs(messages)
   let messagesReceived = 0
-  const messageObjs = [];
+  const messageObjs: Partial<Message>[] = [];
 
   messageDocs.docs.forEach((doc) => {
     const data = doc.data()
-    const messageObj = {
+    const messageObj: Partial<Message> = {
         userId: data.userId,
         msgId: data.msgId,
         msgContent: data.msgContent,
@@ -77,7 +78,7 @@ export const getMessagesByBroadCoordsAndTime = async (broadLat: string, broadLon
   )
 
   const matches = await getDocs(q)
-  const messageObjs = []
+  const messageObjs: Message[] = []
 
   matches.forEach((doc) => {
     const data = doc.data()
