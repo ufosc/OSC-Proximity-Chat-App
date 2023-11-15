@@ -115,7 +115,7 @@ app.delete('/messages', async (req, res) => {
             } 
         }
     } catch(err) {
-        console.error(`Error sending (DELETe /messages) request: ${err.message}`)
+        console.error(`Error sending (DELETE /messages) request: ${err.message}`)
         res.json(false)
     }
 })
