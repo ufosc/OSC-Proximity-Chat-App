@@ -107,12 +107,16 @@ app.post('/messages', async (req, res) => {
 
 app.delete('/messages', async (req, res) => {
     try {
-        if (req.query.msgId) {
-            const msgId = req.query.msgId
-            if (typeof msgId === "string") {
-                let messageDeletedSuccessfully = await deleteMessageById(msgId)
-                res.json(messageDeletedSuccessfully)
-            } 
+        const regexps = [
+            /messages\?msgId=(.*)/,
+        ]
+        if (regexps[0].test(req.originalUrl)) {
+            const msgId = regexps[0].exec(req.originalUrl)[0]
+            const messageDeletedSuccessfully = await deleteMessageById(msgId)
+            res.json(messageDeletedSuccessfully)
+        } else {
+            console.error("The request path is in incorrect format");
+            res.json(false)
         }
     } catch(err) {
         console.error(`Error sending (DELETE /messages) request: ${err.message}`)
@@ -121,15 +125,18 @@ app.delete('/messages', async (req, res) => {
 })
 
 app.get('/users', async (req, res) => {
-    const regexps = [
-        /users\?userId=(.*)/
-    ]
     try {
+        const regexps = [
+            /users\?userId=(.*)/
+        ]
         if (regexps[0].test(req.originalUrl)) {
             // Request path: '/users?userId=<userId>'
             const userId = regexps[0].exec(req.originalUrl)[0]
             const returnData = await getUserById(userId);
             res.json(returnData)
+        } else {
+            console.error("The request path is in incorrect format");
+            res.json(false)
         }
     } catch(err) {
         console.error(`Error sending (GET /users) request: ${err.message}`)
@@ -140,9 +147,9 @@ app.get('/users', async (req, res) => {
 app.post('/users', async (req, res) => {
     try {
         await createUser(
-            req.body.userId,
-            req.body.displayName,
-            req.body.avatarUrl
+            req.body.userId.toString(),
+            req.body.displayName.toString(),
+            req.body.avatarUrl.toString()
         )
         // Sends back true if new user was created!
         res.json(true)
@@ -172,7 +179,8 @@ app.put('/users', async (req, res) => {
             if (successUserUpdate) {
                 res.json(true)
             } else {
-                res.json('User not found, try again!')
+                console.error('User not found, try again!')
+                res.json(false)
             }
         } 
     } catch (error) {
@@ -182,16 +190,25 @@ app.put('/users', async (req, res) => {
 })
 
 app.delete('/users', async (req, res) => {
+    const regexps = [
+        /users\?userId=(.*)/
+    ]
     try {
-        if (/users\?userId=(.*)/.test(req.originalUrl)) {
+        if (regexps[0].test(req.originalUrl)) {
             const userId = req.query.userId
             if (typeof userId === "string") {
-                const returnData = await deleteUserById(userId)
-                res.json(returnData)
+                const successUserDelete = await deleteUserById(userId)
+               
+                if (successUserDelete) {
+                    res.json(true)
+                } else {
+                    console.error('User not found, try again!')
+                    res.json(false)
+                }
             }
         }
     } catch (error) {
-        console.log(`Error sending (DELETE /users) request: ${error.message}`)
+        console.error(`Error sending (DELETE /users) request: ${error.message}`)
         res.json(false)
     }
 })
@@ -213,6 +230,12 @@ app.put('*', (req, res) => {
     // res.json("404: Path could not be found! COULD NOT {PUT}")
     res.json(false)
     res.status(404)
+})
+
+app.delete('*', (req, res) => {
+   // res.json("404: Path could not be found! COULD NOT {DELETE}")
+   res.json(false)
+   res.status(404)
 })
 
 app.listen(port, () => {
