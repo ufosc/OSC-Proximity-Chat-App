@@ -1,4 +1,5 @@
-import express, { json } from 'express'
+import express from 'express'
+import 'dotenv/config';
 import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
 import { createMessage } from './actions/createMessage'
 import { deleteMessageById } from './actions/deleteMessage'
@@ -7,6 +8,7 @@ import { getUserById } from './actions/getUsers'
 import { createUser } from './actions/createUser'
 import { updateUserLocation } from './actions/updateUser'
 import { deleteUserById } from './actions/deleteUser'
+import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates';
 
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyMessages } from "./utilities/getNearbyMessages"
@@ -15,7 +17,7 @@ const app = express()
 const port = 3000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
+  
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -106,19 +108,25 @@ app.post('/messages', async (req, res) => {
         const timeSent = Number(req.body.timeSent)
         if(isNaN(timeSent)) throw Error;
 
+        const broadCoordinates: number[] = convertToBroadCoordinates([req.body.specificLat, req.body.specificLon]);
+        const broadLat = `${broadCoordinates[0]}`; 
+        const broadLon = `${broadCoordinates[1]}`;
+
         await createMessage(
             req.body.userId,
             req.body.msgId,
             req.body.msgContent,
-            req.body.broadLat,
-            req.body.broadLon,
-            req.body.specificLat,
-            req.body.specificLon,
+            broadLat,
+            broadLon,
+            `${req.body.specificLat}`,
+            `${req.body.specificLon}`,
             timeSent
         )
         // Send back "true" if message was successfully created.
+        console.log('Created!')
         res.json(true)
     } catch (e) {
+        console.log(e)
         console.log("Error: (POST /messages) request sent with incorrect data format.")
         res.json(false)
     }

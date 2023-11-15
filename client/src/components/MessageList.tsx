@@ -17,13 +17,13 @@ export const MessageList: React.FC<MessageListProps> = ({ messages }) => {
         width: width,
       }}
       data={messages}
-      keyExtractor={(item) => item.messageId.toString()}
+      keyExtractor={(item) => item.msgId.toString()}
       renderItem={({ item }) => (
         <Message
           messageContent={item.messageContent}
           timestamp={item.timestamp}
           author={item.author}
-          messageId={item.messageId}
+          msgId={item.msgId}
         />
       )}
       inverted={true} // This will render items from the bottom

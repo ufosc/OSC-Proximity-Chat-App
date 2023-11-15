@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Button,
   StyleSheet,
@@ -9,26 +9,65 @@ import {
   Platform,
   Image,
 } from "react-native";
+import * as Crypto from "expo-crypto";
 import { LocationContext } from "../constants/LocationContext";
 import { UserContext } from "../constants/UserContext";
-import { LocationContextType, UserContextType } from "../constants/types";
-import { MessageType } from "../constants/types";
-import { generateUniqueId } from "../constants/scripts";
-
-const sendIcon = require("../../assets/paper-plane.png");
+import { UserContextType, LocationContextType, MessageType, MessageDataType } from "../constants/types";
+const sendIcon = require('../../assets/paper-plane.png')
 
 interface MessageBoxProps {
   onSendMessage: (message: MessageType) => void;
 }
 
+const postMessage = async (messageData: MessageDataType) => {
+  // TODO: Make the port used below (3000) part of a PORT environment variable in the .env file.
+  const URL = `http://${process.env.EXPO_PUBLIC_LOCALHOST_ADDRESS}:3000/messages`;
+  const response = await fetch(URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    referrerPolicy: "same-origin",
+    body: JSON.stringify(messageData)
+  })
+  return response.json();
+}
+
 export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   const [messageContent, setMessageContent] = useState<string>("");
-  const keyboardVerticalOffest = Platform.OS === "ios" ? 50 : 0;
-  const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
-  const inputBoxStyles =
-    Platform.OS === "ios"
-      ? styles.ios_specific_text
-      : styles.android_specific_text;
+  const isMounted = useRef(false);
+  // TODO: Make sure date(0).getTime() returns a Unix Epoch in seconds
+  const [messageData, setMessageData] = useState<MessageDataType>({
+    userId: "",
+    msgId: "",
+    msgContent: "",
+    specificLat: 0.0,
+    specificLon: 0.0,
+    timeSent: new Date(0).getTime()
+  });
+  const [newMessage, setNewMessage] = useState<MessageType>()
+  const keyboardVerticalOffest = Platform.OS === 'ios' ? 50 : 0;
+  const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
+  const inputBoxStyles = Platform.OS === 'ios' ? styles.ios_specific_text : styles.android_specific_text;
+
+  useEffect(() => {
+    if (isMounted.current) {
+      postMessage(messageData).then((data) => {
+        if (data) {
+          if (newMessage) {
+            onSendMessage(newMessage)
+          } else {
+            console.log('How the fuck did this throw an error')
+          }
+        }
+      }).catch((err) => {
+        console.error(err)
+      });
+    } else {
+      isMounted.current = true;
+    }
+  }, [messageData]);
 
   return (
     <LocationContext.Consumer>
@@ -40,16 +79,25 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
                 if (messageContent === "") {
                   console.log("Empty string entered...");
                 } else {
-                  const newMessage: MessageType = {
-                    author: UserContext.displayName!,
-                    timestamp: new Date(2 * 60 * 60 * 1000),
-                    messageContent: messageContent,
-                    messageId: String(generateUniqueId()),
+                  const date = new Date()
+                  const messageData: MessageDataType = {
+                    userId: UserContext.userId,
+                    msgId: Crypto.randomUUID(),
+                    msgContent: messageContent,
+                    specificLat: locationContext.location?.coords.latitude,
+                    specificLon: locationContext.location?.coords.longitude,
+                    timeSent: date.getTime(),
                   };
+              
 
-                  console.log(newMessage);
-
-                  onSendMessage(newMessage);
+                  const newMessage: MessageType = {
+                    author: String(UserContext.displayName),
+                    timestamp: date,
+                    messageContent: messageData.msgContent,
+                    msgId: messageData.msgId
+                  }
+                  setNewMessage(newMessage);
+                  setMessageData(messageData);
                   setMessageContent("");
                 }
               };
