@@ -1,14 +1,21 @@
-export const convertToBroadCoordinates = (coords: Array<number>) => {
-  let lat = coords[0]
-  let lon = coords[1]
-
+export const convertToBroadCoordinates = (specificLat: string, specificLon: string) => {
   // Digits is how many numbers behind the decimal point
   // Why did we choose 2? Refer to documentation! (I will write docs in a few weeks)
-  let digits = 2
+  
+  // The number of characters after the decimal point we wish to keep
+  const digits = 2
+  // The number of characters before the decimal point, including a character for the decimal point
+  let baseLat = 3
+  let baseLon = 3
 
-  let newLat = Math.trunc(lat*Math.pow(10, digits))/Math.pow(10, digits)
-  let newLon = Math.trunc(lon*Math.pow(10, digits))/Math.pow(10, digits)
+  // Increase if a negative sign is found
+  if (specificLon[0] == "-") baseLon++;
+  if (specificLat[0] == "-") baseLat++;
+  
+  // Get truncated string
+  let broadLat = specificLat.substring(0, baseLat + digits);
+  let broadLon = specificLon.substring(0, baseLon + digits);
 
   // return truncated coordinates as an array
-  return [newLat, newLon]
+  return [broadLat, broadLon]
 }

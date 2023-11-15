@@ -8,6 +8,9 @@ import { createUser } from './actions/createUser'
 import { updateUserLocation } from './actions/updateUser'
 import { deleteUserById } from './actions/deleteUser'
 
+import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
+import { getNearbyMessages } from "./utilities/getNearbyMessages"
+
 const app = express()
 const port = 3000
 app.use(express.json())
@@ -28,6 +31,32 @@ app.get('/messages', async (req, res) => {
         const msgId = req.query.msgId
         if (typeof msgId === "string") {
             returnData = await getMessageById(msgId)
+        }
+    } else if (req.query.specificLat && req.query.specificLon && req.query.secondsSinceCreation) {
+        // Request path: '/messages?specificLat=<specificLat>&specificLon=<specificLon>&secondsSinceCreation=<secondsSinceCreation>'
+
+        const specificLat = req.query.specificLat
+        const specificLon = req.query.specificLon
+        const secondsSinceCreation = req.query.secondsSinceCreation
+        if (typeof specificLat === "string" && typeof specificLon === "string" && typeof req.query.secondsSinceCreation === "string") {
+            // It's possible that secondsSinceCreation cannot be converted to a number, so a try/catch is used here.
+            try {
+                // 1. Get new messages within broad coordinates
+                const broadCoords = convertToBroadCoordinates(specificLat, specificLon)
+                let broadLat = broadCoords[0]
+                let broadLon = broadCoords[1]
+                console.log(broadLat, broadLon)
+
+                const broadMessageData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
+                // If no data is returned, return null for error checks
+                if (broadMessageData.length === 0) throw Error;
+
+                // 2. Sift through these messages to see what are within the user's radius, and return
+                returnData = getNearbyMessages(specificLat, specificLon, broadMessageData)
+                
+            } catch (e) {
+                returnData = null
+            }
         }
     } else if (req.query.broadLat && req.query.broadLon && req.query.secondsSinceCreation) {
         // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
@@ -55,8 +84,9 @@ app.get('/messages', async (req, res) => {
             // If no data is returned, return null for error checks
             if (returnData.length === 0) returnData = null
         }
-    } else {
+    } else if (Object.keys(req.query).length === 0){
         // Request path: '/messages'
+        // Runs only when there are no parameters in the query.
         returnData = await getMessages()
     }
 

@@ -4,7 +4,7 @@ import { convertToBroadCoordinates } from "../utilities/convertToBroadCoordinate
 export const updateUserLocation = async (userId: string, newSpecificLat: string, newSpecificLon: string) => {
     const db = getFirestore()
 
-    const broadCoords = await convertToBroadCoordinates([Number(newSpecificLat), Number(newSpecificLon)])
+    const broadCoords = await convertToBroadCoordinates(newSpecificLat, newSpecificLon)
     const broadLat = broadCoords[0]
     const broadLon = broadCoords[1]
 
