@@ -65,7 +65,7 @@ app.get('/messages', async (req, res) => {
             const broadLat = broadCoords[0];
             const broadLon = broadCoords[1];
             const broadMessageData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, secondsSinceCreation);
-            messages = await getNearbyMessages(specificLat, specificLon, broadMessageData);
+            messages = getNearbyMessages(specificLat, specificLon, broadMessageData);
         } else {
             console.error("The request path is in incorrect format");
             res.json(false)
