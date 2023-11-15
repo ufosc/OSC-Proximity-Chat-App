@@ -30,7 +30,8 @@ app.get('/messages', async (req, res) => {
         const regexps = [
             /messages\?msgId=(.*)/,
             /messages\?broadLat=(\d+\.?\d*)&broadLon=(\d+\.?\d?)/,
-            /messages\?broadLat=(\d+\.?\d*)&broadLon=(\d+\.?\d?)&secondsSinceCreation=(\d+)/
+            /messages\?broadLat=(\d+\.?\d*)&broadLon=(\d+\.?\d?)&secondsSinceCreation=(\d+)/,
+            /messages\?specificLat=(\d+\.?\d*)&specificLon=(\d+\.?\d?)&secondsSinceCreation=(\d+)/
         ]
         if (req.originalUrl === '/messages') {
             // Request path: '/messages'
@@ -53,6 +54,18 @@ app.get('/messages', async (req, res) => {
             const broadLon = regexps[2].exec(req.originalUrl)[2]
             const secondsSinceCreation = regexps[2].exec(req.originalUrl)[3]
             messages = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
+        } else if (regexps[3].test(req.originalUrl)) {
+            // Request path: '/messages?specificLat=<broadLat>&specificLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
+            const specificLat = regexps[3].exec(req.originalUrl)[1]
+            const specificLon = regexps[3].exec(req.originalUrl)[2]
+            const secondsSinceCreation = Number(regexps[3].exec(req.originalUrl)[3])
+            if (isNaN(secondsSinceCreation)) throw new Error('The secondsSinceCreation parameter must be an integer');
+            
+            const broadCoords = convertToBroadCoordinates(specificLat, specificLon);
+            const broadLat = broadCoords[0];
+            const broadLon = broadCoords[1];
+            const broadMessageData = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, secondsSinceCreation);
+            messages = await getNearbyMessages(specificLat, specificLon, broadMessageData);
         } else {
             console.error("The request path is in incorrect format");
             res.json(false)
@@ -69,20 +82,20 @@ app.post('/messages', async (req, res) => {
     try {
         // Make sure time is valid before attempting to create message.
         const timeSent = Number(req.body.timeSent)
-        if(isNaN(timeSent)) throw Error;
+        if(isNaN(timeSent)) throw new Error(`The timeSent parameter must be a valid integer`);
 
-        const broadCoords: string[] = convertToBroadCoordinates(req.body.specificLat, req.body.specificLon);
+        const broadCoords: string[] = convertToBroadCoordinates(req.body.specificLat.toString(), req.body.specificLon.toString());
         const broadLat = broadCoords[0] 
         const broadLon = broadCoords[1]
-
+        
         await createMessage(
-            req.body.userId,
-            req.body.msgId,
-            req.body.msgContent,
+            req.body.userId.toString(),
+            req.body.msgId.toString(),
+            req.body.msgContent.toString(),
             broadLat,
             broadLon,
-            `${req.body.specificLat}`,
-            `${req.body.specificLon}`,
+            req.body.specificLat.toString(),
+            req.body.specificLon.toString(),
             timeSent
         )
         res.json(true)
@@ -114,7 +127,7 @@ app.get('/users', async (req, res) => {
     try {
         if (regexps[0].test(req.originalUrl)) {
             // Request path: '/users?userId=<userId>'
-            const userId = regexps[0].exec(req.originalUrl)
+            const userId = regexps[0].exec(req.originalUrl)[0]
             const returnData = await getUserById(userId);
             res.json(returnData)
         }
@@ -148,8 +161,8 @@ app.put('/users', async (req, res) => {
         ]
         if (regexps[0].test(req.originalUrl)) {
             const userId = regexps[0].exec(req.originalUrl)[0];
-            const specificLat = regexps[0].exec(req.originalUrl)[0];
-            const specificLon = regexps[0].exec(req.originalUrl)[0];
+            const specificLat = regexps[0].exec(req.originalUrl)[1];
+            const specificLon = regexps[0].exec(req.originalUrl)[2];
             const successUserUpdate = await updateUserLocation(
                     String(userId),
                     String(specificLat),
