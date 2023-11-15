@@ -10,7 +10,6 @@ import { updateUserLocation } from './actions/updateUser'
 import { deleteUserById } from './actions/deleteUser'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates';
 
-import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates'
 import { getNearbyMessages } from "./utilities/getNearbyMessages"
 
 const app = express()
@@ -108,9 +107,9 @@ app.post('/messages', async (req, res) => {
         const timeSent = Number(req.body.timeSent)
         if(isNaN(timeSent)) throw Error;
 
-        const broadCoordinates: number[] = convertToBroadCoordinates([req.body.specificLat, req.body.specificLon]);
-        const broadLat = `${broadCoordinates[0]}`; 
-        const broadLon = `${broadCoordinates[1]}`;
+        const broadCoords: string[] = convertToBroadCoordinates(req.body.specificLat, req.body.specificLon);
+        const broadLat = broadCoords[0] 
+        const broadLon = broadCoords[1]
 
         await createMessage(
             req.body.userId,

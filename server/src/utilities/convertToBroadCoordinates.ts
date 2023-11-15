@@ -13,8 +13,8 @@ export const convertToBroadCoordinates = (specificLat: string, specificLon: stri
   if (specificLat[0] == "-") baseLat++;
   
   // Get truncated string
-  let broadLat = specificLat.substring(0, baseLat + digits);
-  let broadLon = specificLon.substring(0, baseLon + digits);
+  const broadLat = specificLat.substring(0, baseLat + digits);
+  const broadLon = specificLon.substring(0, baseLon + digits);
 
   // return truncated coordinates as an array
   return [broadLat, broadLon]
