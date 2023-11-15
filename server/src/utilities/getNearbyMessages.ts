@@ -4,7 +4,6 @@ export const getNearbyMessages = (userLat: string, userLon: string, broadMessage
     // TODO: Make radius a .env paramter
     // Radius is in meters
     const radiusEarth: number = 6371000
-    const metersPerDegree = 180/(1000 * Math.PI * radiusEarth)
     const messageRadiusMeters: number = 200
 
     const nearbyMessageObjs = [];
