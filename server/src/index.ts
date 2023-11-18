@@ -29,9 +29,9 @@ app.get('/messages', async (req, res) => {
         // List of regular expression to parse different types of queries sent to GET API
         const regexps = [
             /messages\?msgId=(.*)/,
-            /messages\?broadLat=(\d+\.?\d*)&broadLon=(\d+\.?\d?)/,
-            /messages\?broadLat=(\d+\.?\d*)&broadLon=(\d+\.?\d?)&secondsSinceCreation=(\d+)/,
-            /messages\?specificLat=(\d+\.?\d*)&specificLon=(\d+\.?\d?)&secondsSinceCreation=(\d+)/
+            /messages\?broadLat=(-?\d+\.?\d+)&broadLon=(-?\d+\.?\d+)/,
+            /messages\?broadLat=(-?\d+\.?\d+)&broadLon=(-?\d+\.?\d+)&secondsSinceCreation=(\d+)/,
+            /messages\?specificLat=(-?\d+\.?\d+)&specificLon=(-?\d+\.?\d+)&secondsSinceCreation=(\d+)/
         ]
         if (req.originalUrl === '/messages') {
             // Request path: '/messages'
