@@ -162,12 +162,12 @@ app.put('/users', async (req, res) => {
     try {
         // /users?userId=<userId>&specificLat=<specificLat>&specificLon=<specificLon>
         const regexps = [
-            /users\?userId=(.*)&broadLon=(\d+\.?\d?)&specificLon=(\d+\.?\d?)/
+            /users\?userId=(.*)&specificLat=(-?\d+\.?\d+)&specificLon=(-?\d+\.?\d+)/
         ]
         if (regexps[0].test(req.originalUrl)) {
-            const userId = regexps[0].exec(req.originalUrl)[0];
-            const specificLat = regexps[0].exec(req.originalUrl)[1];
-            const specificLon = regexps[0].exec(req.originalUrl)[2];
+            const userId = regexps[0].exec(req.originalUrl)[1];
+            const specificLat = regexps[0].exec(req.originalUrl)[2];
+            const specificLon = regexps[0].exec(req.originalUrl)[3];
             const successUserUpdate = await updateUserLocation(
                     String(userId),
                     String(specificLat),
