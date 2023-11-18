@@ -109,7 +109,7 @@ app.delete('/messages', async (req, res) => {
             /messages\?msgId=(.*)/,
         ]
         if (regexps[0].test(req.originalUrl)) {
-            const msgId = regexps[0].exec(req.originalUrl)[0]
+            const msgId = regexps[0].exec(req.originalUrl)[1]
             const messageDeletedSuccessfully = await deleteMessageById(msgId)
             res.json(messageDeletedSuccessfully)
         } else {
