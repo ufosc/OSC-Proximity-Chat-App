@@ -129,7 +129,7 @@ app.get('/users', async (req, res) => {
         ]
         if (regexps[0].test(req.originalUrl)) {
             // Request path: '/users?userId=<userId>'
-            const userId = regexps[0].exec(req.originalUrl)[0]
+            const userId = regexps[0].exec(req.originalUrl)[1]
             const returnData = await getUserById(userId);
             res.json(returnData)
         } else {
