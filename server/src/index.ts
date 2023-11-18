@@ -193,7 +193,8 @@ app.delete('/users', async (req, res) => {
     ]
     try {
         if (regexps[0].test(req.originalUrl)) {
-            const userId = req.query.userId
+            const userId = regexps[0].exec(req.originalUrl)[1];
+
             if (typeof userId === "string") {
                 const successUserDelete = await deleteUserById(userId)
                
