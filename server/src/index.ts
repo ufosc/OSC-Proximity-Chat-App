@@ -41,17 +41,17 @@ app.get('/messages', async (req, res) => {
             const msgId = regexps[0].exec(req.originalUrl)[1]
             const message: Message = await getMessageById(msgId);
             if (message) messages.push(message);
-        } else if (regexps[1].test(req.originalUrl)) {
-            // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
-            const broadLat = regexps[1].exec(req.originalUrl)[1]
-            const broadLon = regexps[1].exec(req.originalUrl)[2]
-            messages = await getMessagesByBroadCoordinates(broadLat, broadLon)
         } else if (regexps[2].test(req.originalUrl)) {
             // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
             const broadLat = regexps[2].exec(req.originalUrl)[1]
             const broadLon = regexps[2].exec(req.originalUrl)[2]
             const secondsSinceCreation = regexps[2].exec(req.originalUrl)[3]
             messages = await getMessagesByBroadCoordsAndTime(broadLat, broadLon, Number(secondsSinceCreation))
+        } else if (regexps[1].test(req.originalUrl)) {
+            // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
+            const broadLat = regexps[1].exec(req.originalUrl)[1]
+            const broadLon = regexps[1].exec(req.originalUrl)[2]
+            messages = await getMessagesByBroadCoordinates(broadLat, broadLon)
         } else if (regexps[3].test(req.originalUrl)) {
             // Request path: '/messages?specificLat=<broadLat>&specificLon=<broadLon>&secondsSinceCreation=<secondsSinceCreation>'
             const specificLat = regexps[3].exec(req.originalUrl)[1]
