@@ -38,11 +38,9 @@ app.get('/messages', async (req, res) => {
             messages = await getMessages()
         } else if (regexps[0].test(req.originalUrl)) {
             // Request path: '/messages?msgId=<msgId>'
-            const msgId = /messages?msgId=/
-            if (typeof msgId === "string") {
-                const message: Message = await getMessageById(msgId);
-                if (message) messages.push(message);
-            }
+            const msgId = regexps[0].exec(req.originalUrl)[1]
+            const message: Message = await getMessageById(msgId);
+            if (message) messages.push(message);
         } else if (regexps[1].test(req.originalUrl)) {
             // Request path: '/messages?broadLat=<broadLat>&broadLon=<broadLon>'
             const broadLat = regexps[1].exec(req.originalUrl)[1]
