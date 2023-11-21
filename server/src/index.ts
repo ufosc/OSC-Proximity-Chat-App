@@ -11,7 +11,7 @@ import { deleteUserById } from './actions/deleteUser'
 import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates';
 
 const app = express()
-const port = 3000
+const port = process.env.PORT
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
   
