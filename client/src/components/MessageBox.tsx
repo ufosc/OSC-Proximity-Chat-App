@@ -10,10 +10,18 @@ import {
   Image,
 } from "react-native";
 import * as Crypto from "expo-crypto";
-import { LocationContext } from "../constants/LocationContext";
-import { UserContext } from "../constants/UserContext";
-import { UserContextType, LocationContextType, MessageType, MessageDataType } from "../constants/types";
-const sendIcon = require('../../assets/paper-plane.png')
+import {
+  AppContext,
+  LocationContext,
+  UserContext,
+} from "../constants/Contexts";
+import {
+  UserContextType,
+  LocationContextType,
+  MessageType,
+  MessageDataType,
+} from "../constants/types";
+const sendIcon = require("../../assets/paper-plane.png");
 
 interface MessageBoxProps {
   onSendMessage: (message: MessageType) => void;
@@ -26,13 +34,13 @@ const postMessage = async (messageData: MessageDataType) => {
     method: "POST",
     mode: "no-cors",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     referrerPolicy: "same-origin",
-    body: JSON.stringify(messageData)
-  })
+    body: JSON.stringify(messageData),
+  });
   return response.json();
-}
+};
 
 export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   const [messageContent, setMessageContent] = useState<string>("");
@@ -44,26 +52,31 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
     msgContent: "",
     specificLat: 0.0,
     specificLon: 0.0,
-    timeSent: new Date(0).getTime()
+    timeSent: new Date(0).getTime(),
   });
-  const [newMessage, setNewMessage] = useState<MessageType>()
-  const keyboardVerticalOffest = Platform.OS === 'ios' ? 50 : 0;
-  const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
-  const inputBoxStyles = Platform.OS === 'ios' ? styles.ios_specific_text : styles.android_specific_text;
+  const [newMessage, setNewMessage] = useState<MessageType>();
+  const keyboardVerticalOffest = Platform.OS === "ios" ? 50 : 0;
+  const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
+  const inputBoxStyles =
+    Platform.OS === "ios"
+      ? styles.ios_specific_text
+      : styles.android_specific_text;
 
   useEffect(() => {
     if (isMounted.current) {
-      postMessage(messageData).then((data) => {
-        if (data) {
-          if (newMessage) {
-            onSendMessage(newMessage)
-          } else {
-            console.log('How the fuck did this throw an error')
+      postMessage(messageData)
+        .then((data) => {
+          if (data) {
+            if (newMessage) {
+              onSendMessage(newMessage);
+            } else {
+              console.log("How the fuck did this throw an error");
+            }
           }
-        }
-      }).catch((err) => {
-        console.error(err)
-      });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     } else {
       isMounted.current = true;
     }
@@ -79,7 +92,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
                 if (messageContent === "") {
                   console.log("Empty string entered...");
                 } else {
-                  const date = new Date()
+                  const date = new Date();
                   const messageData: MessageDataType = {
                     userId: UserContext.userId,
                     msgId: Crypto.randomUUID(),
@@ -88,14 +101,13 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
                     specificLon: locationContext.location?.coords.longitude,
                     timeSent: date.getTime(),
                   };
-              
 
                   const newMessage: MessageType = {
                     author: String(UserContext.displayName),
                     timestamp: date,
                     messageContent: messageData.msgContent,
-                    msgId: messageData.msgId
-                  }
+                    msgId: messageData.msgId,
+                  };
                   setNewMessage(newMessage);
                   setMessageData(messageData);
                   setMessageContent("");
