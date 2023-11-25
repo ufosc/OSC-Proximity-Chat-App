@@ -11,16 +11,13 @@ import {
 } from "react-native";
 import * as Crypto from "expo-crypto";
 import {
-  AppContext,
-  LocationContext,
-  UserContext,
-} from "../constants/Contexts";
-import {
   UserContextType,
   LocationContextType,
   MessageType,
   MessageDataType,
+  AppContextType,
 } from "../constants/types";
+import { AppContext } from "../constants/Contexts";
 const sendIcon = require("../../assets/paper-plane.png");
 
 interface MessageBoxProps {
@@ -83,63 +80,57 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   }, [messageData]);
 
   return (
-    <LocationContext.Consumer>
-      {(locationContext: LocationContextType) => {
+    <AppContext.Consumer>
+      {(context: AppContextType) => {
+        const onPress = () => {
+          if (messageContent === "") {
+            console.log("Empty string entered...");
+          } else {
+            const date = new Date();
+            const messageData: MessageDataType = {
+              userId: context.user?.userId,
+              msgId: Crypto.randomUUID(),
+              msgContent: messageContent,
+              specificLat: context.location?.location?.coords.latitude,
+              specificLon: context.location?.location?.coords.longitude,
+              timeSent: date.getTime(),
+            };
+
+            const newMessage: MessageType = {
+              author: String(context.user?.displayName),
+              timestamp: date,
+              messageContent: messageData.msgContent,
+              msgId: messageData.msgId,
+            };
+            setNewMessage(newMessage);
+            setMessageData(messageData);
+            setMessageContent("");
+          }
+        };
+
         return (
-          <UserContext.Consumer>
-            {(UserContext: UserContextType) => {
-              const onPress = () => {
-                if (messageContent === "") {
-                  console.log("Empty string entered...");
-                } else {
-                  const date = new Date();
-                  const messageData: MessageDataType = {
-                    userId: UserContext.userId,
-                    msgId: Crypto.randomUUID(),
-                    msgContent: messageContent,
-                    specificLat: locationContext.location?.coords.latitude,
-                    specificLon: locationContext.location?.coords.longitude,
-                    timeSent: date.getTime(),
-                  };
-
-                  const newMessage: MessageType = {
-                    author: String(UserContext.displayName),
-                    timestamp: date,
-                    messageContent: messageData.msgContent,
-                    msgId: messageData.msgId,
-                  };
-                  setNewMessage(newMessage);
-                  setMessageData(messageData);
-                  setMessageContent("");
-                }
-              };
-
-              return (
-                <KeyboardAvoidingView
-                  behavior={keyboardBehavior}
-                  keyboardVerticalOffset={keyboardVerticalOffest}
-                >
-                  <View style={styles.container}>
-                    <TextInput
-                      style={inputBoxStyles}
-                      onChangeText={setMessageContent}
-                      value={messageContent}
-                      placeholder="Say Something..."
-                      placeholderTextColor={"gray"}
-                      multiline={true}
-                      maxLength={500}
-                    />
-                    <TouchableOpacity style={styles.button} onPress={onPress}>
-                      <Image source={sendIcon} style={styles.sendIcon} />
-                    </TouchableOpacity>
-                  </View>
-                </KeyboardAvoidingView>
-              );
-            }}
-          </UserContext.Consumer>
+          <KeyboardAvoidingView
+            behavior={keyboardBehavior}
+            keyboardVerticalOffset={keyboardVerticalOffest}
+          >
+            <View style={styles.container}>
+              <TextInput
+                style={inputBoxStyles}
+                onChangeText={setMessageContent}
+                value={messageContent}
+                placeholder="Say Something..."
+                placeholderTextColor={"gray"}
+                multiline={true}
+                maxLength={500}
+              />
+              <TouchableOpacity style={styles.button} onPress={onPress}>
+                <Image source={sendIcon} style={styles.sendIcon} />
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         );
       }}
-    </LocationContext.Consumer>
+    </AppContext.Consumer>
   );
 };
 
