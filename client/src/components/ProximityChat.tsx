@@ -13,8 +13,7 @@ import {
   LocationGeocodedAddress,
   LocationObject,
 } from "expo-location";
-import { LocationContext } from "../constants/LocationContext";
-import { UserContext } from "../constants/UserContext";
+import { AppContext } from "../constants/Contexts";
 import { generateName, generateUniqueId } from "../constants/scripts";
 import { MessageWrapper } from "./MessageWrapper";
 
@@ -58,21 +57,24 @@ export default () => {
   return (
     <View style={styles.container_wrapper}>
       <SafeAreaView>
-        <UserContext.Provider
+        <AppContext.Provider
           value={{
-            displayName: generateName(),
-            userId: generateUniqueId().toString(),
-            avatar: undefined,
+            user: {
+              displayName: generateName(),
+              userId: generateUniqueId().toString(),
+              avatar: undefined,
+            },
+            location: {
+              location: location,
+              address: address,
+              errorMsg: errorMsg,
+            },
           }}
         >
-          <LocationContext.Provider
-            value={{ location: location, address: address, errorMsg: errorMsg }}
-          >
-            <View style={styles.container}>
-              <MessageWrapper />
-            </View>
-          </LocationContext.Provider>
-        </UserContext.Provider>
+          <View style={styles.container}>
+            <MessageWrapper />
+          </View>
+        </AppContext.Provider>
       </SafeAreaView>
     </View>
   );

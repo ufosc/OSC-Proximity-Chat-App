@@ -1,15 +1,15 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Dimensions} from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
 import { MessageType } from "../constants/types";
 
-const windowHeight = Dimensions.get('window').height
-const windowWidth = Dimensions.get('window').width
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 
 export const Message = (props: MessageType) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <View style={ styles.image_row }>
+        <View style={styles.image_row}>
           <Image
             style={styles.image}
             source={{
@@ -18,7 +18,7 @@ export const Message = (props: MessageType) => {
             resizeMode="cover"
           />
         </View>
-        <View style={ styles.content_column }>
+        <View style={styles.content_column}>
           <View style={styles.header_row}>
             <Text style={styles.author}>{props.author} </Text>
 
@@ -28,7 +28,6 @@ export const Message = (props: MessageType) => {
                 minute: "2-digit",
               })}
             </Text>
-
           </View>
 
           <View style={styles.message_container}>
@@ -45,13 +44,13 @@ const styles = StyleSheet.create({
     maxWidth: windowWidth,
     paddingVertical: 5,
     paddingTop: 7,
-    paddingBottom: 7
+    paddingBottom: 7,
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingRight: 4,
-    paddingLeft: 4
+    paddingLeft: 4,
   },
   image: {
     width: 45,
@@ -61,35 +60,34 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   author: {
-    fontWeight: 'bold',
-    fontSize: 15
+    fontWeight: "bold",
+    fontSize: 15,
   },
   timestamp: {
-    fontWeight: '500'
+    fontWeight: "500",
   },
 
   messageContent: {
-    flexWrap: 'wrap'
+    flexWrap: "wrap",
   },
 
-  message_container: {
-  },
+  message_container: {},
 
   image_row: {
-    width: '15%',
-    alignItems: 'center',
-    minWidth: 55
+    width: "15%",
+    alignItems: "center",
+    minWidth: 55,
   },
 
   content_column: {
-    width: '85%',
-    paddingLeft: 6
+    width: "85%",
+    paddingLeft: 6,
   },
 
   header_row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingRight: 10,
-    marginBottom: 5
-  }
+    marginBottom: 5,
+  },
 });

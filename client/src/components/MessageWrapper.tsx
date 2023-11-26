@@ -10,7 +10,7 @@ export const MessageWrapper: React.FC = () => {
 
   const handleSendMessage = (message: MessageType) => {
     setMessages([message, ...messages]);
-    console.log(message)
+    console.log(message);
   };
 
   return (
