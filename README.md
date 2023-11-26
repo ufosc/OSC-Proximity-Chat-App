@@ -26,7 +26,7 @@ Install the ExpoGo app from the Google Play Store or App Store on your phone.
 
 `cd` into `client` and install the dependencies: `npm install`.
 
-Create a `.env` file from the `config_example.md` by obtaining the IP address of your local machine (you can either use https://whatismyipaddress.com/ or the bash command `ifconfig en0 | awk '$1 == "inet" { print $2 }'` to obtain it)
+Create a `.env` file with the IP address of your local machine (you can either use https://whatismyipaddress.com/ or the bash command `ifconfig en0 | awk '$1 == "inet" { print $2 }'` to obtain it) and the port number (generally 3000).
 
 Use `npm start` to start the program and scan the QR code using the ExpoGo App (Android) or the Camera App (iOS).
 
@@ -41,7 +41,7 @@ Set up a Firestore instance
 6. When the project is done being created, click the settings icon in the sidebar and then "Project settings"
 7. Underneath the "Your apps" section, click the web development icon (looks like `</>`)
 9. Type a name in for your app, do not check the Firebase Hosting box and click "register app"
-10. Copy the listed configuration keys into `/server/config_example.md`, and rename the file to `.env`
+10. Copy the listed configuration keys into an `.env` file (check the `server/src/utilities/firebaseInit.ts` file for the environment variables needed in `.env`)
 11. Click continue to console, and go to Build > Firestore Database on the sidebar, and click create database
 12. Select the nam5 server, and click next
 13. Start in test mode, click enable

@@ -26,7 +26,7 @@ interface MessageBoxProps {
 
 const postMessage = async (messageData: MessageDataType) => {
   // TODO: Make the port used below (3000) part of a PORT environment variable in the .env file.
-  const URL = `http://${process.env.EXPO_PUBLIC_LOCALHOST_ADDRESS}:3000/messages`;
+  const URL = `${process.env.EXPO_PUBLIC_LOCALHOST_ADDRESS}:${process.env.EXPO_PUBLIC_PORT}/messages`;
   const response = await fetch(URL, {
     method: "POST",
     mode: "no-cors",
