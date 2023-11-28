@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import * as Crypto from "expo-crypto";
 import {
-  UserContextType,
-  LocationContextType,
   MessageType,
   MessageDataType,
   AppContextType,
