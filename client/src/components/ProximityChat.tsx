@@ -37,8 +37,10 @@ export default () => {
       });
       setLocation(location);
       setAddress(address);
+
+      console.log(location);
     })();
-  }, []);
+  });
 
   let coordsText = "";
   if (errorMsg) {
