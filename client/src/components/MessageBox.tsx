@@ -20,8 +20,7 @@ interface MessageBoxProps {
 }
 
 const postMessage = async (messageData: MessageDataType) => {
-  // TODO: Make the port used below (3000) part of a PORT environment variable in the .env file.
-  const URL = `http://${process.env.EXPO_PUBLIC_LOCALHOST_ADDRESS}:3000/messages`;
+  const URL = `http://${process.env.EXPO_PUBLIC_BACKEND_ADDRESS}:${process.env.EXPO_PUBLIC_BACKEND_PORT}/messages`;
   const response = await fetch(URL, {
     method: "POST",
     mode: "no-cors",
@@ -42,8 +41,8 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
     userId: "",
     msgId: "",
     msgContent: "",
-    specificLat: 0.0,
-    specificLon: 0.0,
+    specificLat: "",
+    specificLon: "",
     timeSent: new Date(0).getTime()
   });
   const [newMessage, setNewMessage] = useState<MessageType>()
@@ -84,8 +83,8 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
                     userId: UserContext.userId,
                     msgId: Crypto.randomUUID(),
                     msgContent: messageContent,
-                    specificLat: locationContext.location?.coords.latitude,
-                    specificLon: locationContext.location?.coords.longitude,
+                    specificLat: `${locationContext.location?.coords.latitude}`,
+                    specificLon: `${locationContext.location?.coords.longitude}`,
                     timeSent: date.getTime(),
                   };
               
