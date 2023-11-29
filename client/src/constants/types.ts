@@ -16,6 +16,11 @@ export type MessageDataType = {
   timeSent: number;
 };
 
+export type AppContextType = {
+  user: UserContextType | undefined;
+  location: LocationContextType | undefined;
+};
+
 export type UserContextType = {
   displayName: string | undefined;
   userId: string | undefined;
