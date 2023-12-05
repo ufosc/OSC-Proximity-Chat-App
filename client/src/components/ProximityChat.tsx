@@ -37,8 +37,6 @@ export default () => {
       });
       setLocation(location);
       setAddress(address);
-
-      console.log(location);
     })();
   });
 
