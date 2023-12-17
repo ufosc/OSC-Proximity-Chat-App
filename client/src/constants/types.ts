@@ -11,8 +11,8 @@ export type MessageDataType = {
   userId: string | undefined;
   msgId: string;
   msgContent: string;
-  specificLat: number | undefined;
-  specificLon: number | undefined;
+  specificLat: string | undefined;
+  specificLon: string | undefined;
   timeSent: number;
 };
 

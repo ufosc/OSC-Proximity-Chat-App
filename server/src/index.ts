@@ -14,7 +14,7 @@ import { getNearbyMessages } from "./utilities/getNearbyMessages";
 import { Message } from './types/Message';
 
 const app = express()
-const port = process.env.PORT
+const port = process.env.port
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
   

@@ -23,8 +23,7 @@ interface MessageBoxProps {
 }
 
 const postMessage = async (messageData: MessageDataType) => {
-  // TODO: Make the port used below (3000) part of a PORT environment variable in the .env file.
-  const URL = `${process.env.EXPO_PUBLIC_LOCALHOST_ADDRESS}:${process.env.EXPO_PUBLIC_PORT}/messages`;
+const URL = `http://${process.env.EXPO_PUBLIC_BACKEND_ADDRESS}:${process.env.EXPO_PUBLIC_BACKEND_PORT}/messages`;
   const response = await fetch(URL, {
     method: "POST",
     mode: "no-cors",
@@ -45,9 +44,9 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
     userId: "",
     msgId: "",
     msgContent: "",
-    specificLat: 0.0,
-    specificLon: 0.0,
-    timeSent: new Date(0).getTime(),
+    specificLat: "",
+    specificLon: "",
+    timeSent: new Date(0).getTime()
   });
   const [newMessage, setNewMessage] = useState<MessageType>();
   const keyboardVerticalOffest = Platform.OS === "ios" ? 50 : 0;
@@ -89,8 +88,8 @@ export const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
               userId: context.user?.userId,
               msgId: Crypto.randomUUID(),
               msgContent: messageContent,
-              specificLat: context.location?.location?.coords.latitude,
-              specificLon: context.location?.location?.coords.longitude,
+              specificLat: `${context.location?.location?.coords.latitude}`,
+              specificLon: `${context.location?.location?.coords.longitude}`,
               timeSent: date.getTime(),
             };
 
