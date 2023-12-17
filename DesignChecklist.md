@@ -1,4 +1,4 @@
-## [Figma page](https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1)
+## [Final draft of UI (Figma)](https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1)
 ## Views
 * Message view 
 * Settings view
