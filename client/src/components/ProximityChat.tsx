@@ -40,7 +40,7 @@ export default () => {
 
       console.log(location);
     })();
-  }, []);
+  });
 
   let coordsText = "";
   if (errorMsg) {
