@@ -14,9 +14,27 @@ import { getNearbyMessages } from "./utilities/getNearbyMessages";
 import { Message } from './types/Message';
 
 const app = express()
+const http = require('http');
+const { Server } = require("socket.io");
+const server = http.createServer(app);
+
+const io = new Server(server, {});
+
 const port = process.env.port
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+// Socket.io implementation
+
+io.on('connection', (socket: any) => {
+    console.log('a user connected:', socket.id);
+});
+
+io.on('disconnect', (socket: any) => {
+    console.log('user disconnected');
+});
+
+// Below are all the current API endpoints
   
 app.get('/', (req, res) => {
   res.send('Hello World!')

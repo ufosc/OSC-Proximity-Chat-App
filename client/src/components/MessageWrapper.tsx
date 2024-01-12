@@ -4,8 +4,12 @@ import { MessageList } from "./MessageList";
 import { MessageBox } from "./MessageBox";
 import { useState } from "react";
 import { MessageType } from "../constants/types";
+import { useSocket } from "../constants/SocketContext";
 
-export const MessageWrapper: React.FC = () => {
+export const MessageWrapper = () => {
+
+  const socket = useSocket();
+
   const [messages, setMessages] = useState<MessageType[]>([]);
 
   const handleSendMessage = (message: MessageType) => {
