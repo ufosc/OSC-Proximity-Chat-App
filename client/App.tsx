@@ -1,12 +1,16 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Text } from "react-native";
 import ProximityChat from "./src/components/ProximityChat";
+import { SocketProvider } from "./src/constants/SocketContext";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <ProximityChat />
-    </View>
+    <SocketProvider>
+      <View style={styles.container}>
+        {/* Replace Hello! with the proximity chat app */}
+        <Text>Hello!</Text>
+      </View>
+    </SocketProvider>
   );
 }
 
