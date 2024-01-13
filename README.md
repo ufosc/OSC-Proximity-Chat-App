@@ -20,6 +20,9 @@ After `nvm` is installed run `nvm install node` and then `nvm use node`.
 **Windows**
 
 Install Linux immediately
+jk
+
+Follow Microsoft's guide on installing `nvm` [here](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows).
 
 ### Client
 Install the ExpoGo app from the Google Play Store or App Store on your phone.
