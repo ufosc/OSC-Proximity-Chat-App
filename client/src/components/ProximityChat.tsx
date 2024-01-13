@@ -58,11 +58,9 @@ export default () => {
   return (
     <View style={styles.container_wrapper}>
       <SafeAreaView>
-        <SocketProvider>
-            <View style={styles.container}>
-              <MessageWrapper />
-            </View>
-        </SocketProvider>
+        <View style={styles.container}>
+          <MessageWrapper />
+        </View>
       </SafeAreaView>
     </View>
   );
