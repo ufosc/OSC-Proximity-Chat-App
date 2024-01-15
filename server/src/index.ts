@@ -1,6 +1,6 @@
 // import express from 'express'
 // import 'dotenv/config';
-// import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
+//import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
 // import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
 
@@ -9,12 +9,14 @@
 // import { updateUserLocation } from './actions/updateUser'
 // import { deleteUserById } from './actions/deleteUser'
 // import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates';
-// import { getNearbyMessages } from "./utilities/getNearbyMessages";
 
-// import { Message } from './types/Message';
 
+import { getNearbyMessages } from "./utilities/getNearbyMessages";
+import { Message } from './types/Message';
+import { createMessage } from './actions/createMessage';
 
 import express from 'express';
+import { deleteMessageById } from "./actions/deleteMessage";
 const app = express();
 const { createServer } = require('http');
 const { Server } = require('socket.io');
@@ -35,7 +37,121 @@ const io = new Server(httpServer, {
 
 io.on('connection', (socket: any) => {
   console.log('User: ', socket.id, ' connected');
+
+  socket.on('message', (message) => {
+    // message post - when someone sends a message
+    try{ 
+      const timeSent = message.timeSent;
+      if(isNaN(timeSent))
+        throw new Error("The timeSent parameter must be a valid number.");
+
+      const broadLat = message.broadCoords[0];
+      const broadLon = message.broadCoords[1];
+
+      createMessage(
+        message.userId,
+        message.messageId,
+        message.msgContent,
+        broadLat,
+        broadLon,
+        message.specificLat,
+        message.specificLon,
+        timeSent
+      );
+
+      socket.broadcast.to(message.id).emit("verify_message_post", true);
+
+    } catch(err) {
+      console.error(`Error sending (message_post) request: ${err.message}`);
+      socket.broadcast.to(message.id).emit("verify_message_post", false);
+
+    }
+  });
 });
+
+
+// REST functions
+app.delete('/messages', async (req, res) => {
+    try {
+        const regexps = [
+            /messages\?msgId=(.*)/,
+        ]
+        if (regexps[0].test(req.originalUrl)) {
+            const msgId = regexps[0].exec(req.originalUrl)[1]
+            const messageDeletedSuccessfully = await deleteMessageById(msgId)
+            res.json(messageDeletedSuccessfully)
+        } else {
+            console.error("The request path is in incorrect format");
+            res.json(false)
+        }
+    } catch(err) {
+        console.error(`Error sending (DELETE /messages) request: ${err.message}`)
+        res.json(false)
+    }
+})
+
+// This is commented out for now so the code can compile!
+
+// app.post('/users', async (req, res) => {
+//     try {
+//         await createUser(
+//             req.body.userId.toString(),
+//             req.body.displayName.toString(),
+//             req.body.avatarUrl.toString()
+//         )
+//         // Sends back true if new user was created!
+//         res.json(true)
+//     } catch (e) {
+//         console.error(`Error sending (POST /users) request: ${e.message}`)
+//         res.json(false)
+//     }
+// })
+
+app.get('/users', async (req, res) => {
+    try {
+        const regexps = [
+            /users\?userId=(.*)/
+        ]
+        if (regexps[0].test(req.originalUrl)) {
+            // Request path: '/users?userId=<userId>'
+            const userId = regexps[0].exec(req.originalUrl)[1]
+            const returnData = await getUserById(userId);
+            res.json(returnData)
+        } else {
+            console.error("The request path is in incorrect format");
+            res.json(false)
+        }
+    } catch(err) {
+        console.error(`Error sending (GET /users) request: ${err.message}`)
+        res.json(false)
+    }
+})
+
+app.delete('/users', async (req, res) => {
+    const regexps = [
+        /users\?userId=(.*)/
+    ]
+    try {
+        if (regexps[0].test(req.originalUrl)) {
+            const userId = regexps[0].exec(req.originalUrl)[1];
+
+            if (typeof userId === "string") {
+                const successUserDelete = await deleteUserById(userId)
+               
+                if (successUserDelete) {
+                    res.json(true)
+                } else {
+                    console.error('User not found, try again!')
+                    res.json(false)
+                }
+            }
+        }
+    } catch (error) {
+        console.error(`Error sending (DELETE /users) request: ${error.message}`)
+        res.json(false)
+    }
+})
+
 
 httpServer.listen(port, () => {
   console.log(`Listening on port ${port}`);
