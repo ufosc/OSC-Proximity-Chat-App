@@ -1,6 +1,6 @@
 // import express from 'express'
 // import 'dotenv/config';
-// import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
+//import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
 // import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
 
@@ -9,12 +9,14 @@
 // import { updateUserLocation } from './actions/updateUser'
 // import { deleteUserById } from './actions/deleteUser'
 // import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates';
-// import { getNearbyMessages } from "./utilities/getNearbyMessages";
 
-// import { Message } from './types/Message';
 
+import { getNearbyMessages } from "./utilities/getNearbyMessages";
+import { Message } from './types/Message';
+import { createMessage } from './actions/createMessage';
 
 import express from 'express';
+import { deleteMessageById } from "./actions/deleteMessage";
 const app = express();
 const { createServer } = require('http');
 const { Server } = require('socket.io');
@@ -35,7 +37,62 @@ const io = new Server(httpServer, {
 
 io.on('connection', (socket: any) => {
   console.log('User: ', socket.id, ' connected');
+
+  socket.on('message_post', (message) => {
+    // message post - when someone sends a message
+    try{ 
+      const timeSent = message.timeSent;
+      if(isNaN(timeSent))
+        throw new Error("The timeSent parameter must be a valid number.");
+
+      const broadLat = message.broadCoords[0];
+      const broadLon = message.broadCoords[1];
+
+      createMessage(
+        message.userId,
+        message.messageId,
+        message.msgContent,
+        broadLat,
+        broadLon,
+        message.specificLat,
+        message.specificLon,
+        timeSent
+      );
+
+      socket.broadcast.to(message.id).emit("verify_message_post", true);
+
+    } catch(err) {
+      console.error(`Error sending (message_post) request: ${err.message}`);
+      socket.broadcast.to(message.id).emit("verify_message_post", false);
+
+    }
+  });
+
+  socket.on('message_pull', (user) => {
+    // message pull - get the messages and send them to everyone
+    try {
+      // Pull all recent messages from the database
+      let messages: Message[] | Partial<Message>[] = getNearbyMessages(user.userLat, user.userLon);
+      // ^ Prob broken / temp solution until we implement geofirestore
+
+      socket.broadcast.to(user.id).emit("message_pull", messages);
+    } catch(err) {
+      console.error(`Error sending (message_pull) request: ${err.message}`);
+
+    }
+  })
+
+  socket.on('message_delete', (message) => {
+    // Delete a message from the database
+    try {
+      const messageDeletedSuccessfully = deleteMessageById(message.messageId);
+      socket.broadcast.to(message.id).emit("verify_delete_message", messageDeletedSuccessfully);
+    } catch(err) {
+      console.error(`Error sending (message_delete) request: ${err.message}`);
+    }
+  })
 });
+
 
 httpServer.listen(port, () => {
   console.log(`Listening on port ${port}`);
