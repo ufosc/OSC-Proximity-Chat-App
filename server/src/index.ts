@@ -38,7 +38,7 @@ const io = new Server(httpServer, {
 io.on('connection', (socket: any) => {
   console.log('User: ', socket.id, ' connected');
 
-  socket.on('message_post', (message) => {
+  socket.on('message', (message) => {
     // message post - when someone sends a message
     try{ 
       const timeSent = message.timeSent;
@@ -67,31 +67,90 @@ io.on('connection', (socket: any) => {
 
     }
   });
-
-  socket.on('message_pull', (user) => {
-    // message pull - get the messages and send them to everyone
-    try {
-      // Pull all recent messages from the database
-      let messages: Message[] | Partial<Message>[] = getNearbyMessages(user.userLat, user.userLon);
-      // ^ Prob broken / temp solution until we implement geofirestore
-
-      socket.broadcast.to(user.id).emit("message_pull", messages);
-    } catch(err) {
-      console.error(`Error sending (message_pull) request: ${err.message}`);
-
-    }
-  })
-
-  socket.on('message_delete', (message) => {
-    // Delete a message from the database
-    try {
-      const messageDeletedSuccessfully = deleteMessageById(message.messageId);
-      socket.broadcast.to(message.id).emit("verify_delete_message", messageDeletedSuccessfully);
-    } catch(err) {
-      console.error(`Error sending (message_delete) request: ${err.message}`);
-    }
-  })
 });
+
+
+// REST functions
+app.delete('/messages', async (req, res) => {
+    try {
+        const regexps = [
+            /messages\?msgId=(.*)/,
+        ]
+        if (regexps[0].test(req.originalUrl)) {
+            const msgId = regexps[0].exec(req.originalUrl)[1]
+            const messageDeletedSuccessfully = await deleteMessageById(msgId)
+            res.json(messageDeletedSuccessfully)
+        } else {
+            console.error("The request path is in incorrect format");
+            res.json(false)
+        }
+    } catch(err) {
+        console.error(`Error sending (DELETE /messages) request: ${err.message}`)
+        res.json(false)
+    }
+})
+
+// This is commented out for now so the code can compile!
+
+// app.post('/users', async (req, res) => {
+//     try {
+//         await createUser(
+//             req.body.userId.toString(),
+//             req.body.displayName.toString(),
+//             req.body.avatarUrl.toString()
+//         )
+//         // Sends back true if new user was created!
+//         res.json(true)
+//     } catch (e) {
+//         console.error(`Error sending (POST /users) request: ${e.message}`)
+//         res.json(false)
+//     }
+// })
+
+app.get('/users', async (req, res) => {
+    try {
+        const regexps = [
+            /users\?userId=(.*)/
+        ]
+        if (regexps[0].test(req.originalUrl)) {
+            // Request path: '/users?userId=<userId>'
+            const userId = regexps[0].exec(req.originalUrl)[1]
+            const returnData = await getUserById(userId);
+            res.json(returnData)
+        } else {
+            console.error("The request path is in incorrect format");
+            res.json(false)
+        }
+    } catch(err) {
+        console.error(`Error sending (GET /users) request: ${err.message}`)
+        res.json(false)
+    }
+})
+
+app.delete('/users', async (req, res) => {
+    const regexps = [
+        /users\?userId=(.*)/
+    ]
+    try {
+        if (regexps[0].test(req.originalUrl)) {
+            const userId = regexps[0].exec(req.originalUrl)[1];
+
+            if (typeof userId === "string") {
+                const successUserDelete = await deleteUserById(userId)
+               
+                if (successUserDelete) {
+                    res.json(true)
+                } else {
+                    console.error('User not found, try again!')
+                    res.json(false)
+                }
+            }
+        }
+    } catch (error) {
+        console.error(`Error sending (DELETE /users) request: ${error.message}`)
+        res.json(false)
+    }
+})
 
 
 httpServer.listen(port, () => {
