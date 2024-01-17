@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import SignUp from "../components/Auth/SignUp";
+import Welcome from "../components/Home/Welcome"
 
 const WelcomeScreen = () => {
-  return <SignUp />;
+  return <Welcome />;
 };
 
 export default WelcomeScreen;
