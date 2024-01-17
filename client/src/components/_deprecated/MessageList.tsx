@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, FlatList, Dimensions } from "react-native";
-import { MessageType } from "../constants/types";
+import { MessageType } from "../../utils/types";
 import { Message } from "./Message";
 
 const { width } = Dimensions.get("window");

@@ -14,8 +14,8 @@ import {
   MessageType,
   MessageDataType,
   AppContextType,
-} from "../constants/types";
-import { AppContext } from "../constants/Contexts";
+} from "../../utils/types";
+import { AppContext } from "../../constants/Contexts";
 const sendIcon = require("../../assets/paper-plane.png");
 
 interface MessageBoxProps {

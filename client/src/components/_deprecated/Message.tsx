@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
-import { MessageType } from "../constants/types";
+import { MessageType } from "../../utils/types";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
