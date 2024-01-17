@@ -1,13 +1,11 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import SignUp from "../components/Auth/SignUp";
 
-
 const WelcomeScreen = () => {
-    return (
-        <SignUp />
-    );
+  return <SignUp />;
 };
 
+const styles = StyleSheet.create({});
 
 export default WelcomeScreen;
