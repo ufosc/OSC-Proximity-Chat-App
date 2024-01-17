@@ -1,101 +1,81 @@
+"use strict";
 // import express from 'express'
 // import 'dotenv/config';
 //import { getMessages, getMessageById, getMessagesByBroadCoordinates, getMessagesByBroadCoordsAndTime } from './actions/getMessages'
 // import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
-
-// import { getUserById } from './actions/getUsers'
-// import { createUser } from './actions/createUser'
-// import { updateUserLocation } from './actions/updateUser'
-// import { deleteUserById } from './actions/deleteUser'
-// import { convertToBroadCoordinates } from './utilities/convertToBroadCoordinates';
-
-
-import { getNearbyMessages } from "./utilities/getNearbyMessages";
-import { Message } from './types/Message';
-import { createMessage } from './actions/createMessage';
-
-import express from 'express';
-import { deleteMessageById } from "./actions/deleteMessage";
-const app = express();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const createMessage_1 = require("./src/actions/createMessage");
+const express_1 = __importDefault(require("express"));
+const deleteMessage_1 = require("./src/actions/deleteMessage");
+const app = (0, express_1.default)();
 const { createServer } = require('http');
 const { Server } = require('socket.io');
-
 const port = 8080;
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
 const httpServer = createServer(app);
-
 const io = new Server(httpServer, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-  },
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+    },
 });
-
-io.on('connection', (socket: any) => {
-
+io.on('connection', (socket) => {
     let userLocation = {
         latitude: 0.0,
         longitude: 0.0
-    }
-
-
-  console.log('User: ', socket.id, ' connected');
-
-  socket.on('message', (message) => {
-    // message post - when someone sends a message
-    try{ 
-      const timeSent = message.timeSent;
-      if(isNaN(timeSent))
-        throw new Error("The timeSent parameter must be a valid number.");
-
-      createMessage(
-        message.userId,
-        message.messageId,
-        message.msgContent,
-        userLocation.latitude.toString(),
-        userLocation.longitude.toString(),
-        message.specificLat,
-        message.specificLon,
-        timeSent
-      );
-
-      socket.broadcast.to(socket.id).emit("verify_message_post", true);
-
-    } catch(err) {
-      console.error(`Error sending (message_post) request: ${err.message}`);
-      socket.broadcast.to(socket.id).emit("verify_message_post", false);
-
-    }
-  });
+    };
+    console.log('User: ', socket.id, ' connected');
+    socket.on('message', (message) => {
+        // message post - when someone sends a message
+        try {
+            const timeSent = message.timeSent;
+            if (isNaN(timeSent))
+                throw new Error("The timeSent parameter must be a valid number.");
+            (0, createMessage_1.createMessage)(message.userId, message.messageId, message.msgContent, userLocation.latitude.toString(), userLocation.longitude.toString(), message.specificLat, message.specificLon, timeSent);
+            socket.broadcast.to(socket.id).emit("verify_message_post", true);
+        }
+        catch (err) {
+            console.error(`Error sending (message_post) request: ${err.message}`);
+            socket.broadcast.to(socket.id).emit("verify_message_post", false);
+        }
+    });
 });
-
-
 // REST functions
-app.delete('/messages', async (req, res) => {
+app.delete('/messages', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const regexps = [
             /messages\?msgId=(.*)/,
-        ]
+        ];
         if (regexps[0].test(req.originalUrl)) {
-            const msgId = regexps[0].exec(req.originalUrl)[1]
-            const messageDeletedSuccessfully = await deleteMessageById(msgId)
-            res.json(messageDeletedSuccessfully)
-        } else {
-            console.error("The request path is in incorrect format");
-            res.json(false)
+            const msgId = regexps[0].exec(req.originalUrl)[1];
+            const messageDeletedSuccessfully = yield (0, deleteMessage_1.deleteMessageById)(msgId);
+            res.json(messageDeletedSuccessfully);
         }
-    } catch(err) {
-        console.error(`Error sending (DELETE /messages) request: ${err.message}`)
-        res.json(false)
+        else {
+            console.error("The request path is in incorrect format");
+            res.json(false);
+        }
     }
-})
-
+    catch (err) {
+        console.error(`Error sending (DELETE /messages) request: ${err.message}`);
+        res.json(false);
+    }
+}));
 // This is commented out for now so the code can compile!
-
 // app.post('/users', async (req, res) => {
 //     try {
 //         await createUser(
@@ -110,65 +90,58 @@ app.delete('/messages', async (req, res) => {
 //         res.json(false)
 //     }
 // })
-
-app.get('/users', async (req, res) => {
+app.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const regexps = [
             /users\?userId=(.*)/
-        ]
+        ];
         if (regexps[0].test(req.originalUrl)) {
             // Request path: '/users?userId=<userId>'
-            const userId = regexps[0].exec(req.originalUrl)[1]
-            const returnData = await getUserById(userId);
-            res.json(returnData)
-        } else {
-            console.error("The request path is in incorrect format");
-            res.json(false)
+            const userId = regexps[0].exec(req.originalUrl)[1];
+            const returnData = yield getUserById(userId);
+            res.json(returnData);
         }
-    } catch(err) {
-        console.error(`Error sending (GET /users) request: ${err.message}`)
-        res.json(false)
+        else {
+            console.error("The request path is in incorrect format");
+            res.json(false);
+        }
     }
-})
-
-app.delete('/users', async (req, res) => {
+    catch (err) {
+        console.error(`Error sending (GET /users) request: ${err.message}`);
+        res.json(false);
+    }
+}));
+app.delete('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const regexps = [
         /users\?userId=(.*)/
-    ]
+    ];
     try {
         if (regexps[0].test(req.originalUrl)) {
             const userId = regexps[0].exec(req.originalUrl)[1];
-
             if (typeof userId === "string") {
-                const successUserDelete = await deleteUserById(userId)
-               
+                const successUserDelete = yield deleteUserById(userId);
                 if (successUserDelete) {
-                    res.json(true)
-                } else {
-                    console.error('User not found, try again!')
-                    res.json(false)
+                    res.json(true);
+                }
+                else {
+                    console.error('User not found, try again!');
+                    res.json(false);
                 }
             }
         }
-    } catch (error) {
-        console.error(`Error sending (DELETE /users) request: ${error.message}`)
-        res.json(false)
     }
-})
-
-
+    catch (error) {
+        console.error(`Error sending (DELETE /users) request: ${error.message}`);
+        res.json(false);
+    }
+}));
 httpServer.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+    console.log(`Listening on port ${port}`);
 });
-
-
-
 // Below are all the current API endpoints
-  
 // app.get('/', (req, res) => {
 //   res.send('Hello World!')
 // })
-
 // app.get('/messages', async (req, res) => {
 //     try {
 //         // Get messages from Firestore
@@ -205,7 +178,6 @@ httpServer.listen(port, () => {
 //             const specificLon = regexps[3].exec(req.originalUrl)[2]
 //             const secondsSinceCreation = Number(regexps[3].exec(req.originalUrl)[3])
 //             if (isNaN(secondsSinceCreation)) throw new Error('The secondsSinceCreation parameter must be an integer');
-            
 //             const broadCoords = convertToBroadCoordinates(specificLat, specificLon);
 //             const broadLat = broadCoords[0];
 //             const broadLon = broadCoords[1];
@@ -222,17 +194,14 @@ httpServer.listen(port, () => {
 //         res.json(false)
 //     }
 // })
-
 // app.post('/messages', async (req, res) => {
 //     try {
 //         // Make sure time is valid before attempting to create message.
 //         const timeSent = Number(req.body.timeSent)
 //         if(isNaN(timeSent)) throw new Error(`The timeSent parameter must be a valid integer`);
-
 //         const broadCoords: string[] = convertToBroadCoordinates(req.body.specificLat.toString(), req.body.specificLon.toString());
 //         const broadLat = broadCoords[0] 
 //         const broadLon = broadCoords[1]
-        
 //         await createMessage(
 //             req.body.userId.toString(),
 //             req.body.msgId.toString(),
@@ -249,7 +218,6 @@ httpServer.listen(port, () => {
 //         res.json(false)
 //     }
 // })
-
 // app.delete('/messages', async (req, res) => {
 //     try {
 //         const regexps = [
@@ -268,7 +236,6 @@ httpServer.listen(port, () => {
 //         res.json(false)
 //     }
 // })
-
 // app.get('/users', async (req, res) => {
 //     try {
 //         const regexps = [
@@ -288,7 +255,6 @@ httpServer.listen(port, () => {
 //         res.json(false)
 //     }
 // })
-
 // app.post('/users', async (req, res) => {
 //     try {
 //         await createUser(
@@ -303,7 +269,6 @@ httpServer.listen(port, () => {
 //         res.json(false)
 //     }
 // })
-
 // // Updates user location so far, going to add updating and checking messages in next push
 // app.put('/users', async (req, res) => {
 //     try {
@@ -320,7 +285,6 @@ httpServer.listen(port, () => {
 //                     String(specificLat),
 //                     String(specificLon)
 //             )
-
 //             if (successUserUpdate) {
 //                 res.json(true)
 //             } else {
@@ -333,7 +297,6 @@ httpServer.listen(port, () => {
 //         res.json(false)
 //     }
 // })
-
 // app.delete('/users', async (req, res) => {
 //     const regexps = [
 //         /users\?userId=(.*)/
@@ -341,10 +304,8 @@ httpServer.listen(port, () => {
 //     try {
 //         if (regexps[0].test(req.originalUrl)) {
 //             const userId = regexps[0].exec(req.originalUrl)[1];
-
 //             if (typeof userId === "string") {
 //                 const successUserDelete = await deleteUserById(userId)
-               
 //                 if (successUserDelete) {
 //                     res.json(true)
 //                 } else {
@@ -358,28 +319,25 @@ httpServer.listen(port, () => {
 //         res.json(false)
 //     }
 // })
-
 // // Error handling
 // app.get('*', (req, res) => {
 //     // res.json("404: Path could not be found! COULD NOT {GET}")
 //     res.json(false)
 //     res.status(404)
 // })
-
 // app.post('*', (req, res) => {
 //     // res.json("404: Path could not be found! COULD NOT {POST}")
 //     res.json(false)
 //     res.status(404)
 // })
-
 // app.put('*', (req, res) => {
 //     // res.json("404: Path could not be found! COULD NOT {PUT}")
 //     res.json(false)
 //     res.status(404)
 // })
-
 // app.delete('*', (req, res) => {
 //    // res.json("404: Path could not be found! COULD NOT {DELETE}")
 //    res.json(false)
 //    res.status(404)
 // })
+//# sourceMappingURL=index.js.map

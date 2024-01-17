@@ -2,6 +2,7 @@
   "expo": {
     "name": "osc-proximity-chat-app",
     "slug": "osc-proximity-chat-app",
+    "scheme": "osc-proximity-chat-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +26,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }

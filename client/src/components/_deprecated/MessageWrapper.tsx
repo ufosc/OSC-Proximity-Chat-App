@@ -3,8 +3,8 @@ import { View, StyleSheet } from "react-native";
 import { MessageList } from "./MessageList";
 import { MessageBox } from "./MessageBox";
 import { useState } from "react";
-import { MessageType } from "../constants/types";
-import { useSocket } from "../constants/SocketContext";
+import { MessageType } from "../../utils/types";
+import { useSocket } from "../../sockets/SocketContext";
 
 export const MessageWrapper = () => {
 
