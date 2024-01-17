@@ -6,10 +6,4 @@ const WelcomeScreen = () => {
   return <SignUp />;
 };
 
-const styles = StyleSheet.create({
-    container: {
-        color: "blue",
-    }
-});
-
 export default WelcomeScreen;
