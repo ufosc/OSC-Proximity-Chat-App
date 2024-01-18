@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, SafeAreaView } from 'react-native';
 import { useFonts } from 'expo-font';
+import { Link } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import Email_Input from '../Common/Email_Input';
 
@@ -8,8 +9,12 @@ import Email_Input from '../Common/Email_Input';
 
 const Welcome = () => {
 
+  const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
+  const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
+
   const [fontsLoaded, fontError] = useFonts({
     'Gilroy-ExtraBold': require('../../../assets/fonts/Gilroy-ExtraBold.otf'),
+    'Gilroy-Light': require('../../../assets/fonts/Gilroy-Light.otf'),
   });
 
   if (!fontsLoaded && !fontError) {
@@ -17,46 +22,65 @@ const Welcome = () => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={keyboardVerticalOffest}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-      <View style={styles.main_container}>
+        <View style={styles.main_container}>
 
-        <Image style={styles.image} source={require('../../../assets/cute_tree_cropped.png')} />
-        <Text style={styles.header_text}>Welcome to Proximity Chat</Text>
+          <View style={styles.sub_container}>
 
-        <View style={styles.login_container}>
+            <View style={styles.image_container}>
+              <Image style={styles.image} source={require('../../../assets/talking_location.png')} />
+            </View>
 
-          <Text>Log in</Text>
+            <Text style={styles.header_text}>Welcome to Proximity Chat!</Text>
 
-          <View style={styles.login_mini_container}>
+            <View style={styles.info_container}>
 
-            <Email_Input flex={1} height={Dimensions.get('window').width * 0.11} />
+              <View style={styles.login_container}>
 
-            <TouchableOpacity style={styles.login_button}>
-              <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
-            </TouchableOpacity>
+                <Text style={styles.login_text}>Log in</Text>
 
+                <View style={styles.login_mini_container}>
+
+                  <Email_Input flex={1} height={Dimensions.get('window').width * 0.11} />
+
+                  <TouchableOpacity style={styles.login_button}>
+                    <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
+                  </TouchableOpacity>
+
+                </View>
+
+              </View>
+              <Text>
+                Don't have an account? <Link style={styles.link} href="/login">Sign up!</Link>
+              </Text>
+            </View>
           </View>
 
         </View>
 
-      </View>
-
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
   image: {
-    width: Dimensions.get("window").width * 0.15,
-    height: Dimensions.get("window").height * 0.15,
+    maxWidth: Dimensions.get("window").width * 1,
+    maxHeight: Dimensions.get("window").height * 0.37,
     resizeMode: "contain",
-    borderColor: "#5dbea3",
-    borderWidth: 1,
   },
 
   header_text: {
     fontFamily: "Gilroy-ExtraBold",
+    fontSize: Dimensions.get("window").width * 0.07,
+  },
+
+  login_text: {
+    fontFamily: "Gilroy-Light",
+    fontSize: Dimensions.get("window").width * 0.049,
+    marginLeft: Dimensions.get("window").width * 0.02,
   },
 
   main_container: {
@@ -65,16 +89,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: '100%',
     width: '100%',
+    justifyContent: "flex-end",
+
+  },
+
+  sub_container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: Dimensions.get("window").width * 1,
+    height: Dimensions.get("window").height * 0.75,
+  },
+
+  info_container: {
+    width: Dimensions.get("window").width * 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    minHeight: Dimensions.get("window").height * 0.35,
 
   },
 
   login_container: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "space-between",
     width: Dimensions.get("window").width * 0.8,
-    borderColor: "#5dbea3",
-    borderWidth: 1,
+    height: Dimensions.get("window").height * 0.09,
+  },
+
+  image_container: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   login_mini_container: {
@@ -86,8 +136,8 @@ const styles = StyleSheet.create({
 
   login_button: {
     backgroundColor: "#5dbea3",
-    width: Dimensions.get("window").width * 0.11,
-    height: Dimensions.get("window").width * 0.11,
+    width: Dimensions.get("window").width * 0.105,
+    height: Dimensions.get("window").width * 0.105,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -97,10 +147,15 @@ const styles = StyleSheet.create({
   },
 
   arrow_image: {
-    width: Dimensions.get("window").width * 0.06,
-    height: Dimensions.get("window").width * 0.06,
+    width: Dimensions.get("window").width * 0.05,
+    height: Dimensions.get("window").width * 0.05,
     resizeMode: "contain",
   },
+
+  link: {
+    color: "#5dbea3",
+    textDecorationLine: "underline",
+  }
 
 });
 
