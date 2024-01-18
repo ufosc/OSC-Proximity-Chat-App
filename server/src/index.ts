@@ -45,21 +45,21 @@ io.on('connection', (socket: any) => {
 
   console.log('User: ', socket.id, ' connected');
 
-  socket.on('message', (message) => {
+  socket.on('message', (data) => {
     // message post - when someone sends a message
     try{ 
-      const timeSent = message.timeSent;
+      const timeSent = data.timeSent;
       if(isNaN(timeSent))
         throw new Error("The timeSent parameter must be a valid number.");
 
       createMessage(
-        message.userId,
-        message.messageId,
-        message.msgContent,
+        data.userId,
+        data.messageId,
+        data.msgContent,
         userLocation.latitude.toString(),
         userLocation.longitude.toString(),
-        message.specificLat,
-        message.specificLon,
+        data.specificLat,
+        data.specificLon,
         timeSent
       );
 
