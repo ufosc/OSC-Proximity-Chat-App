@@ -5,16 +5,17 @@ interface Email_InputProps {
     flex?: number;
     height?: number;
     width?: number;
+    placeholder?: string;
 };
 
-const Email_Input:React.FC<Email_InputProps> = ({ flex, height, width }) => {
+const Custom_Input:React.FC<Email_InputProps> = ({ flex, height, width, placeholder }) => {
   return (
     <View style={{
         flex: flex,
         height: height,
         width: width,
     }}>
-        <TextInput style={styles.input} placeholder="Email" multiline={false}/>
+        <TextInput style={styles.input} placeholder={placeholder} multiline={false}/>
     </View>
   )
 }
@@ -23,11 +24,11 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
         borderRadius: 30,
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
         height: '100%',
         width: '100%',
     },
 });
 
-export default Email_Input
+export default Custom_Input

@@ -5,15 +5,10 @@ import SignUpButton from "../Common/SignUpButton";
 import LogInButton from "../Common/LogInButton";
 
 const SignUp = () => {
-  const goToLogIn = () => {
-    router.push("/LoginPage");
-  };
 
   return (
     <View style={styles.container}>
       <View style={styles.button_container}>
-        <SignUpButton />
-        <LogInButton onPress={goToLogIn} />
       </View>
     </View>
   );
