@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableW
 import { useFonts } from 'expo-font';
 import { Link } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import Email_Input from '../Common/Email_Input';
+import Custom_Input from '../Common/Custom_Input';
 
 
 
@@ -43,7 +43,7 @@ const Welcome = () => {
 
                 <View style={styles.login_mini_container}>
 
-                  <Email_Input flex={1} height={Dimensions.get('window').width * 0.11} />
+                  <Custom_Input flex={1} height={Dimensions.get('window').width * 0.11} placeholder='Email' />
 
                   <TouchableOpacity style={styles.login_button}>
                     <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
