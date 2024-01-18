@@ -1,31 +1,44 @@
-import React from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import Email_Input from '../Common/Email_Input';
 
+
+
 const Welcome = () => {
+
+  const [fontsLoaded, fontError] = useFonts({
+    'Gilroy-ExtraBold': require('../../../assets/fonts/Gilroy-ExtraBold.otf'),
+  });
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
       <View style={styles.main_container}>
 
-          <Image style={styles.image} source={require('../../../assets/cute_tree_cropped.png')}/>
-          <Text>Welcome to Proximity Chat</Text>
+        <Image style={styles.image} source={require('../../../assets/cute_tree_cropped.png')} />
+        <Text style={styles.header_text}>Welcome to Proximity Chat</Text>
 
-          <View style={styles.login_container}>
+        <View style={styles.login_container}>
 
-            <Text>Log in</Text>
+          <Text>Log in</Text>
 
-            <View style={styles.login_mini_container}>
-              
-              <Email_Input flex={1} height={Dimensions.get('window').width * 0.11} />
+          <View style={styles.login_mini_container}>
 
-              <TouchableOpacity style={styles.login_button}>
-                <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
-              </TouchableOpacity>
+            <Email_Input flex={1} height={Dimensions.get('window').width * 0.11} />
 
-            </View>
+            <TouchableOpacity style={styles.login_button}>
+              <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
+            </TouchableOpacity>
 
           </View>
+
+        </View>
 
       </View>
 
@@ -42,13 +55,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
+  header_text: {
+    fontFamily: "Gilroy-ExtraBold",
+  },
+
   main_container: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     height: '100%',
     width: '100%',
-    
+
   },
 
   login_container: {
