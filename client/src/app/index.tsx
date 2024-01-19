@@ -1,10 +1,10 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Welcome from "../components/Home/Welcome";
-import LogIn from "../components/Auth/LogIn";
+import WelcomeScreen from "../components/Home/WelcomeScreen";
+import LogIn from "../components/Auth/LoginScreen";
 
-const WelcomeScreen = () => {
-  return <Welcome />;
+const WelcomePage = () => {
+  return <WelcomeScreen />;
 };
 
-export default WelcomeScreen;
+export default WelcomePage;
