@@ -10,10 +10,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import Custom_Input from "../Common/Custom_Input";
+import { LogInEmailInput, LogInPasswordInput} from "../Common/CustomInputs";
 import LogInButton from "../Common/LogInButton";
 
-const LogIn = () => {
+const LoginScreen = () => {
   const [fontsLoaded, fontError] = useFonts({
     "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
     "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
@@ -38,16 +38,8 @@ const LogIn = () => {
             <Text style={styles.header_text}>Welcome back!</Text>
           </View>
           <View style={styles.input_container}>
-            <Custom_Input
-              height={Dimensions.get("window").height * 0.06}
-              width={Dimensions.get("window").width * 0.75}
-              placeholder="Email"
-            />
-            <Custom_Input
-              height={Dimensions.get("window").height * 0.06}
-              width={Dimensions.get("window").width * 0.75}
-              placeholder="Password"
-            />
+            <LogInEmailInput />
+            <LogInPasswordInput />
           </View>
           <View style={styles.button_container}>
             <LogInButton />
@@ -105,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogIn;
+export default LoginScreen;

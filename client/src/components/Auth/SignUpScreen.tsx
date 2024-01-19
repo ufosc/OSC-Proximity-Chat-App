@@ -1,10 +1,8 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { router } from "expo-router";
-import SignUpButton from "../Common/SignUpButton";
-import LogInButton from "../Common/LogInButton";
 
-const SignUp = () => {
+const SignUpScreen = () => {
 
   return (
     <View style={styles.container}>
@@ -31,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default SignUpScreen;

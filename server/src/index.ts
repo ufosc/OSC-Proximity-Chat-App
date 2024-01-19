@@ -13,10 +13,8 @@
 
 import { getNearbyMessages } from "./utilities/getNearbyMessages";
 import { Message } from './types/Message';
-import { createMessage } from './actions/createMessage';
 
 import express from 'express';
-import { deleteMessageById } from "./actions/deleteMessage";
 const app = express();
 const { createServer } = require('http');
 const { Server } = require('socket.io');
@@ -45,21 +43,21 @@ io.on('connection', (socket: any) => {
 
   console.log('User: ', socket.id, ' connected');
 
-  socket.on('message', (data) => {
+  socket.on('message', (message) => {
     // message post - when someone sends a message
     try{ 
-      const timeSent = data.timeSent;
+      const timeSent = message.timeSent;
       if(isNaN(timeSent))
         throw new Error("The timeSent parameter must be a valid number.");
 
       createMessage(
-        data.userId,
-        data.messageId,
-        data.msgContent,
+        message.userId,
+        message.messageId,
+        message.msgContent,
         userLocation.latitude.toString(),
         userLocation.longitude.toString(),
-        data.specificLat,
-        data.specificLon,
+        message.specificLat,
+        message.specificLon,
         timeSent
       );
 

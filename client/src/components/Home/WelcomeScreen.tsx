@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, SafeAreaView } from 'react-native';
 import { useFonts } from 'expo-font';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import Custom_Input from '../Common/Custom_Input';
+import { WelcomeEmailInput } from '../Common/CustomInputs';
 
 
 
-const Welcome = () => {
+const WelcomeScreen = () => {
 
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
@@ -43,9 +43,9 @@ const Welcome = () => {
 
                 <View style={styles.login_mini_container}>
 
-                  <Custom_Input flex={1} height={Dimensions.get('window').width * 0.11} placeholder='Email' />
+                  <WelcomeEmailInput flex={1} height={Dimensions.get('window').width * 0.11} placeholder='Email' />
 
-                  <TouchableOpacity style={styles.login_button}>
+                  <TouchableOpacity style={styles.login_button} onPress={() => router.push('/login')}>
                     <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
                   </TouchableOpacity>
 
@@ -53,7 +53,7 @@ const Welcome = () => {
 
               </View>
               <Text>
-                Don't have an account? <Link style={styles.link} href="/login">Sign up!</Link>
+                Don't have an account? <Link style={styles.link} href="/singup">Sign up!</Link>
               </Text>
             </View>
           </View>
@@ -159,4 +159,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Welcome
+export default WelcomeScreen
