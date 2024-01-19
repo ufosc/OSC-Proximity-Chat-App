@@ -4,7 +4,7 @@ import Welcome from "../components/Home/Welcome";
 import LogIn from "../components/Auth/LogIn";
 
 const WelcomeScreen = () => {
-  return <LogIn />;
+  return <Welcome />;
 };
 
 export default WelcomeScreen;
