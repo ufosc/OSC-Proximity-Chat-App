@@ -40,8 +40,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     elevation: 1,
-    borderColor: 'black',
-    borderWidth: 1,
   },
 
   profileImageContainer: {

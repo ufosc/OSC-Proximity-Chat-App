@@ -1,6 +1,13 @@
 import React from 'react'
 import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
 
+interface ChatInputProps {
+    value?: string,
+    onChangeText?: (text: string) => void,
+}
+
+
+
 export const WelcomeEmailInput: React.FC = () => {
     return (
         <TextInput style={styles.welcomeEmailInput} placeholder='Email' multiline={false} />
@@ -21,11 +28,16 @@ export const LogInPasswordInput: React.FC = () => {
     )
 }
 
-export const ChatInput: React.FC = () => {
+export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
+
+
+    
     return (
         <TextInput style={styles.loginInput} 
         placeholder='Say Something...'
         multiline={true}
+        value={value}
+        onChangeText={onChangeText}
         maxLength={500} />
     )
 };
