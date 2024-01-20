@@ -14,4 +14,5 @@ messagingSenderId = ### MESSAGING SENDER ID ###
 appId = ### APP ID ###
 
 # Misc
-port = 3001
+express_port = 3001
+socket_port = 8080

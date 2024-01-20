@@ -1,11 +1,17 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import SignUp from "../components/Auth/SignUp";
+import React, { Fragment } from "react";
+import { View, StyleSheet, Text, SafeAreaView, Platform } from "react-native";
+import WelcomeScreen from "../components/Home/WelcomeScreen";
+import LogIn from "../components/Auth/LoginScreen";
+import ChatScreen from "../components/Chat/ChatScreen";
+import { LinearGradient } from "expo-linear-gradient";
+import SafeAreaWrapper from "../components/Common/SafeAreaWrapper";
 
-const WelcomeScreen = () => {
-  return <SignUp />;
+const WelcomePage = () => {
+  return (
+    <SafeAreaWrapper>
+      <ChatScreen />
+    </SafeAreaWrapper>
+  );
 };
 
-const styles = StyleSheet.create({});
-
-export default WelcomeScreen;
+export default WelcomePage;
