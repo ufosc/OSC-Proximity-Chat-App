@@ -1,12 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import ProximityChat from "./src/components/ProximityChat";
+import { StyleSheet, View, Text } from "react-native";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <ProximityChat />
-    </View>
   );
 }
 

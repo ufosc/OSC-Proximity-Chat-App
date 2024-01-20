@@ -13,8 +13,9 @@ import {
   LocationGeocodedAddress,
   LocationObject,
 } from "expo-location";
-import { AppContext } from "../constants/Contexts";
-import { generateName, generateUniqueId } from "../constants/scripts";
+import { AppContext } from "../../constants/Contexts";
+import { SocketProvider } from "../../sockets/SocketContext";
+import { generateName, generateUniqueId } from "../../utils/scripts";
 import { MessageWrapper } from "./MessageWrapper";
 
 export default () => {
@@ -57,24 +58,9 @@ export default () => {
   return (
     <View style={styles.container_wrapper}>
       <SafeAreaView>
-        <AppContext.Provider
-          value={{
-            user: {
-              displayName: generateName(),
-              userId: generateUniqueId().toString(),
-              avatar: undefined,
-            },
-            location: {
-              location: location,
-              address: address,
-              errorMsg: errorMsg,
-            },
-          }}
-        >
-          <View style={styles.container}>
-            <MessageWrapper />
-          </View>
-        </AppContext.Provider>
+        <View style={styles.container}>
+          <MessageWrapper />
+        </View>
       </SafeAreaView>
     </View>
   );
