@@ -1,9 +1,13 @@
 import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, Image, Dimensions } from 'react-native'
 
-export const ChatSendButton = () => {
+interface ChatSendButtonProps {
+  onPress?: () => void,
+}
+
+export const ChatSendButton: React.FC<ChatSendButtonProps> = ({ onPress }) => {
   return (
-    <TouchableOpacity style={styles.sendButton}>
+    <TouchableOpacity style={styles.sendButton} onPress={onPress}>
         <Image style={styles.sendButtonImage} source={require('../../../assets/send.png')}/>
     </TouchableOpacity>
   )

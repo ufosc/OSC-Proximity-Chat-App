@@ -1,27 +1,40 @@
 import React, { Fragment } from 'react'
-import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, View, Text, StyleSheet, Dimensions, SafeAreaView } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, View, Text, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native'
 import { ChatInput } from '../Common/CustomInputs';
 import { ChatSendButton } from '../Common/CustomButtons';
 import MessageChannel from '../Common/MessageChannel';
 import { LinearGradient } from 'expo-linear-gradient';
+import { MessageType } from '../../utils/types';
+import * as Crypto from 'expo-crypto';
+import { generateName } from '../../utils/scripts';
 
 const ChatScreen = () => {
-    const keyboardBehavior = Platform.OS === "ios" ? "padding" : "height";
+    const screenWidth = Dimensions.get('window').width;
+    const screenHeight = Dimensions.get('window').height;
+    const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
 
-    const messages = [
-        { author: 'Alex', messageContent: 'Hello, my name is Alex!!!', msgID: '1' },
-        { author: 'Ben', messageContent: 'Hello, my name is Ben!!!', msgID: '2' },
-        { author: 'Chris', messageContent: "This is chris's message, it is a little bit longer because he a very outspoken person and has a lottt to say!", msgID: '3' },
-        { author: 'Alex', messageContent: 'Hello, my name is Alex!!!', msgID: '4' },
-        { author: 'Ben', messageContent: 'Hello, my name is Ben!!!', msgID: '5' },
-        { author: 'Chris', messageContent: "This is chris's message, it is a little bit longer because he a very outspoken person and has a lottt to say!", msgID: '6' },
-        { author: 'Alex', messageContent: 'Hello, my name is Alex!!!', msgID: '7' },
-        { author: 'Ben', messageContent: 'Hello, my name is Ben!!!', msgID: '8' },
-    ]
+    // Message loading and sending logic
+    const [messages, setMessages] = React.useState<MessageType[]>([]);
+    const [message, setMessage] = React.useState<string>('');
+
+    // For when the user sends a message (fired by the send button)
+    const onHandleSubmit = () => {
+        if (message.trim() !== '') {
+            const newMessage: MessageType = {
+                msgID: Crypto.randomUUID(),
+                messageContent: message,
+                author: generateName(),
+            };
+    
+            setMessages([...messages, newMessage]);
+    
+            setMessage('');
+        };
+    }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-            <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 30}>
+        <View>
+            <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={Platform.OS === 'ios' ? screenHeight * 0.055 : 0}>
                 <View style={styles.mainContainer}>
                     <View style={styles.headerContainer}>
                         <Text style={{
@@ -34,12 +47,12 @@ const ChatScreen = () => {
                         <MessageChannel messages={messages} />
                     </View>
                     <View style={styles.footerContainer}>
-                        <ChatInput />
-                        <ChatSendButton />
+                        <ChatInput value={message} onChangeText={(text: string) => { setMessage(text); }} />
+                        <ChatSendButton onPress={onHandleSubmit} />
                     </View>
                 </View>
             </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
+        </View>
     )
 }
 
