@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, View, StyleSheet, Dimensions } from 'react-native'
+import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
 
 export const WelcomeEmailInput: React.FC = () => {
     return (
@@ -21,6 +21,15 @@ export const LogInPasswordInput: React.FC = () => {
     )
 }
 
+export const ChatInput: React.FC = () => {
+    return (
+        <TextInput style={styles.loginInput} 
+        placeholder='Say Something...'
+        multiline={true}
+        maxLength={500} />
+    )
+};
+
 const styles = StyleSheet.create({
 
     welcomeEmailInput: {
@@ -33,13 +42,14 @@ const styles = StyleSheet.create({
     },
 
     loginInput: {
-        height: Dimensions.get('window').height * 0.06,
         width: Dimensions.get('window').width * 0.75,
+        minHeight: Dimensions.get('window').height * 0.055,
         borderWidth: 1,
         borderRadius: 30,
+        paddingTop: Platform.OS === 'ios' ? 15 : 0,
+        paddingBottom: Platform.OS === 'ios' ? 15 : 0,
         paddingLeft: 15,
         paddingRight: 15,
-        flex: 1,
     },
 
 });
