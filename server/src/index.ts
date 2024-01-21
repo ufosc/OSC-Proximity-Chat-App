@@ -73,7 +73,7 @@ io.on('connection', (socket: any) => {
 
 
 socketServer.listen(socket_port, () => {
-  console.log(`[INFO] Listening for websockets on port ${socket_port}`)
+  console.log(`[INFO] Listening for websockets on port ${socket_port}.`)
 })
 
 // === REST APIs === 
@@ -104,7 +104,7 @@ app.delete('*', (req, res) => {
 })
 
 app.listen(express_port, () => {
-    return console.log(`[INFO] Express is listening for requests at http://localhost:${express_port}`)
+    return console.log(`[INFO] Express is listening for requests at http://localhost:${express_port}.`)
 })
 
 // Some old API routes are commented out for now due to breaking type changes.
