@@ -35,11 +35,13 @@ io.on('connection', (socket: any) => {
   //       longitude: 0.0
   //   }
   //
-  console.log('User: ', socket.id, ' connected');
+  console.log(`[ALERT] User <${socket.id}> connected.`);
   //
+  socket.on('disconnect', () => {
+      console.log(`[ALERT] User <${socket.id}> exited.`);
+  })
   socket.on('ping', (cb) => {
-      console.log('recieved ping')
-      // socket.broadcast.to(socket.id).emit('pong')
+      console.log(`[ALERT] Recieved ping from user <${socket.id}>.`)
       cb('pong')
   })
   // socket.on('message', (message) => {
@@ -66,13 +68,12 @@ io.on('connection', (socket: any) => {
   //
   //   }
   // })
-  
-
 })
 
 
+
 socketServer.listen(socket_port, () => {
-  console.log(`Listening for websockets on port ${socket_port}`)
+  console.log(`[INFO] Listening for websockets on port ${socket_port}`)
 })
 
 // === REST APIs === 
@@ -103,7 +104,7 @@ app.delete('*', (req, res) => {
 })
 
 app.listen(express_port, () => {
-    return console.log(`Express is listening for requests at http://localhost:${express_port}`)
+    return console.log(`[INFO] Express is listening for requests at http://localhost:${express_port}`)
 })
 
 // Some old API routes are commented out for now due to breaking type changes.
