@@ -1,5 +1,6 @@
 import express from 'express'
-import 'dotenv/config';
+import 'dotenv/config'
+import 'geofire-common' 
 
 // import { Message } from './types/Message';
 import { createMessage } from './actions/createMessage'
@@ -7,6 +8,8 @@ import { createMessage } from './actions/createMessage'
 // import { getUserById } from './actions/getUsers'
 // import { createUser } from './actions/createUser'
 // import { deleteUserById } from './actions/deleteUser'
+import { Message } from './types/Message';
+import {geohashForLocation} from 'geofire-common';
 
 const { createServer } = require('http')
 const { Server } = require('socket.io')
@@ -29,14 +32,8 @@ const io = new Server(socketServer, {
 });
 
 io.on('connection', (socket: any) => {
-
-  //   let userLocation = {
-  //       latitude: 0.0,
-  //       longitude: 0.0
-  //   }
-  //
   console.log(`[ALERT] User <${socket.id}> connected.`);
-  //
+
   socket.on('disconnect', () => {
       console.log(`[ALERT] User <${socket.id}> exited.`);
   })
@@ -44,30 +41,34 @@ io.on('connection', (socket: any) => {
       console.log(`[ALERT] Recieved ping from user <${socket.id}>.`)
       cb('pong')
   })
-  // socket.on('message', (message) => {
-  //   // message post - when someone sends a message
-  //   try{
-  //     const timeSent = message.timeSent
-  //     if(isNaN(timeSent))
-  //       throw new Error("The timeSent parameter must be a valid number.")
-  //
-  //     createMessage(
-  //       message.userId,
-  //       message.messageId,
-  //       message.msgContent,
-  //       userLocation.latitude,
-  //       userLocation.longitude,
-  //       timeSent
-  //     ); // TODO: import these parameters from the message type.
-  //
-  //     socket.broadcast.to(socket.id).emit("verify_message_post", true)
-  //
-  //   } catch(err) {
-  //     console.error(`Error sending (message_post) request: ${err.message}`)
-  //     socket.broadcast.to(socket.id).emit("verify_message_post", false)
-  //
-  //   }
-  // })
+  socket.on('message', (message, ack) => {
+    // message post - when someone sends a message
+    console.log(`[ALERT] Recieved message from user <${socket.id}>.`)
+    console.log(message)
+    try{
+      const timeSent = message.timeSent
+      if(isNaN(timeSent))
+        throw new Error("The timeSent parameter must be a valid number.")
+
+      const hash = geohashForLocation([message.lat, message.lon])
+
+      createMessage(
+        message.userId,
+        message.messageId,
+        message.msgContent,
+        message.lat,
+        message.lon,
+        hash,
+        timeSent
+      ); // TODO: import these parameters from the message type.
+
+      ack("message recieved")
+
+    } catch(err) {
+      console.error(`Error sending (message_post) request: ${err.message}`)
+      ack('error after sending message')
+    }
+  })
 })
 
 
