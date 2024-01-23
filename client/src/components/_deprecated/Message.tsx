@@ -1,11 +1,18 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
-import { MessageType } from "../constants/types";
+import { MessageType } from "../../utils/types";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export const Message = (props: MessageType) => {
+interface MessageProps {
+  messageContent: string;
+  timestamp: Date;
+  author: string;
+  msgId: string;
+}
+
+export const Message = (messageContent:string, timestamp:Date, author:string, msgID:string) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -20,10 +27,10 @@ export const Message = (props: MessageType) => {
         </View>
         <View style={styles.content_column}>
           <View style={styles.header_row}>
-            <Text style={styles.author}>{props.author} </Text>
+            <Text style={styles.author}>{author} </Text>
 
             <Text style={styles.timestamp}>
-              {props.timestamp.toLocaleTimeString([], {
+              {timestamp.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
@@ -31,7 +38,7 @@ export const Message = (props: MessageType) => {
           </View>
 
           <View style={styles.message_container}>
-            <Text style={styles.messageContent}>{props.messageContent}</Text>
+            <Text style={styles.messageContent}>{messageContent}</Text>
           </View>
         </View>
       </View>

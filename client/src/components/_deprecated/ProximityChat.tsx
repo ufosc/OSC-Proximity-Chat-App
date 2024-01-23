@@ -13,9 +13,9 @@ import {
   LocationGeocodedAddress,
   LocationObject,
 } from "expo-location";
-import { AppContext } from "../constants/Contexts";
-import { SocketProvider } from "../constants/SocketContext";
-import { generateName, generateUniqueId } from "../constants/scripts";
+import { AppContext } from "../../constants/Contexts";
+import { SocketProvider } from "../../sockets/SocketContext";
+import { generateName, generateUniqueId } from "../../utils/scripts";
 import { MessageWrapper } from "./MessageWrapper";
 
 export default () => {
