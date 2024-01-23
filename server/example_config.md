@@ -16,4 +16,4 @@ appId = ### APP ID ###
 # Misc
 express_port = 3001
 socket_port = 8080
-socket_test_client_port = 8081
+socket_test_client_port = 8080
