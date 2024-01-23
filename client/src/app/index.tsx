@@ -1,17 +1,15 @@
 import React, { Fragment } from "react";
-import { View, StyleSheet, Text, SafeAreaView, Platform } from "react-native";
-import WelcomeScreen from "../components/Home/WelcomeScreen";
-import LogIn from "../components/Auth/LoginScreen";
-import ChatScreen from "../components/Chat/ChatScreen";
-import { LinearGradient } from "expo-linear-gradient";
+import { Button } from "react-native";
 import SafeAreaWrapper from "../components/Common/SafeAreaWrapper";
+import { router } from "expo-router";
+import WelcomeScreen from "../components/Home/WelcomeScreen";
 
-const WelcomePage = () => {
+const EntryPage = () => {
   return (
     <SafeAreaWrapper>
-      <ChatScreen />
+      <WelcomeScreen />
     </SafeAreaWrapper>
   );
 };
 
-export default WelcomePage;
+export default EntryPage;
