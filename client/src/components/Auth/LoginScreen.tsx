@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
 import {
   View,
@@ -12,23 +12,28 @@ import {
 } from "react-native";
 import { LogInEmailInput, LogInPasswordInput} from "../Common/CustomInputs";
 import LogInButton from "../Common/LogInButton";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const LoginScreen = () => {
   const [fontsLoaded, fontError] = useFonts({
     "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
     "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
   });
+  const router = useRouter();
+  const { inputEmail } = useLocalSearchParams();
+
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
+
+  useEffect(() => {
+    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
+  }, []);
 
   if (!fontsLoaded && !fontError) {
     return null;
   }
 
   return (
-    // Logo
-    // Let's ge you started!
-
-    // Email
-    // Password
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -38,8 +43,8 @@ const LoginScreen = () => {
             <Text style={styles.header_text}>Welcome back!</Text>
           </View>
           <View style={styles.input_container}>
-            <LogInEmailInput />
-            <LogInPasswordInput />
+            <LogInEmailInput value={email} onChangeText={text => setEmail(text)} />
+            <LogInPasswordInput value={password} onChangeText={text => setPassword(text)} />
           </View>
           <View style={styles.button_container}>
             <LogInButton />
@@ -68,8 +73,6 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-around",
     alignItems: "center",
-    borderColor: "red",
-    borderWidth: 1,
     height: Dimensions.get("window").height * 0.15,
   },
 
@@ -78,8 +81,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     width: "100%",
-    borderColor: "blue",
-    borderWidth: 1,
   },
 
   header_container: {
@@ -87,8 +88,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    borderColor: "green",
-    borderWidth: 1,
   },
 
   header_text: {
