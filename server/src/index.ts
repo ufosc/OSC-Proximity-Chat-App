@@ -71,8 +71,6 @@ io.on('connection', (socket: any) => {
   })
 })
 
-
-
 socketServer.listen(socket_port, () => {
   console.log(`[INFO] Listening for websockets on port ${socket_port}.`)
 })
