@@ -17,9 +17,26 @@ const WelcomeScreen = () => {
     'Gilroy-Light': require('../../../assets/fonts/Gilroy-Light.otf'),
   });
 
+  const [email, setEmail] = useState<string>('');
+
   if (!fontsLoaded && !fontError) {
     return null;
   }
+
+  const handleLogin = () => {
+    const preparedEmail = email.trim();
+    if ((preparedEmail.length !== 0) && isValidEmail(preparedEmail)) {
+      router.push( { pathname: '/login', params: { inputEmail: preparedEmail } } );
+    } else {
+      console.log('Invalid email');
+    }
+  }
+
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   return (
     <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={keyboardVerticalOffest}>
@@ -43,9 +60,9 @@ const WelcomeScreen = () => {
 
                 <View style={styles.login_mini_container}>
 
-                  <WelcomeEmailInput flex={1} height={Dimensions.get('window').width * 0.11} placeholder='Email' />
+                  <WelcomeEmailInput value={email} onChangeText={text => setEmail(text)} />
 
-                  <TouchableOpacity style={styles.login_button} onPress={() => router.push('/login')}>
+                  <TouchableOpacity style={styles.login_button} onPress={handleLogin}>
                     <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
                   </TouchableOpacity>
 
@@ -53,7 +70,7 @@ const WelcomeScreen = () => {
 
               </View>
               <Text>
-                Don't have an account? <Link style={styles.link} href="/singup">Sign up!</Link>
+                Don't have an account? <Link style={styles.link} href="/signup">Sign up!</Link>
               </Text>
             </View>
           </View>

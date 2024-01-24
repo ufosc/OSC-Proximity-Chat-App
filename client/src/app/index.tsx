@@ -1,17 +1,8 @@
-import React, { Fragment } from "react";
-import { View, StyleSheet, Text, SafeAreaView, Platform } from "react-native";
-import WelcomeScreen from "../components/Home/WelcomeScreen";
-import LogIn from "../components/Auth/LoginScreen";
-import ChatScreen from "../components/Chat/ChatScreen";
-import { LinearGradient } from "expo-linear-gradient";
-import SafeAreaWrapper from "../components/Common/SafeAreaWrapper";
+import React from "react";
 
-const WelcomePage = () => {
-  return (
-    <SafeAreaWrapper>
-      <ChatScreen />
-    </SafeAreaWrapper>
-  );
+const App = () => {
+  return <div>App</div>;
+  // replace this div with one of the pages inside this directory (eg. ChatroomPage in chatchannel.tsx)
 };
 
-export default WelcomePage;
+export default App;
