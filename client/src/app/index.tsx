@@ -1,15 +1,7 @@
-import React, { Fragment } from "react";
-import { Button } from "react-native";
-import SafeAreaWrapper from "../components/Common/SafeAreaWrapper";
-import { router } from "expo-router";
-import WelcomeScreen from "../components/Home/WelcomeScreen";
+import React from "react";
 
-const EntryPage = () => {
-  return (
-    <SafeAreaWrapper>
-      <WelcomeScreen />
-    </SafeAreaWrapper>
-  );
+const App = () => {
+  return <div>App</div>;
 };
 
-export default EntryPage;
+export default App;
