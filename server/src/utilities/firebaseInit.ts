@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, CollectionReference, collection, DocumentData } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app'
+import { getFirestore, CollectionReference, collection, DocumentData } from 'firebase/firestore'
 import 'dotenv/config';
 
 export const firebaseApp = initializeApp({
@@ -9,20 +9,19 @@ export const firebaseApp = initializeApp({
   storageBucket: process.env.storageBucket,
   messagingSenderId: process.env.messagingSenderId,
   appId: process.env.appId
-});
+})
 
-export const firestore = getFirestore();
+export const firestore = getFirestore()
 
 const createCollection = <T = DocumentData>(collectionName: string) => {
   return collection(firestore, collectionName) as CollectionReference<T>;
-};
+}
 
-import { Message } from '../types/Message';
-import { User } from '../types/User';
+import { Message } from '../types/Message'
+import { User } from '../types/User'
 
-export const messages = createCollection<Message>('messages');
-export const users = createCollection<User>('users');
+export const messages = createCollection<Message>('messages')
+export const users = createCollection<User>('users')
 
-console.log("Database synced");
-
+console.log("[INFO] Database synced")
 
