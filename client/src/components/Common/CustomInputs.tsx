@@ -8,23 +8,39 @@ interface ChatInputProps {
 
 
 
-export const WelcomeEmailInput: React.FC = () => {
+export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
     return (
-        <TextInput style={styles.welcomeEmailInput} placeholder='Email' multiline={false} />
+        <TextInput style={styles.welcomeEmailInput}
+        placeholder='Email'
+        multiline={false}
+        value={value}
+        onChangeText={onChangeText}
+        />
     )
 }
 
 // Maybe will put LogInEmailInput & LogInPasswordInput two together into a single component
 
-export const LogInEmailInput: React.FC = () => {
+export const LogInEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
     return (
-        <TextInput style={styles.loginInput} placeholder='Email' multiline={false} />
+        <TextInput style={styles.loginInput}
+        placeholder='Email'
+        multiline={false}
+        value={value}
+        onChangeText={onChangeText}
+        />
     )
 }
 
-export const LogInPasswordInput: React.FC = () => {
+export const LogInPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeText}) => {
     return (
-        <TextInput style={styles.loginInput} placeholder='Password' multiline={false} />
+        <TextInput style={styles.loginInput}
+        placeholder='Password'
+        multiline={false}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={true}
+        />
     )
 }
 

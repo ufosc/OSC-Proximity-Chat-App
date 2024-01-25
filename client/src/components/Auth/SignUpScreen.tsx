@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { router } from "expo-router";
 
 const SignUpScreen = () => {
@@ -7,6 +7,7 @@ const SignUpScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.button_container}>
+        <Text>Sign Up</Text>
       </View>
     </View>
   );
