@@ -1,6 +1,8 @@
 import express from 'express'
 import 'dotenv/config'
 
+import 'geofire-common'
+
 // import { Message } from './types/Message';
 import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
@@ -51,7 +53,7 @@ io.on('connection', (socket: any) => {
       console.log(`[WS] Recieved ping from user <${socket.id}>.`)
       ack('pong')
   })
-  socket.on('message', (message, ack) => {
+  socket.on('message', (message:Message, ack) => {
     // message post - when someone sends a message
     console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
@@ -62,16 +64,7 @@ io.on('connection', (socket: any) => {
 
       const hash = geohashForLocation([message.lat, message.lon])
 
-      createMessage(
-        message.userId,
-        message.messageId,
-        message.msgContent,
-        message.lat,
-        message.lon,
-        hash,
-        timeSent
-      ); // TODO: import these parameters from the message type.
-
+      createMessage(message);
       ack("message recieved")
 
     } catch(error) {
@@ -102,7 +95,7 @@ socketServer.listen(socket_port, () => {
   console.log(`[WS] Listening for new connections on port ${socket_port}.`)
 })
 
-// === REST APIs === 
+// === REST APIs ===
 
 app.get('/', (req, res) => {
     res.send("Echologator API")
