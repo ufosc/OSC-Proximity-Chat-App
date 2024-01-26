@@ -1,10 +1,11 @@
 // Uploads a new document in the Users collection.
 import { doc, setDoc } from '@firebase/firestore'
 import { users } from '../utilities/firebaseInit'
+import { User } from '../types/User'
 
 export const createUser = async (displayName: string, userId: string, avatarUrl: string, lat: number, lon: number, geohash: string) => {
    const newMsgRef = doc(users, userId) 
-   const docData = {
+   const docData: User = {
        displayName: displayName,
        userId: userId,
        avatarUrl: avatarUrl,
