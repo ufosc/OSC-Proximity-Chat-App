@@ -6,8 +6,8 @@ import 'geofire-common'
 import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
 // import { getUserById } from './actions/getUsers'
-// import { createUser } from './actions/createUser'
-// import { deleteUserById } from './actions/deleteUser'
+import { createUser } from './actions/createUser'
+import { deleteUserById } from './actions/deleteUser'
 import { Message } from './types/Message';
 import {geohashForLocation} from 'geofire-common';
 
@@ -22,7 +22,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // === SOCKET API ===
-
 const socketServer = createServer()
 const io = new Server(socketServer, {
   cors: {
@@ -32,18 +31,19 @@ const io = new Server(socketServer, {
 });
 
 io.on('connection', (socket: any) => {
-  console.log(`[ALERT] User <${socket.id}> connected.`);
+  console.log(`[WS] User <${socket.id}> connected.`);
 
   socket.on('disconnect', () => {
-      console.log(`[ALERT] User <${socket.id}> exited.`);
+      console.log(`[WS] User <${socket.id}> exited.`);
   })
-  socket.on('ping', (cb) => {
-      console.log(`[ALERT] Recieved ping from user <${socket.id}>.`)
-      cb('pong')
+  socket.on('ping', (ack) => {
+      // The (ack) parameter stands for "acknowledgement." This function a message to the originating socket.
+      console.log(`[WS] Recieved ping from user <${socket.id}>.`)
+      ack('pong')
   })
   socket.on('message', (message, ack) => {
     // message post - when someone sends a message
-    console.log(`[ALERT] Recieved message from user <${socket.id}>.`)
+    console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
     try{
       const timeSent = message.timeSent
@@ -64,21 +64,59 @@ io.on('connection', (socket: any) => {
 
       ack("message recieved")
 
-    } catch(err) {
-      console.error(`Error sending (message_post) request: ${err.message}`)
+    } catch(error) {
+      console.error("[WS] Error sending message:", error.message)
       ack('error after sending message')
     }
   })
 })
 
 socketServer.listen(socket_port, () => {
-  console.log(`[INFO] Listening for websockets on port ${socket_port}.`)
+  console.log(`[WS] Listening for new connections on port ${socket_port}.`)
 })
 
 // === REST APIs === 
 
 app.get('/', (req, res) => {
     res.send("Echologator API")
+})
+
+app.post('/users', async (req, res) => {
+    try {
+        await createUser(
+          req.body.displayName,
+          req.body.userId,
+          req.body.avatarUrl,
+          req.body.lat,
+          req.body.lon,
+          req.body.geohash
+        )
+        // Sends back true if new user was created!
+        res.json("Operation <POST /user> was handled successfully.")
+        console.log("[EXP] Request <POST /users> returned successfully.")
+    } catch (error) {
+        console.error("[EXP] Error returning request <POST /users>:\n",error.message)
+        res.json("\"Error\":\"test\"")
+    }
+  
+})
+
+app.delete('/users', async (req, res) => {
+  try {
+    const userId = req.query.userId
+    if (typeof userId != "string") throw Error("  [userId] is not a string.")
+    const success = await deleteUserById(userId)
+
+    if (success) {
+      res.json("Operation <DELETE /users/[userId]> was handled successfully.")
+      console.log("[EXP] Request <DELETE /users/[userId]> returned successfully.")
+    } else {
+      throw Error("  deleteUserById() failed.")
+    }
+  } catch (error) {
+    console.error("[EXP] Error returning request <DELETE /users/[userId]>:\n",error.message)
+    res.json(false)
+  }
 })
 
 // Error handling
@@ -103,7 +141,7 @@ app.delete('*', (req, res) => {
 })
 
 app.listen(express_port, () => {
-    return console.log(`[INFO] Express is listening for requests at http://localhost:${express_port}.`)
+    return console.log(`[EXP] Listening for requests at http://localhost:${express_port}.`)
 })
 
 // Some old API routes are commented out for now due to breaking type changes.

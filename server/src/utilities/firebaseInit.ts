@@ -23,5 +23,5 @@ import { User } from '../types/User'
 export const messages = createCollection<Message>('messages')
 export const users = createCollection<User>('users')
 
-console.log("[INFO] Database synced")
+console.log("[FIRESTORE] Database synced.")
 
