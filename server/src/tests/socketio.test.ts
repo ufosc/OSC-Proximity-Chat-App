@@ -37,4 +37,10 @@ describe("socket-tests", () => {
             done()
         })
     })
+    test('Update location', (done) => {
+        socket.emit('updateLocation', { lat: 77, lon: 77 } , (response) => {
+            expect(response).toBe('location updated')
+            done()
+        })
+    })
 })
