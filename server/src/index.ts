@@ -89,7 +89,7 @@ io.on('connection', (socket: any) => {
         console.log("[WS] Location updated in database successfully.")
         ack("location updated")
       } else {
-        throw Error("updateUserLocation() failed.")
+        throw Error("     updateUserLocation() failed.")
       }
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message)
@@ -122,8 +122,8 @@ app.post('/users', async (req, res) => {
         res.json("Operation <POST /user> was handled successfully.")
         console.log("[EXP] Request <POST /users> returned successfully.")
     } catch (error) {
-        console.error("[EXP] Error returning request <POST /users>:\n",error.message)
-        res.json("\"Error\":\"test\"")
+        console.error("[EXP] Error returning request <POST /users>:\n", error.message)
+        res.json(`Operation <POST /user> failed.`)
     }
 })
 
@@ -137,12 +137,7 @@ app.put('/users', async (req, res) => {
       if (typeof userId != "string") throw Error("  [userId] is not a string.")
 
       const success = await toggleUserConnectionStatus(userId)
-      if (success) {
-        res.json("Operation <PUT /user> was handled successfully.")
-        console.log("[EXP] Request <PUT /users> returned successfully.")
-      } else {
-        throw Error("toggleUserConnectionStatus() failed.")
-      }
+      if (!success) throw Error("     toggleUserConnectionStatus() failed.")
     }
     else if(req.query.userId && req.query.lat && req.query.lon) {
       const userId = req.query.userId
@@ -153,17 +148,14 @@ app.put('/users', async (req, res) => {
       if (typeof lon != "number") throw Error("  [lon] is not a number.")
 
       const success = await updateUserLocation(userId, lat, lon)
-      if (success) {
-        res.json("Operation <PUT /users> was handled successfully.")
-        console.log("[EXP] Request <PUT /users> returned successfully.")
-      } else {
-        throw Error("toggleUserConnectionStatus() failed.")
-      }
+      if (!success) throw Error("     toggleUserConnectionStatus() failed.")
     }
+    console.log(`[EXP] Request <PUT /users${query}> returned successfully.`)
+    res.json(`Operation <PUT /user${query}> was handled successfully.`)
 
   } catch (error) {
-    console.error("[EXP] Error returning request <PUT /users>:\n", error.message)
-    res.json(false)
+    console.error(`[EXP] Error returning request <PUT /users${query}>:\n`, error.message)
+    res.json(`Operation <PUT /user${query}> failed.`)
   }
 })
 
@@ -173,17 +165,15 @@ app.delete('/users', async (req, res) => {
     query = "?userId"
     const userId = req.query.userId
     if (typeof userId != "string") throw Error("  [userId] is not a string.")
-    const success = await deleteUserById(userId)
 
-    if (success) {
-      res.json("Operation <DELETE /users/[userId]> was handled successfully.")
-      console.log("[EXP] Request <DELETE /users/[userId]> returned successfully.")
-    } else {
-      throw Error("     deleteUserById() failed.")
-    }
+    const success = await deleteUserById(userId)
+    if (!success) throw Error("     deleteUserById() failed.")
+
+    console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`)
+    res.json(`Operation <DELETE /users${query}> was handled successfully.`)
   } catch (error) {
-    console.error(`[EXP] Error returning request <DELETE /users${query}>:\n`,error.message)
-    res.json(false)
+    console.error(`[EXP] Error returning request <DELETE /users${query}>:\n`, error.message)
+    res.json(`Operation <DELETE /user${query}> failed.`)
   }
 })
 
