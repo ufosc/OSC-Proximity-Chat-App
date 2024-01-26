@@ -24,7 +24,6 @@ const ChatScreen = () => {
                 msgID: Crypto.randomUUID(),
                 messageContent: message.trim(),
                 author: generateName(),
-                //this is a change
             };
     
             setMessages([...messages, newMessage]);
