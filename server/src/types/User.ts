@@ -5,4 +5,5 @@ export interface User {
     lat: number
     lon: number
     geohash: string
+    isConnected: boolean
 }
