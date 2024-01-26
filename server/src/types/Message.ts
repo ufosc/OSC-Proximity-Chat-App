@@ -5,5 +5,5 @@ export interface Message {
     lat: Number
     lon: Number
     geohash: string
-    timeSent: Number
+    timeSent: number
 }
