@@ -1,4 +1,4 @@
-import { doc, getDoc, deleteDoc} from '@firebase/firestore'
+import { doc, getDoc, deleteDoc } from '@firebase/firestore'
 import { users } from '../utilities/firebaseInit'
 
 export const deleteUserById = async (userId: string) => {
