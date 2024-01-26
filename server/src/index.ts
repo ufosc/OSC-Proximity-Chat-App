@@ -1,12 +1,12 @@
 import express from 'express'
 import 'dotenv/config'
-import 'geofire-common' 
 
 // import { Message } from './types/Message';
 import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
 // import { getUserById } from './actions/getUsers'
 import { createUser } from './actions/createUser'
+import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateUser'
 import { deleteUserById } from './actions/deleteUser'
 import { Message } from './types/Message';
 import {geohashForLocation} from 'geofire-common';
@@ -32,12 +32,22 @@ const io = new Server(socketServer, {
 
 io.on('connection', (socket: any) => {
   console.log(`[WS] User <${socket.id}> connected.`);
+  createUser(
+    "USER",
+    socket.id,
+    "AVATARURL",
+    100,
+    100,
+    "fff"
+  )
+  toggleUserConnectionStatus(socket.id)
 
   socket.on('disconnect', () => {
       console.log(`[WS] User <${socket.id}> exited.`);
+      deleteUserById(socket.id)
   })
   socket.on('ping', (ack) => {
-      // The (ack) parameter stands for "acknowledgement." This function a message to the originating socket.
+  // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
       console.log(`[WS] Recieved ping from user <${socket.id}>.`)
       ack('pong')
   })
@@ -69,6 +79,23 @@ io.on('connection', (socket: any) => {
       ack('error after sending message')
     }
   })
+  socket.on('updateLocation', (message, ack) => {
+    console.log(`[WS] Recieved new location from user <${socket.id}>.`)
+    try {
+      const lat = message.lat
+      const lon = message.lon
+      const success = updateUserLocation(socket.id, lat, lon)
+      if (success) {
+        console.log("[WS] Location updated in database successfully.")
+        ack("location updated")
+      } else {
+        throw Error("updateUserLocation() failed.")
+      }
+    } catch (error) {
+      console.error("[WS] Error calling updateLocation:", error.message)
+      ack("error updating location")
+    }
+  })
 })
 
 socketServer.listen(socket_port, () => {
@@ -87,8 +114,8 @@ app.post('/users', async (req, res) => {
           req.body.displayName,
           req.body.userId,
           req.body.avatarUrl,
-          req.body.lat,
-          req.body.lon,
+          Number(req.body.lat),
+          Number(req.body.lon),
           req.body.geohash
         )
         // Sends back true if new user was created!
@@ -98,11 +125,52 @@ app.post('/users', async (req, res) => {
         console.error("[EXP] Error returning request <POST /users>:\n",error.message)
         res.json("\"Error\":\"test\"")
     }
-  
+})
+
+app.put('/users', async (req, res) => {
+  let query = ""
+  try {
+    if (req.query.userId && req.query.toggleConnection) {
+      // Note: toggleConnection should be assigned 'true', but it at least needs to contain any value. We don't perform a check on this parameter for this reason.
+      query = "?userId&toggleConnection"
+      const userId = req.query.userId
+      if (typeof userId != "string") throw Error("  [userId] is not a string.")
+
+      const success = await toggleUserConnectionStatus(userId)
+      if (success) {
+        res.json("Operation <PUT /user> was handled successfully.")
+        console.log("[EXP] Request <PUT /users> returned successfully.")
+      } else {
+        throw Error("toggleUserConnectionStatus() failed.")
+      }
+    }
+    else if(req.query.userId && req.query.lat && req.query.lon) {
+      const userId = req.query.userId
+      const lat = Number(req.query.lat)
+      const lon = Number(req.query.lon)
+      if (typeof userId != "string") throw Error("  [userId] is not a string.")
+      if (typeof lat != "number") throw Error("  [lat] is not a number.")
+      if (typeof lon != "number") throw Error("  [lon] is not a number.")
+
+      const success = await updateUserLocation(userId, lat, lon)
+      if (success) {
+        res.json("Operation <PUT /users> was handled successfully.")
+        console.log("[EXP] Request <PUT /users> returned successfully.")
+      } else {
+        throw Error("toggleUserConnectionStatus() failed.")
+      }
+    }
+
+  } catch (error) {
+    console.error("[EXP] Error returning request <PUT /users>:\n", error.message)
+    res.json(false)
+  }
 })
 
 app.delete('/users', async (req, res) => {
+  let query = ""
   try {
+    query = "?userId"
     const userId = req.query.userId
     if (typeof userId != "string") throw Error("  [userId] is not a string.")
     const success = await deleteUserById(userId)
@@ -111,10 +179,10 @@ app.delete('/users', async (req, res) => {
       res.json("Operation <DELETE /users/[userId]> was handled successfully.")
       console.log("[EXP] Request <DELETE /users/[userId]> returned successfully.")
     } else {
-      throw Error("  deleteUserById() failed.")
+      throw Error("     deleteUserById() failed.")
     }
   } catch (error) {
-    console.error("[EXP] Error returning request <DELETE /users/[userId]>:\n",error.message)
+    console.error(`[EXP] Error returning request <DELETE /users${query}>:\n`,error.message)
     res.json(false)
   }
 })
