@@ -1,13 +1,13 @@
 import express from 'express'
 import 'dotenv/config'
-import 'geofire-common' 
 
 // import { Message } from './types/Message';
 import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
 // import { getUserById } from './actions/getUsers'
-// import { createUser } from './actions/createUser'
-// import { deleteUserById } from './actions/deleteUser'
+import { createUser } from './actions/createUser'
+import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateUser'
+import { deleteUserById } from './actions/deleteUser'
 import { Message } from './types/Message';
 import {geohashForLocation} from 'geofire-common';
 
@@ -22,7 +22,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // === SOCKET API ===
-
 const socketServer = createServer()
 const io = new Server(socketServer, {
   cors: {
@@ -32,18 +31,29 @@ const io = new Server(socketServer, {
 });
 
 io.on('connection', (socket: any) => {
-  console.log(`[ALERT] User <${socket.id}> connected.`);
+  console.log(`[WS] User <${socket.id}> connected.`);
+  createUser(
+    "USER",
+    socket.id,
+    "AVATARURL",
+    100,
+    100,
+    "fff"
+  )
+  toggleUserConnectionStatus(socket.id)
 
   socket.on('disconnect', () => {
-      console.log(`[ALERT] User <${socket.id}> exited.`);
+      console.log(`[WS] User <${socket.id}> exited.`);
+      deleteUserById(socket.id)
   })
-  socket.on('ping', (cb) => {
-      console.log(`[ALERT] Recieved ping from user <${socket.id}>.`)
-      cb('pong')
+  socket.on('ping', (ack) => {
+  // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
+      console.log(`[WS] Recieved ping from user <${socket.id}>.`)
+      ack('pong')
   })
   socket.on('message', (message, ack) => {
     // message post - when someone sends a message
-    console.log(`[ALERT] Recieved message from user <${socket.id}>.`)
+    console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
     try{
       const timeSent = message.timeSent
@@ -64,21 +74,107 @@ io.on('connection', (socket: any) => {
 
       ack("message recieved")
 
-    } catch(err) {
-      console.error(`Error sending (message_post) request: ${err.message}`)
+    } catch(error) {
+      console.error("[WS] Error sending message:", error.message)
       ack('error after sending message')
+    }
+  })
+  socket.on('updateLocation', (message, ack) => {
+    console.log(`[WS] Recieved new location from user <${socket.id}>.`)
+    try {
+      const lat = message.lat
+      const lon = message.lon
+      const success = updateUserLocation(socket.id, lat, lon)
+      if (success) {
+        console.log("[WS] Location updated in database successfully.")
+        ack("location updated")
+      } else {
+        throw Error("     updateUserLocation() failed.")
+      }
+    } catch (error) {
+      console.error("[WS] Error calling updateLocation:", error.message)
+      ack("error updating location")
     }
   })
 })
 
 socketServer.listen(socket_port, () => {
-  console.log(`[INFO] Listening for websockets on port ${socket_port}.`)
+  console.log(`[WS] Listening for new connections on port ${socket_port}.`)
 })
 
 // === REST APIs === 
 
 app.get('/', (req, res) => {
     res.send("Echologator API")
+})
+
+app.post('/users', async (req, res) => {
+    try {
+        await createUser(
+          req.body.displayName,
+          req.body.userId,
+          req.body.avatarUrl,
+          Number(req.body.lat),
+          Number(req.body.lon),
+          req.body.geohash
+        )
+        // Sends back true if new user was created!
+        res.json("Operation <POST /user> was handled successfully.")
+        console.log("[EXP] Request <POST /users> returned successfully.")
+    } catch (error) {
+        console.error("[EXP] Error returning request <POST /users>:\n", error.message)
+        res.json(`Operation <POST /user> failed.`)
+    }
+})
+
+app.put('/users', async (req, res) => {
+  let query = ""
+  try {
+    if (req.query.userId && req.query.toggleConnection) {
+      // Note: toggleConnection should be assigned 'true', but it at least needs to contain any value. We don't perform a check on this parameter for this reason.
+      query = "?userId&toggleConnection"
+      const userId = req.query.userId
+      if (typeof userId != "string") throw Error("  [userId] is not a string.")
+
+      const success = await toggleUserConnectionStatus(userId)
+      if (!success) throw Error("     toggleUserConnectionStatus() failed.")
+    }
+    else if(req.query.userId && req.query.lat && req.query.lon) {
+      const userId = req.query.userId
+      const lat = Number(req.query.lat)
+      const lon = Number(req.query.lon)
+      if (typeof userId != "string") throw Error("  [userId] is not a string.")
+      if (typeof lat != "number") throw Error("  [lat] is not a number.")
+      if (typeof lon != "number") throw Error("  [lon] is not a number.")
+
+      const success = await updateUserLocation(userId, lat, lon)
+      if (!success) throw Error("     toggleUserConnectionStatus() failed.")
+    }
+    console.log(`[EXP] Request <PUT /users${query}> returned successfully.`)
+    res.json(`Operation <PUT /user${query}> was handled successfully.`)
+
+  } catch (error) {
+    console.error(`[EXP] Error returning request <PUT /users${query}>:\n`, error.message)
+    res.json(`Operation <PUT /user${query}> failed.`)
+  }
+})
+
+app.delete('/users', async (req, res) => {
+  let query = ""
+  try {
+    query = "?userId"
+    const userId = req.query.userId
+    if (typeof userId != "string") throw Error("  [userId] is not a string.")
+
+    const success = await deleteUserById(userId)
+    if (!success) throw Error("     deleteUserById() failed.")
+
+    console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`)
+    res.json(`Operation <DELETE /users${query}> was handled successfully.`)
+  } catch (error) {
+    console.error(`[EXP] Error returning request <DELETE /users${query}>:\n`, error.message)
+    res.json(`Operation <DELETE /user${query}> failed.`)
+  }
 })
 
 // Error handling
@@ -103,7 +199,7 @@ app.delete('*', (req, res) => {
 })
 
 app.listen(express_port, () => {
-    return console.log(`[INFO] Express is listening for requests at http://localhost:${express_port}.`)
+    return console.log(`[EXP] Listening for requests at http://localhost:${express_port}.`)
 })
 
 // Some old API routes are commented out for now due to breaking type changes.
