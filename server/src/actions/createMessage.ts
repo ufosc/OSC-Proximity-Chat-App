@@ -10,7 +10,7 @@ export const createMessage = async (userId: string, msgId: string, msgContent: s
        lat: lat,
        lon: lon,
        geohash: geohash,
-       timeSent: timeSent
+       timeSent: timeSent,
    } // TODO: import these parameters from the message type
 
    await setDoc(newMsgRef, docData)
