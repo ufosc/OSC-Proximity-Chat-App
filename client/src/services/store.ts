@@ -1,4 +1,4 @@
-import { User, onAuthStateChanged } from 'firebase/auth'
+import { User, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { Store } from 'pullstate'
 import { app, auth } from '../configs/firebaseConfig'
 
@@ -22,3 +22,44 @@ const unsub = onAuthStateChanged(auth, (user) => {
         store.user = user
     })
 });
+
+export const appSignIn = async (email: string, password: string) => {
+    try {
+        const response = await signInWithEmailAndPassword(auth, email, password);
+        AuthStore.update((store) => {
+            store.user = response.user;
+            store.isLoggedin = response.user ? true : false;
+        });
+
+        return { user: auth.currentUser };
+    } catch (e) {
+        return { error: e };
+    }
+};
+
+export const appSignOut = async () => {
+    try {
+        await signOut(auth);
+        AuthStore.update((store) => {
+            store.user = null;
+            store.isLoggedin = false;
+        });
+        return { user: null}
+    } catch (e) {
+        return { error: e };
+    }
+};
+
+export const appSignUp = async (email: string, password: string) => {
+    try {
+        const response = await createUserWithEmailAndPassword(auth, email, password);
+        
+        AuthStore.update((store) => {
+            store.user = response.user;
+            store.isLoggedin = response.user ? true : false;
+        });
+        return { user: auth.currentUser}
+    } catch (e) {
+        return { error: e };
+    }
+};
