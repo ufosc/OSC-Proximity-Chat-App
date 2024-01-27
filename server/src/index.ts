@@ -96,7 +96,7 @@ io.on('connection', (socket: any) => {
         console.log("[WS] Location updated in database successfully.")
         ack("location updated")
       } else {
-        throw Error("updateUserLocation() failed.")
+        throw Error("     updateUserLocation() failed.")
       }
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message)
