@@ -35,10 +35,6 @@ const SignUpScreen = () => {
     }
   };
 
-  useEffect(() => {
-    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
-  }, []);
-
   if (!fontsLoaded && !fontError) {
     return null;
   }
