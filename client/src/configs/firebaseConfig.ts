@@ -6,13 +6,12 @@ import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, A
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCTpiaslzR6h75b7r262KW97g9Nho1bsUE",
-  authDomain: "proxchat-ad12c.firebaseapp.com",
-  projectId: "proxchat-ad12c",
-  storageBucket: "proxchat-ad12c.appspot.com",
-  messagingSenderId: "399108933140",
-  appId: "1:399108933140:web:222da991755cb159700901",
-  measurementId: "G-LVYZJKW1CR"
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
 };
 
 
