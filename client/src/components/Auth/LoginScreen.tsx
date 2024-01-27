@@ -10,20 +10,30 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { LogInEmailInput, LogInPasswordInput} from "../Common/CustomInputs";
+import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
 import LogInButton from "../Common/LogInButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { appSignIn } from "../../services/store";
 
 const LoginScreen = () => {
+  const router = useRouter();
   const [fontsLoaded, fontError] = useFonts({
     "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
     "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
   });
-  const router = useRouter();
-  const { inputEmail } = useLocalSearchParams();
 
+  const { inputEmail } = useLocalSearchParams();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+
+  const onHandleSubmit = async () => {
+    const response = await appSignIn(email, password);
+    if (response?.user) {
+      router.replace("(home)/chatchannel");
+    } else if (response?.error) {
+      console.log(response.error);
+    }
+  };
 
   useEffect(() => {
     setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
@@ -43,11 +53,17 @@ const LoginScreen = () => {
             <Text style={styles.header_text}>Welcome back!</Text>
           </View>
           <View style={styles.input_container}>
-            <LogInEmailInput value={email} onChangeText={text => setEmail(text)} />
-            <LogInPasswordInput value={password} onChangeText={text => setPassword(text)} />
+            <LogInEmailInput
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <LogInPasswordInput
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
           </View>
           <View style={styles.button_container}>
-            <LogInButton />
+            <LogInButton onPress={onHandleSubmit} />
           </View>
         </View>
       </KeyboardAvoidingView>

@@ -1,6 +1,6 @@
 import { User, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { Store } from 'pullstate'
-import { app, auth } from '../configs/firebaseConfig'
+import { auth, app } from '../configs/firebaseConfig'
 
 interface AuthStoreInterface {
     isLoggedin: boolean,
@@ -27,8 +27,8 @@ export const appSignIn = async (email: string, password: string) => {
     try {
         const response = await signInWithEmailAndPassword(auth, email, password);
         AuthStore.update((store) => {
-            store.user = response.user;
-            store.isLoggedin = response.user ? true : false;
+            store.user = response?.user;
+            store.isLoggedin = response?.user ? true : false;
         });
 
         return { user: auth.currentUser };
