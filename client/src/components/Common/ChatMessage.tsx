@@ -5,7 +5,7 @@ interface MessageProps {
   messageContent: string,
   // timestamp: Date, (This will be added later inside the message object passed in)
   author: string,
-  time: Date,
+  time: Date
 };
 
 const Message:React.FC<MessageProps> = ({ messageContent, author}) => {
