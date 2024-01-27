@@ -3,6 +3,9 @@
   "compilerOptions": {
     "jsx": "react",
     "strict": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "paths": {
+      "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
+    }
+  },
 }

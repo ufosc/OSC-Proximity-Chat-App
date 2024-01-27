@@ -1,16 +1,15 @@
-import React from 'react'
-import { Stack } from 'expo-router';
+import React from "react";
+import { Stack } from "expo-router";
 
-const AuthLayout = () => {
+const PublicLayout = () => {
   return (
-    <Stack screenOptions={{
-        headerShown: false
-    }}>
-
-        <Stack.Screen name="chatchannel" options={{
-        }} />
+    <Stack>
+        <Stack.Screen name="welcome" options={{ headerShown: false}}/>
+        <Stack.Screen name="login" options={{ headerShown: false}}/>
+        <Stack.Screen name="signup" options={{ headerShown: false}}/>
+        <Stack.Screen name="resetpass" options={{ headerShown: false}}/>
     </Stack>
   )
 }
 
-export default AuthLayout
+export default PublicLayout
