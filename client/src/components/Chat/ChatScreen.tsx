@@ -22,7 +22,7 @@ const ChatScreen = () => {
         if (message.trim() !== '') {
             const newMessage: MessageType = {
                 msgID: Crypto.randomUUID(),
-                messageContent: message,
+                messageContent: message.trim(),
                 author: generateName(),
             };
     
