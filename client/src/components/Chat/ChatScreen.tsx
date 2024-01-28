@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { useContext } from 'react'
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, View, Text, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native'
 import { ChatInput } from '../Common/CustomInputs';
 import { ChatSendButton } from '../Common/CustomButtons';
@@ -7,8 +7,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MessageType } from '../../utils/types';
 import * as Crypto from 'expo-crypto';
 import { generateName } from '../../utils/scripts';
+import { SettingsContext } from '../../app';
 
 const ChatScreen = () => {
+    const settings = useContext(SettingsContext);
     const screenWidth = Dimensions.get('window').width;
     const screenHeight = Dimensions.get('window').height;
     const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
@@ -32,22 +34,30 @@ const ChatScreen = () => {
         };
     }
 
+    const headerContainerStyleProps = {...styles.headerContainer, backgroundColor: settings.headerBackgroundColor};
+    const chatContainerStyleProps = {...styles.chatContainer, backgroundColor: settings.theme == 'light' ? 'white': 'black'};
+
     return (
         <View>
             <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={Platform.OS === 'ios' ? screenHeight * 0.055 : 0}>
                 <View style={styles.mainContainer}>
-                    <View style={styles.headerContainer}>
+                    <View style={headerContainerStyleProps}>
                         <Text style={{
                             fontSize: 20,
                             fontWeight: 'bold',
                             color: 'white',
                         }}>Chat Screen</Text>
                     </View>
-                    <View style={styles.chatContainer}>
+                    <View style={chatContainerStyleProps}>
                         <MessageChannel messages={messages} />
                     </View>
                     <View style={styles.footerContainer}>
-                        <ChatInput value={message} onChangeText={(text: string) => { setMessage(text); }} />
+                        <ChatInput 
+                            value={message} 
+                            onChangeText={(text: string) => { setMessage(text); }} 
+                            autoCorrect={settings.autoCorrect}
+                            autoCapitalize={settings.autoCapitalize}
+                        />
                         <ChatSendButton onPress={onHandleSubmit} />
                     </View>
                 </View>
@@ -70,13 +80,12 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * 0.05,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#98BF64',
+        alignItems: 'center'
     },
 
     chatContainer: {
         width: '100%',
-        flex: 1,
+        flex: 1
     },
 
     footerContainer: {
@@ -90,7 +99,7 @@ const styles = StyleSheet.create({
         paddingBottom: Dimensions.get('window').height * 0.02,
         paddingTop: Dimensions.get('window').height * 0.02,
         marginTop: 10,
-        borderTopWidth: 1,
+        borderTopWidth: 1
     },
 });
 

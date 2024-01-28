@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { View, StyleSheet, Text, Image, Dimensions } from 'react-native';
+import { SettingsContext } from '../../app';
 
 interface MessageProps {
   messageContent: string,
@@ -8,8 +9,10 @@ interface MessageProps {
 };
 
 const Message:React.FC<MessageProps> = ({ messageContent, author}) => {
+  const settings = useContext(SettingsContext);
   const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
+  // Text should have a different color to contrast with the background color
+  const authorStyleProps = {...styles.authorStyle, color: settings.theme === 'light' ? 'black': 'white'};
   return (
 
     <View style={styles.container}>
@@ -19,12 +22,12 @@ const Message:React.FC<MessageProps> = ({ messageContent, author}) => {
       <View style={styles.contentContainer}>
 
         <View style={styles.messageHeader}>
-          <Text style={styles.authorStyle}>{author}</Text>
-          <Text>{timestamp}</Text>
+          <Text style={authorStyleProps}>{author}</Text>
+          <Text style={{color: settings.theme === 'light'? 'black': 'white'}}>{timestamp}</Text>
 
         </View>
         <View style={styles.messageContent}>
-          <Text>{messageContent}</Text>
+          <Text style={{color: settings.theme === 'light'? 'black': 'white'}}>{messageContent}</Text>
 
         </View>
 
@@ -40,6 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     elevation: 1,
+    color: 'white'
   },
 
   profileImageContainer: {
