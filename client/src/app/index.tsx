@@ -4,7 +4,7 @@ import { AuthStore } from "../services/store";
 import { useRootNavigationState, useRouter, useSegments } from "expo-router";
 
 const App = () => {
-  const { initialized, isLoggedIn } = AuthStore.useState();
+  const { initialized, isLoggedin } = AuthStore.useState();
   const router = useRouter();
   const segments = useSegments();
   const navigationState = useRootNavigationState();
@@ -12,14 +12,12 @@ const App = () => {
   useEffect(() => {
     if (!navigationState?.key || !initialized) return;
 
-    const inAuthGroup = segments[0] === "(auth)";
-
-    if (!isLoggedIn && !inAuthGroup) {
-      router.replace('/welcome')
-    } else if (isLoggedIn) {
-      router.replace('/chatchannel')
+    if (!isLoggedin) {
+      router.replace("/welcome");
+    } else if (isLoggedin) {
+      router.replace("/chatchannel");
     }
-  }, [segments, navigationState?.key, initialized])
+  }, [segments, navigationState?.key, initialized]);
 
   return (
     <View>

@@ -44,6 +44,31 @@ export const LogInPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeTe
     )
 }
 
+// sign up screen inputs
+
+export const SignUpEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
+    return (
+        <TextInput style={styles.loginInput}
+        placeholder='Email'
+        multiline={false}
+        value={value}
+        onChangeText={onChangeText}
+        />
+    )
+}
+
+export const SignUpPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeText}) => {
+    return (
+        <TextInput style={styles.loginInput}
+        placeholder='Password'
+        multiline={false}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={true}
+        />
+    )
+}
+
 export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
 
 
