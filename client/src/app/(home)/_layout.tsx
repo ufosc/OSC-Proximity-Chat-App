@@ -1,15 +1,18 @@
 import React from 'react'
 import { Stack } from 'expo-router';
+import { SettingsProvider } from '../../components/settings/SettingsContext';
 
 const AuthLayout = () => {
-  return (
-    <Stack screenOptions={{
-        headerShown: false
-    }}>
 
+  return (
+    <SettingsProvider>
+      <Stack screenOptions={{
+          headerShown: false
+      }}>
         <Stack.Screen name="chatchannel" options={{
         }} />
-    </Stack>
+      </Stack>
+    </SettingsProvider>
   )
 }
 
