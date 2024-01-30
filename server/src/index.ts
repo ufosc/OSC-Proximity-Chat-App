@@ -1,5 +1,6 @@
 import express from 'express'
 import 'dotenv/config'
+import 'geofire-common'
 
 // import { Message } from './types/Message';
 import { createMessage } from './actions/createMessage'
@@ -52,7 +53,7 @@ io.on('connection', (socket: any) => {
       console.log(`[WS] Recieved ping from user <${socket.id}>.`)
       ack('pong')
   })
-  socket.on('message', async (message, ack) => {
+  socket.on('message', (message:Message, ack) => {
     // message post - when someone sends a message
     console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
@@ -63,15 +64,7 @@ io.on('connection', (socket: any) => {
 
       const hash = geohashForLocation([Number(message.lat), Number(message.lon)])
 
-      createMessage(
-        message.userId,
-        message.messageId,
-        message.msgContent,
-        Number(message.lat),
-        Number(message.lon),
-        hash,
-        timeSent
-      ); // TODO: import these parameters from the message type.
+      createMessage(message); // TODO: import these parameters from the message type.
 
       // Get nearby users and push the message's id to them.
       const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
@@ -103,13 +96,30 @@ io.on('connection', (socket: any) => {
       console.error("[WS] Error calling updateLocation:", error.message)
     }
   })
+  socket.on('updateLocation', (message, ack) => {
+    console.log(`[WS] Recieved new location from user <${socket.id}>.`)
+    try {
+      const lat = message.lat
+      const lon = message.lon
+      const success = updateUserLocation(socket.id, lat, lon)
+      if (success) {
+        console.log("[WS] Location updated in database successfully.")
+        ack("location updated")
+      } else {
+        throw Error("     updateUserLocation() failed.")
+      }
+    } catch (error) {
+      console.error("[WS] Error calling updateLocation:", error.message)
+      ack("error updating location")
+    }
+  })
 })
 
 socketServer.listen(socket_port, () => {
   console.log(`[WS] Listening for new connections on port ${socket_port}.`)
 })
 
-// === REST APIs === 
+// === REST APIs ===
 
 app.get('/', (req, res) => {
     res.send("Echologator API")

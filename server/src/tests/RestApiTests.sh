@@ -25,6 +25,6 @@ localhost:3001/users?userId=USERID\&lat=88\&lon=88
 echo ""
 sleep 1
 
-# curl --request "DELETE" \
-# localhost:3001/users?userId=USERID
-# echo ""
+curl --request "DELETE" \
+localhost:3001/users?userId=USERID
+echo ""
