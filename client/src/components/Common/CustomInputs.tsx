@@ -3,9 +3,7 @@ import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
 
 interface ChatInputProps {
     value?: string,
-    onChangeText?: (text: string) => void,
-    autoCorrect?: boolean,
-    autoCapitalize?: string
+    onChangeText?: (text: string) => void
 }
 
 
@@ -71,7 +69,7 @@ export const SignUpPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeT
     )
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText, autoCorrect, autoCapitalize }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
 
 
     
@@ -80,8 +78,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText, autoC
         placeholder='Say Something...'
         multiline={true}
         value={value}
-        autoCorrect={autoCorrect}
-        autoCapitalize={autoCapitalize}
         onChangeText={onChangeText}
         maxLength={500} />
     )
