@@ -13,6 +13,9 @@ messagingSenderId = ### MESSAGING SENDER ID ###
 
 appId = ### APP ID ###
 
+# Location
+message_outreach_radius = 100 # meters
+
 # Misc
 express_port = 3001
 socket_port = 8080

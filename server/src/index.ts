@@ -1,6 +1,5 @@
 import express from 'express'
 import 'dotenv/config'
-
 import 'geofire-common'
 
 // import { Message } from './types/Message';
@@ -12,6 +11,7 @@ import { toggleUserConnectionStatus, updateUserLocation } from './actions/update
 import { deleteUserById } from './actions/deleteUser'
 import { Message } from './types/Message';
 import {geohashForLocation} from 'geofire-common';
+import { findNearbyUsers } from './actions/getUsers'
 
 const { createServer } = require('http')
 const { Server } = require('socket.io')
@@ -62,14 +62,38 @@ io.on('connection', (socket: any) => {
       if(isNaN(timeSent))
         throw new Error("The timeSent parameter must be a valid number.")
 
-      const hash = geohashForLocation([message.lat, message.lon])
+      const hash = geohashForLocation([Number(message.lat), Number(message.lon)])
 
-      createMessage(message);
+      createMessage(message); // TODO: import these parameters from the message type.
+
+      // Get nearby users and push the message's id to them.
+      const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
+      console.log("Nearby users:", nearbyUserSockets)
+      for (const recievingSocket of nearbyUserSockets) {
+        console.log(`Sending new message to socket ${recievingSocket}`)
+        socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
+      }
+
       ack("message recieved")
 
     } catch(error) {
       console.error("[WS] Error sending message:", error.message)
-      ack('error after sending message')
+    }
+  })
+  socket.on('updateLocation', async (message, ack) => {
+    console.log(`[WS] Recieved new location from user <${socket.id}>.`)
+    try {
+      const lat = Number(message.lat)
+      const lon = Number(message.lon)
+      const success = await updateUserLocation(socket.id, lat, lon)
+      if (success) {
+        console.log("[WS] Location updated in database successfully.")
+        ack("location updated")
+      } else {
+        throw Error("     updateUserLocation() failed.")
+      }
+    } catch (error) {
+      console.error("[WS] Error calling updateLocation:", error.message)
     }
   })
   socket.on('updateLocation', (message, ack) => {
@@ -99,6 +123,27 @@ socketServer.listen(socket_port, () => {
 
 app.get('/', (req, res) => {
     res.send("Echologator API")
+})
+
+app.get('/users', async (req, res) => {
+  let query = ''
+  try {
+    if (req.query.lat && req.query.lon && req.query.radius) {
+      // Looks up all users close to a geographic location extended by a radius (in meters).
+      query = "?lat&lon&radius"
+
+      const lat = Number(req.query.lat)
+      const lon = Number(req.query.lon)
+      const radius = Number(req.query.radius)
+      
+      const userIds = await findNearbyUsers(lat, lon, radius)
+      console.log(userIds)
+      res.json(userIds)
+    }
+  } catch(error) {
+    console.error(`[EXP] Error returning request <GET /users${query}>:\n`, error.message)
+    res.json(`Operation <GET /users${query}> failed.`)
+  }
 })
 
 app.post('/users', async (req, res) => {

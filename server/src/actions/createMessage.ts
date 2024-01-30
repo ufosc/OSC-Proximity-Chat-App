@@ -12,6 +12,7 @@ export const createMessage = async (msg : Message) => {
        lon: msg.lon,
        geohash: msg.geohash,
        timeSent: msg.timeSent
+   }
    
    await setDoc(newMsgRef, docData)
 }
