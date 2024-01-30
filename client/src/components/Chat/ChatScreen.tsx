@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react';
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, View, Text, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native'
 import { ChatInput } from '../Common/CustomInputs';
 import { ChatSendButton } from '../Common/CustomButtons';
@@ -7,10 +7,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MessageType } from '../../utils/types';
 import * as Crypto from 'expo-crypto';
 import { generateName } from '../../utils/scripts';
-import { SettingsContext } from '../../app';
+import { useSettings } from '../settings/SettingsContext';
 
 const ChatScreen = () => {
-    const settings = useContext(SettingsContext);
+    const settings = useSettings();
     const screenWidth = Dimensions.get('window').width;
     const screenHeight = Dimensions.get('window').height;
     const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
@@ -33,15 +33,13 @@ const ChatScreen = () => {
             setMessage('');
         };
     }
-
-    const headerContainerStyleProps = {...styles.headerContainer, backgroundColor: settings.headerBackgroundColor};
-    const chatContainerStyleProps = {...styles.chatContainer, backgroundColor: settings.theme == 'light' ? 'white': 'black'};
+    const chatContainerStyleProps = {...styles.chatContainer, backgroundColor: settings && settings.theme != 'light' ? 'black': 'white'};
 
     return (
         <View>
             <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={Platform.OS === 'ios' ? screenHeight * 0.055 : 0}>
                 <View style={styles.mainContainer}>
-                    <View style={headerContainerStyleProps}>
+                    <View style={styles.headerContainer}>
                         <Text style={{
                             fontSize: 20,
                             fontWeight: 'bold',
@@ -55,8 +53,6 @@ const ChatScreen = () => {
                         <ChatInput 
                             value={message} 
                             onChangeText={(text: string) => { setMessage(text); }} 
-                            autoCorrect={settings.autoCorrect}
-                            autoCapitalize={settings.autoCapitalize}
                         />
                         <ChatSendButton onPress={onHandleSubmit} />
                     </View>

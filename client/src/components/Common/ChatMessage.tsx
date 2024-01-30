@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { View, StyleSheet, Text, Image, Dimensions } from 'react-native';
-import { SettingsContext } from '../../app';
+import { useSettings } from '../settings/SettingsContext';
 
 interface MessageProps {
   messageContent: string,
@@ -9,10 +9,10 @@ interface MessageProps {
 };
 
 const Message:React.FC<MessageProps> = ({ messageContent, author}) => {
-  const settings = useContext(SettingsContext);
+  const settings = useSettings();
   const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   // Text should have a different color to contrast with the background color
-  const authorStyleProps = {...styles.authorStyle, color: settings.theme === 'light' ? 'black': 'white'};
+  const authorStyleProps = {...styles.authorStyle, color: settings && settings.theme != 'light' ? 'white': 'black'};
   return (
 
     <View style={styles.container}>
@@ -23,11 +23,11 @@ const Message:React.FC<MessageProps> = ({ messageContent, author}) => {
 
         <View style={styles.messageHeader}>
           <Text style={authorStyleProps}>{author}</Text>
-          <Text style={{color: settings.theme === 'light'? 'black': 'white'}}>{timestamp}</Text>
+          <Text style={{color: settings && settings.theme != 'light' ? 'white': 'black'}}>{timestamp}</Text>
 
         </View>
         <View style={styles.messageContent}>
-          <Text style={{color: settings.theme === 'light'? 'black': 'white'}}>{messageContent}</Text>
+          <Text style={{color: settings && settings.theme != 'light' ? 'white': 'black'}}>{messageContent}</Text>
 
         </View>
 
