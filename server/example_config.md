@@ -14,7 +14,7 @@ messagingSenderId = ### MESSAGING SENDER ID ###
 appId = ### APP ID ###
 
 # Location
-message_pickup_radius = 100 # meters
+message_outreach_radius = 100 # meters
 
 # Misc
 express_port = 3001
