@@ -9,48 +9,53 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
 
 // Additionally, GeoPoints and storing a 'center' array leads to type issues, so similar GeoPoint checks are performed.
 
- if (centerLat < -90 || centerLat > 90) throw Error("centerLat does not fit GeoPoint bounds.")
- if (centerLon < -180 || centerLon > 180) throw Error("centerLon does not fit GeoPoint bounds.")
+ try {
+   console.log("getNeabyUsers() params:", centerLat, centerLon, radius)
+   if (centerLat < -90 || centerLat > 90) throw Error("centerLat does not fit GeoPoint bounds.")
+   if (centerLon < -180 || centerLon > 180) throw Error("centerLon does not fit GeoPoint bounds.")
 
- const originHash = geohashForLocation([centerLat, centerLon])
- const bounds = geohashQueryBounds([centerLat, centerLon], radius)
- const promises = []
+   const originHash = geohashForLocation([centerLat, centerLon])
+   const bounds = geohashQueryBounds([centerLat, centerLon], radius)
+   const promises = []
 
- for (const b of bounds) {
-  const q = query(
-   users,
-   orderBy('geohash'),
-   startAt(b[0]),
-   endAt(b[1])
-  )
+   for (const b of bounds) {
+    const q = query(
+     users,
+     orderBy('geohash'),
+     startAt(b[0]),
+     endAt(b[1])
+    )
 
-  promises.push(getDocs(q))
- }
-
- // Collect query results and append into a single array
- const snapshots = await Promise.all(promises)
-
- const matchingDocs = []
- for (const snap of snapshots) {
-  for (const doc of snap.docs) {
-   const lat = doc.get('lat')
-   const lon = doc.get('lon')
-
-   // We have to filter out a few false positives due to GeoHash
-   // accuracy, but most will match
-   const distanceInKm = distanceBetween([lat, lon], [centerLat, centerLon])
-   const distanceInM = distanceInKm * 1000
-   if (distanceInM <= radius) {
-    matchingDocs.push(doc)
+    promises.push(getDocs(q))
    }
-  }
- }
 
- // Extract userIds from matched documents
- const userIds = []
- for (const doc of matchingDocs) {
-  // userIds.push(doc.data()['userId'])
-  userIds.push(doc.data()['userId'])
+   // Collect query results and append into a single array
+   const snapshots = await Promise.all(promises)
+
+   const matchingDocs = []
+   for (const snap of snapshots) {
+    for (const doc of snap.docs) {
+     const lat = doc.get('lat')
+     const lon = doc.get('lon')
+
+     // We have to filter out a few false positives due to GeoHash
+     // accuracy, but most will match
+     const distanceInKm = distanceBetween([lat, lon], [centerLat, centerLon])
+     const distanceInM = distanceInKm * 1000
+     if (distanceInM <= radius) {
+      matchingDocs.push(doc)
+     }
+    }
+   }
+
+   // Extract userIds from matched documents
+   const userIds = []
+   for (const doc of matchingDocs) {
+    // userIds.push(doc.data()['userId'])
+    userIds.push(doc.data()['userId'])
+   }
+   return userIds
+ } catch (error) {
+   console.error("getNearbyUsers() failed.", error.message)
  }
- return userIds
 }

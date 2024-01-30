@@ -61,37 +61,38 @@ io.on('connection', (socket: any) => {
       if(isNaN(timeSent))
         throw new Error("The timeSent parameter must be a valid number.")
 
-      const hash = geohashForLocation([message.lat, message.lon])
+      const hash = geohashForLocation([Number(message.lat), Number(message.lon)])
 
       createMessage(
         message.userId,
         message.messageId,
         message.msgContent,
-        message.lat,
-        message.lon,
+        Number(message.lat),
+        Number(message.lon),
         hash,
         timeSent
       ); // TODO: import these parameters from the message type.
 
       // Get nearby users and push the message's id to them.
-      const nearbyUserSockets = await findNearbyUsers(message.lat, message.lon, Number(process.env.message_outreach_radius))
+      const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
+      console.log("Nearby users:", nearbyUserSockets)
       for (const recievingSocket of nearbyUserSockets) {
-        socket.broadcast.to(recievingSocket).emit(message.messageId)
+        console.log(`Sending new message to socket ${recievingSocket}`)
+        socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
       }
 
       ack("message recieved")
 
     } catch(error) {
       console.error("[WS] Error sending message:", error.message)
-      ack('error after sending message')
     }
   })
-  socket.on('updateLocation', (message, ack) => {
+  socket.on('updateLocation', async (message, ack) => {
     console.log(`[WS] Recieved new location from user <${socket.id}>.`)
     try {
-      const lat = message.lat
-      const lon = message.lon
-      const success = updateUserLocation(socket.id, lat, lon)
+      const lat = Number(message.lat)
+      const lon = Number(message.lon)
+      const success = await updateUserLocation(socket.id, lat, lon)
       if (success) {
         console.log("[WS] Location updated in database successfully.")
         ack("location updated")
