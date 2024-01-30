@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Settings = {
   theme: string;
-  setTheme: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SettingsContext = createContext<Settings | null>(null);
@@ -11,6 +10,19 @@ const SettingsContext = createContext<Settings | null>(null);
 export const useSettings = () => {
   return useContext(SettingsContext);
 };
+
+export const toggleTheme = async () => {
+  try {
+    const settings = await loadSettings();
+    if (settings && settings.theme === "light") {
+      await AsyncStorage.setItem("theme", "dark");
+    } else {
+      await AsyncStorage.setItem("theme", "light");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 export const loadSettings = async () => {
   try {
@@ -25,8 +37,8 @@ export const loadSettings = async () => {
         theme: "light",
       };
     }
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
   }
 };
 
@@ -37,15 +49,16 @@ export const SettingsProvider = ({
 }) => {
   const [theme, setTheme] = useState("light");
   useEffect(() => {
-    loadSettings().then((settings) => {
+    (async () => {
+        const settings = await loadSettings();
         if (settings) {
-            setTheme(settings.theme);
+          setTheme(settings.theme);
         }
     })
   }, [theme]);
 
   return (
-    <SettingsContext.Provider value={{theme, setTheme}}>
+    <SettingsContext.Provider value={{theme}}>
       {children}
     </SettingsContext.Provider>
   );
