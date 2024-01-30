@@ -96,7 +96,7 @@ io.on('connection', (socket: any) => {
         console.log("[WS] Location updated in database successfully.")
         ack("location updated")
       } else {
-        throw Error("updateUserLocation() failed.")
+        throw Error("     updateUserLocation() failed.")
       }
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message)
@@ -164,7 +164,7 @@ app.put('/users', async (req, res) => {
       if (typeof userId != "string") throw Error("  [userId] is not a string.")
 
       const success = await toggleUserConnectionStatus(userId)
-      if (!success) throw Error("toggleUserConnectionStatus() failed.")
+      if (!success) throw Error("     toggleUserConnectionStatus() failed.")
     }
     else if(req.query.userId && req.query.lat && req.query.lon) {
       const userId = req.query.userId
@@ -175,7 +175,7 @@ app.put('/users', async (req, res) => {
       if (typeof lon != "number") throw Error("  [lon] is not a number.")
 
       const success = await updateUserLocation(userId, lat, lon)
-      if (!success) throw Error("toggleUserConnectionStatus() failed.")
+      if (!success) throw Error("     toggleUserConnectionStatus() failed.")
     }
     console.log(`[EXP] Request <PUT /users${query}> returned successfully.`)
     res.json(`Operation <PUT /user${query}> was handled successfully.`)
