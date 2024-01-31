@@ -71,8 +71,6 @@ export const SettingsProvider = ({
     }
 
     await reloadSettings();
-
-    console.log("Theme toggled to " + (await loadSettings())?.theme);
   };
 
   return (

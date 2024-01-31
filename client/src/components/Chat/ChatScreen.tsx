@@ -43,17 +43,15 @@ const ChatScreen = () => {
 
       setMessage("");
     }
-
-    // Toggling theme from the chat screen (for testing purposes)
-    settings?.toggleTheme();
-  };
-  const chatContainerStyleProps = {
-    ...styles.chatContainer,
-    backgroundColor: settings && settings.theme != "light" ? "black" : "white",
   };
 
   return (
-    <View>
+    <View
+      style={{
+        backgroundColor:
+          settings && settings.theme != "light" ? "#191d20" : "white", // Needs to be changed to be a prop later (new issue?)
+      }}
+    >
       <KeyboardAvoidingView
         behavior={keyboardBehavior}
         keyboardVerticalOffset={
@@ -72,7 +70,7 @@ const ChatScreen = () => {
               Chat Screen
             </Text>
           </View>
-          <View style={chatContainerStyleProps}>
+          <View style={styles.chatContainer}>
             <MessageChannel messages={messages} />
           </View>
           <View style={styles.footerContainer}>
