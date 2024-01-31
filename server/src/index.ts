@@ -133,6 +133,7 @@ app.put('/users', async (req, res) => {
       if (!success) throw Error("     toggleUserConnectionStatus() failed.")
     }
     else if(req.query.userId && req.query.lat && req.query.lon) {
+      query = "?userId&lat&lon"
       const userId = req.query.userId
       const lat = Number(req.query.lat)
       const lon = Number(req.query.lon)
