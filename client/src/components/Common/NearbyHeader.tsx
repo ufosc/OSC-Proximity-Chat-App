@@ -20,7 +20,7 @@ export const HeaderCount: React.FC<CounterProps> = ({ count }) => {
             }}>Nearby</Text>
             <View style={styles.iconContainer}>
                 <View style={styles.iconAndCount}>
-            <Image style={styles.iconImage} source={require("../../../assets/users-solid.png")}/>
+            <Image style={styles.iconImage} source={require("../../../assets/nearby_icon.png")}/>
             <Text style={{
                 fontSize: 20,
                 fontWeight: 'bold',
