@@ -14,7 +14,7 @@ import {
   LocationObject,
 } from "expo-location";
 import { AppContext } from "../../constants/Contexts";
-import { SocketProvider } from "../../sockets/SocketContext";
+import { SocketProvider } from "../../contexts/SocketContext";
 import { generateName, generateUniqueId } from "../../utils/scripts";
 import { MessageWrapper } from "./MessageWrapper";
 

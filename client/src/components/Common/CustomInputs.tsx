@@ -3,7 +3,7 @@ import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
 
 interface ChatInputProps {
     value?: string,
-    onChangeText?: (text: string) => void,
+    onChangeText?: (text: string) => void
 }
 
 

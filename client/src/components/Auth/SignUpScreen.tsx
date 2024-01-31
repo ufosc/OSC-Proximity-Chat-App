@@ -27,6 +27,7 @@ const SignUpScreen = () => {
   const [password, setPassword] = React.useState<string>("");
 
   const onHandleSubmit = async () => {
+    Keyboard.dismiss();
     const response = await appSignUp(email, password);
     if (response?.user) {
       router.replace("(home)/chatchannel");
