@@ -2,8 +2,8 @@ export interface Message {
     userId: string
     msgId: string
     msgContent: string
-    lat: Number
-    lon: Number
+    lat: number
+    lon: number
     geohash: string
-    timeSent: Number
+    timeSent: number
 }

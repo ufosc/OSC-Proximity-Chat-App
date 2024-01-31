@@ -3,6 +3,10 @@ import { StyleSheet, View, Text } from "react-native";
 
 export default function App() {
   return (
+    <View>
+      <Text>This Componenet is DEPRECATED.</Text>
+      <Text>DO NOT TOUCH. THE NEW ENTRY POINT IS AT 'app/index.tsx'</Text>
+    </View>
   );
 }
 
