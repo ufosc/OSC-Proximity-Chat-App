@@ -6,7 +6,7 @@ interface CounterProps {
     count: number;
   }
 
-export const HeaderCount: React.FC<CounterProps> = ({ count }) => {
+export const NearbyHeader: React.FC<CounterProps> = ({ count }) => {
     return (
         <View style={styles.nearbyContainer}>
         <View style={{flexDirection: "row"}}>
@@ -58,3 +58,5 @@ export const HeaderCount: React.FC<CounterProps> = ({ count }) => {
         alignItems: "center"
     }
 });
+
+export default NearbyHeader;
