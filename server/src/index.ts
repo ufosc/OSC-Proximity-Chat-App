@@ -53,7 +53,7 @@ io.on('connection', (socket: any) => {
       console.log(`[WS] Recieved ping from user <${socket.id}>.`)
       ack('pong')
   })
-  socket.on('message', (message:Message, ack) => {
+  socket.on('message', async (message, ack) => {
     // message post - when someone sends a message
     console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
@@ -63,8 +63,17 @@ io.on('connection', (socket: any) => {
         throw new Error("The timeSent parameter must be a valid number.")
 
       const hash = geohashForLocation([Number(message.lat), Number(message.lon)])
-
-      createMessage(message); // TODO: import these parameters from the message type.
+      const newMessage: Message = {
+        userId: message.userId,
+        msgId: message.msgId,
+        msgContent: message.msgContent,
+        lat: Number(message.lat),
+        lon: Number(message.lon),
+        geohash: hash,
+        timeSent: Number(message.timeSent),
+      }
+      
+      createMessage(newMessage); 
 
       // Get nearby users and push the message's id to them.
       const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
@@ -94,23 +103,6 @@ io.on('connection', (socket: any) => {
       }
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message)
-    }
-  })
-  socket.on('updateLocation', (message, ack) => {
-    console.log(`[WS] Recieved new location from user <${socket.id}>.`)
-    try {
-      const lat = message.lat
-      const lon = message.lon
-      const success = updateUserLocation(socket.id, lat, lon)
-      if (success) {
-        console.log("[WS] Location updated in database successfully.")
-        ack("location updated")
-      } else {
-        throw Error("     updateUserLocation() failed.")
-      }
-    } catch (error) {
-      console.error("[WS] Error calling updateLocation:", error.message)
-      ack("error updating location")
     }
   })
 })

@@ -53,6 +53,7 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    for (const doc of matchingDocs) {
     // userIds.push(doc.data()['userId'])
     userIds.push(doc.data()['userId'])
+    console.log(doc.data())
    }
    return userIds
  } catch (error) {
