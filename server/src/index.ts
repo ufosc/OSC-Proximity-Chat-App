@@ -51,7 +51,7 @@ io.on('connection', (socket: any) => {
   socket.on('ping', (ack) => {
   // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
       console.log(`[WS] Recieved ping from user <${socket.id}>.`)
-      ack('pong')
+      if (ack) ack('pong')      
   })
   socket.on('message', async (message, ack) => {
     // message post - when someone sends a message
@@ -77,13 +77,13 @@ io.on('connection', (socket: any) => {
 
       // Get nearby users and push the message's id to them.
       const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
-      console.log("Nearby users:", nearbyUserSockets)
+      // console.log("Nearby users:", nearbyUserSockets)
       for (const recievingSocket of nearbyUserSockets) {
         console.log(`Sending new message to socket ${recievingSocket}`)
         socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
       }
 
-      ack("message recieved")
+      if (ack) ack("message recieved")
 
     } catch(error) {
       console.error("[WS] Error sending message:", error.message)
@@ -97,7 +97,7 @@ io.on('connection', (socket: any) => {
       const success = await updateUserLocation(socket.id, lat, lon)
       if (success) {
         console.log("[WS] Location updated in database successfully.")
-        ack("location updated")
+        if (ack) ack("location updated")
       } else {
         throw Error("     updateUserLocation() failed.")
       }

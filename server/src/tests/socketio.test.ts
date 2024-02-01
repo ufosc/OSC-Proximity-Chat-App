@@ -55,7 +55,7 @@ describe("socket-tests", () => {
         })
         done()
     })
-    test('Send message to user', async (done) => {
+    test('Send message to user', async () => {
         const user2Coords = { lat: 29.64881, lon: -82.34429 } // 8.65 meters SW of user 1
         const user2Message = {
             userId: user2.id,
@@ -65,14 +65,11 @@ describe("socket-tests", () => {
             lon: user2Coords.lon,
             timeSent: 999999
         }
-        user1.on('message', (message, response) => {
+        user1.on('message', (message) => {
             console.log(`User 2 recieved message ${message}`)
-            console.log(response)
             expect(message).toBe("omggg hi!!!! :3")
         })
-        await sleep(200)
-        user2.emit('message', user2Message, (response) => {
-            console.log(response)
-        })
+        // await sleep(200) use sleep if test case doesn't work for some reason
+        user2.emit('message', user2Message)
     })
 })
