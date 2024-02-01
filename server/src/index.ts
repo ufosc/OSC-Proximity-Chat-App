@@ -53,27 +53,21 @@ io.on('connection', (socket: any) => {
       console.log(`[WS] Recieved ping from user <${socket.id}>.`)
       if (ack) ack('pong')      
   })
-  socket.on('message', async (message, ack) => {
+  socket.on('message', async (message: Message, ack) => {
     // message post - when someone sends a message
     console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
     try{
-      const timeSent = message.timeSent
-      if(isNaN(timeSent))
-        throw new Error("The timeSent parameter must be a valid number.")
+      if(isNaN(message.timeSent)) throw new Error("The timeSent parameter must be a valid number.")
+      if(isNaN(message.lat)) throw new Error("The lat parameter must be a valid number.")
+      if(isNaN(message.lon)) throw new Error("The lon parameter must be a valid number.")
 
-      const hash = geohashForLocation([Number(message.lat), Number(message.lon)])
-      const newMessage: Message = {
-        userId: message.userId,
-        msgId: message.msgId,
-        msgContent: message.msgContent,
-        lat: Number(message.lat),
-        lon: Number(message.lon),
-        geohash: hash,
-        timeSent: Number(message.timeSent),
+      if (message.geohash == undefined || message.geohash === "") {
+        message.geohash = geohashForLocation([Number(message.lat), Number(message.lon)])
+        console.log(`New geohash generated: ${message.geohash}`)
       }
-      
-      createMessage(newMessage); 
+
+      createMessage(message); 
 
       // Get nearby users and push the message's id to them.
       const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
