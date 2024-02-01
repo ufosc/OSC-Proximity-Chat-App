@@ -51,30 +51,33 @@ io.on('connection', (socket: any) => {
   socket.on('ping', (ack) => {
   // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
       console.log(`[WS] Recieved ping from user <${socket.id}>.`)
-      ack('pong')
+      if (ack) ack('pong')      
   })
-  socket.on('message', (message:Message, ack) => {
+  socket.on('message', async (message: Message, ack) => {
     // message post - when someone sends a message
     console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
     try{
-      const timeSent = message.timeSent
-      if(isNaN(timeSent))
-        throw new Error("The timeSent parameter must be a valid number.")
+      if(isNaN(message.timeSent)) throw new Error("The timeSent parameter must be a valid number.")
+      if(isNaN(message.lat)) throw new Error("The lat parameter must be a valid number.")
+      if(isNaN(message.lon)) throw new Error("The lon parameter must be a valid number.")
 
-      const hash = geohashForLocation([Number(message.lat), Number(message.lon)])
+      if (message.geohash == undefined || message.geohash === "") {
+        message.geohash = geohashForLocation([Number(message.lat), Number(message.lon)])
+        console.log(`New geohash generated: ${message.geohash}`)
+      }
 
-      createMessage(message); // TODO: import these parameters from the message type.
+      createMessage(message); 
 
       // Get nearby users and push the message's id to them.
       const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
-      console.log("Nearby users:", nearbyUserSockets)
+      // console.log("Nearby users:", nearbyUserSockets)
       for (const recievingSocket of nearbyUserSockets) {
         console.log(`Sending new message to socket ${recievingSocket}`)
         socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
       }
 
-      ack("message recieved")
+      if (ack) ack("message recieved")
 
     } catch(error) {
       console.error("[WS] Error sending message:", error.message)
@@ -88,29 +91,12 @@ io.on('connection', (socket: any) => {
       const success = await updateUserLocation(socket.id, lat, lon)
       if (success) {
         console.log("[WS] Location updated in database successfully.")
-        ack("location updated")
+        if (ack) ack("location updated")
       } else {
         throw Error("     updateUserLocation() failed.")
       }
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message)
-    }
-  })
-  socket.on('updateLocation', (message, ack) => {
-    console.log(`[WS] Recieved new location from user <${socket.id}>.`)
-    try {
-      const lat = message.lat
-      const lon = message.lon
-      const success = updateUserLocation(socket.id, lat, lon)
-      if (success) {
-        console.log("[WS] Location updated in database successfully.")
-        ack("location updated")
-      } else {
-        throw Error("     updateUserLocation() failed.")
-      }
-    } catch (error) {
-      console.error("[WS] Error calling updateLocation:", error.message)
-      ack("error updating location")
     }
   })
 })

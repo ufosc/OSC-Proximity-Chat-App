@@ -4,6 +4,6 @@ export interface Message {
     msgContent: string
     lat: number
     lon: number
-    geohash: string
+    geohash?: string
     timeSent: number
 }

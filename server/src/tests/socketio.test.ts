@@ -4,14 +4,15 @@ import { io as io } from 'socket.io-client'
 const socket_test_client_port = process.env.socket_test_client_port;
 console.log("Socket clients are listening on port", socket_test_client_port)
 
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 describe("socket-tests", () => {
-    let socket
     let user1, user2
     let user2Id
 
     beforeAll((done) => {
-        socket = io(`http://localhost:${socket_test_client_port}`)
-        socket.on('connect', done)
         user1 = io(`http://localhost:${socket_test_client_port}`)
         user1.on('connect', done)
         user2 = io(`http://localhost:${socket_test_client_port}`)
@@ -19,13 +20,12 @@ describe("socket-tests", () => {
     })
 
     afterAll(() => {
-        socket.disconnect()
         user1.disconnect()
         user2.disconnect()
     })
 
     test('Ping', (done) => {
-        socket.emit('ping', (response) => {
+        user1.emit('ping', (response) => {
             expect(response).toBe('pong')
             done()
         })
@@ -33,13 +33,13 @@ describe("socket-tests", () => {
     test('Send message', (done) => {
         const msgObject = {
             userId: "userId",
-            messageId: "hiii 33 :3",
+            msgId: "hiii 33 :3",
             msgContent: "messageContent",
             lat: 10,
             lon: 10,
             timeSent: 99999999
         }
-        socket.emit('message', msgObject, (response) => {
+        user1.emit('message', msgObject, (response) => {
             expect(response).toBe('message recieved')
             done()
         })
@@ -55,26 +55,21 @@ describe("socket-tests", () => {
         })
         done()
     })
-    test('Send message to user', async (done) => {
+    test('Send message to user', async () => {
         const user2Coords = { lat: 29.64881, lon: -82.34429 } // 8.65 meters SW of user 1
         const user2Message = {
             userId: user2.id,
-            messageId: "testid",
+            msgId: "testid",
             msgContent: "omggg hi!!!! :3",
-            timeSent: 999999,
             lat: user2Coords.lat,
-            lon: user2Coords.lon
+            lon: user2Coords.lon,
+            timeSent: 999999
         }
-        let res = ""
-        await user1.on('message', (message, response) => {
+        user1.on('message', (message) => {
             console.log(`User 2 recieved message ${message}`)
-            console.log(response)
             expect(message).toBe("omggg hi!!!! :3")
         })
-        if (res == "location updated") {
-            user2.emit('message', user2Message, (response) => {
-                console.log(response)
-            })
-        }
+        await sleep(200) // use sleep if test case doesn't work for some reason
+        user2.emit('message', user2Message)
     })
 })

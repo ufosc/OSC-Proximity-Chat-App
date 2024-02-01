@@ -10,7 +10,7 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
 // Additionally, GeoPoints and storing a 'center' array leads to type issues, so similar GeoPoint checks are performed.
 
  try {
-   console.log("getNeabyUsers() params:", centerLat, centerLon, radius)
+   console.log(`getNeabyUsers(): centerLat: ${centerLat}, centerLon: ${centerLon}, radius (meters): ${radius}`)
    if (centerLat < -90 || centerLat > 90) throw Error("centerLat does not fit GeoPoint bounds.")
    if (centerLon < -180 || centerLon > 180) throw Error("centerLon does not fit GeoPoint bounds.")
 
@@ -53,6 +53,7 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    for (const doc of matchingDocs) {
     // userIds.push(doc.data()['userId'])
     userIds.push(doc.data()['userId'])
+    // console.log(doc.data())
    }
    return userIds
  } catch (error) {
