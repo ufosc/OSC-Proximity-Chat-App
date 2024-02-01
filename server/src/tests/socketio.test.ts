@@ -69,7 +69,7 @@ describe("socket-tests", () => {
             console.log(`User 2 recieved message ${message}`)
             expect(message).toBe("omggg hi!!!! :3")
         })
-        // await sleep(200) use sleep if test case doesn't work for some reason
+        await sleep(200) // use sleep if test case doesn't work for some reason
         user2.emit('message', user2Message)
     })
 })
