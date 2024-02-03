@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 const socket_test_client_port = process.env.socket_test_client_port;
 console.log("Socket clients are listening on port", socket_test_client_port)
-const SECONDS = 1000;
-jest.setTimeout(60 * SECONDS);
+const SECONDS_MULTIPLIER = 1000;
+jest.setTimeout(60 * SECONDS_MULTIPLIER);
 
-const numClients = 100; // Adjust the number of clients as needed
+const numClients = 100; // Adjust the number of clients as needed. Do not go over 300 to prevent being blocked by Firebase.
 
 const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -136,7 +136,7 @@ describe("socket-tests", () => {
         })
         done()
     })
-    test('Send message to user', async () => {
+    test('Send message to user', async (done) => {
         const user2Coords = { lat: 29.64881, lon: -82.34429 } // 8.65 meters SW of user 1
         const user2Message = {
             userId: user2.id,
@@ -165,4 +165,5 @@ describe("socket-tests", () => {
         await sleep(200) // use sleep if test case doesn't work for some reason
         user2.emit('message', user2Message)
     })
+    // TODO: Find a way for expect() to be verified after messages return.
 })
