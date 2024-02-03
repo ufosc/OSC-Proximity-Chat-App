@@ -71,10 +71,14 @@ io.on('connection', (socket: any) => {
 
       // Get nearby users and push the message's id to them.
       const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
-      // console.log("Nearby users:", nearbyUserSockets)
       for (const recievingSocket of nearbyUserSockets) {
-        console.log(`Sending new message to socket ${recievingSocket}`)
-        socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
+        // Don't send the message to the sender (who will be included in list of nearby users).
+        if (recievingSocket !== socket.id) {
+          console.log(`Sending new message to socket ${recievingSocket}`)
+          socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
+        } else {
+          console.log("Will not send message to sender.")
+        }
       }
 
       if (ack) ack("message recieved")
@@ -93,7 +97,7 @@ io.on('connection', (socket: any) => {
         console.log("[WS] Location updated in database successfully.")
         if (ack) ack("location updated")
       } else {
-        throw Error("     updateUserLocation() failed.")
+        throw Error("updateUserLocation() failed.")
       }
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message)

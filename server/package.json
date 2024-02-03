@@ -29,7 +29,8 @@
     "firebase": "^10.5.0",
     "geofire-common": "^6.0.0",
     "nodemon": "^3.0.2",
-    "socket.io": "^4.7.4"
+    "socket.io": "^4.7.4",
+    "uuid": "^9.0.1"
   },
   "jest": {
     "verbose": true,

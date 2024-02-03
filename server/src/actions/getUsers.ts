@@ -51,10 +51,9 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    // Extract userIds from matched documents
    const userIds = []
    for (const doc of matchingDocs) {
-    // userIds.push(doc.data()['userId'])
     userIds.push(doc.data()['userId'])
-    // console.log(doc.data())
    }
+   console.log(`getNearbyUsers(): ${userIds.length} users found within ${radius} meters of ${centerLat}, ${centerLon}`)
    return userIds
  } catch (error) {
    console.error("getNearbyUsers() failed.", error.message)
