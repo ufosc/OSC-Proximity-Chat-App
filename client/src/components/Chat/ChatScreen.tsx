@@ -19,6 +19,7 @@ import { MessageType } from "../../utils/types";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
 import { useSettings } from "../../contexts/SettingsContext";
+import SignOutButton from "../Auth/SignOutButton";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -52,6 +53,7 @@ const ChatScreen = () => {
           settings && settings.theme != "light" ? "#191d20" : "white", // Needs to be changed to be a prop later (new issue?)
       }}
     >
+      <SignOutButton />
       <KeyboardAvoidingView
         behavior={keyboardBehavior}
         keyboardVerticalOffset={
