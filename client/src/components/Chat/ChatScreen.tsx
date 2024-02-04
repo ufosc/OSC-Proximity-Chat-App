@@ -53,7 +53,6 @@ const ChatScreen = () => {
           settings && settings.theme != "light" ? "#191d20" : "white", // Needs to be changed to be a prop later (new issue?)
       }}
     >
-      <SignOutButton />
       <KeyboardAvoidingView
         behavior={keyboardBehavior}
         keyboardVerticalOffset={
@@ -72,6 +71,7 @@ const ChatScreen = () => {
               Chat Screen
             </Text>
           </View>
+          <SignOutButton />
           <View style={styles.chatContainer}>
             <MessageChannel messages={messages} />
           </View>

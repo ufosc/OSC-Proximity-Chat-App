@@ -49,7 +49,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "red"
+    backgroundColor: "red",
+    height: Dimensions.get("window").height * 0.05,
+    marginTop: Dimensions.get("window").height * 0.005,
+    borderRadius: 5,
+    padding: 5
   },
 
   button_text: {
