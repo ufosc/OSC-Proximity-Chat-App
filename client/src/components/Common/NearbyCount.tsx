@@ -16,13 +16,7 @@ const NearbyCount: React.FC<CounterProps> = ({count}) => {
         <View style={styles.iconContainer}>
             <View style={styles.iconAndCount}>
             <Image style={styles.iconImage} source={require("../../../assets/nearby_icon.png")}/>
-            <Text style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: 'black',
-                textAlign:"center",
-                width: "50%",
-            }}>{count}</Text>
+            <Text style={styles.countText}>{count}</Text>
             </View>
         </View>
     )
@@ -39,6 +33,13 @@ const styles = StyleSheet.create({
     iconAndCount:{
         alignSelf: "flex-end",
         alignItems: "center"
+    },
+    countText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'black',
+        textAlign:"center",
+        width: "50%",
     }
 });
 
