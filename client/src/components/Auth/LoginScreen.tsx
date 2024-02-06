@@ -11,7 +11,7 @@ import {
   Keyboard,
 } from "react-native";
 import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
-import LogInButton from "../Common/LogInButton";
+import { LogInButton } from "../Common/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/store";
 

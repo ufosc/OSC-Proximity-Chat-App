@@ -19,6 +19,7 @@ import { MessageType } from "../../utils/types";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
 import { useSettings } from "../../contexts/SettingsContext";
+import { SignOutButton } from "../Common/AuthButtons"
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -70,6 +71,7 @@ const ChatScreen = () => {
               Chat Screen
             </Text>
           </View>
+          <SignOutButton />
           <View style={styles.chatContainer}>
             <MessageChannel messages={messages} />
           </View>
