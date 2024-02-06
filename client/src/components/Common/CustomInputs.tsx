@@ -6,8 +6,6 @@ interface ChatInputProps {
     onChangeText?: (text: string) => void
 }
 
-
-
 export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
     return (
         <TextInput style={styles.welcomeEmailInput}

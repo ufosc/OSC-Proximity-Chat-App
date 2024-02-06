@@ -9,7 +9,6 @@ export const generateName = (): string => {
 
   const adjectives = ["Absurd", "Amusing", "Attractive", "Awesome", "Bizarre", "Boisterous", "Bizarre", "Blue", "Comical", "Curious", "Daft", "Dapper", "Droll", "Eccentric", "Entertaining", "Farcical", "Flippant", "Goofy", "Grotesque", "Green", "Hilarious", "Hodgepodge", "Ironic", "Improbable", "Jocular", "Jumbled", "Kooky", "Knuckleheaded", "Ludicrous", "Loopy", "Mirthful", "Muddled", "Nonsensical", "Nutty", "Oddball", "Orange", "Outlandish", "Peculiar", "Preposterous", "Pogging", "Purple", "Quirky", "Quacking", "Red", "Ridiculous", "Random", "Silly", "Strange", "Topsy-turvy", "Twisted", "Unusual", "Unpredictable", "Wacky", "Whimsical", "Yellow", "Zany", "Zealous"];
 
-
   const animals = [
     "Aardvark",
     "Poggers",
