@@ -3,3 +3,8 @@ export type MessageType = {
   author: string;
   msgID: string;
 };
+
+export type UserType = {
+  username: string;
+  pfp: string;
+};

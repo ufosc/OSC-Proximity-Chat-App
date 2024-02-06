@@ -14,12 +14,12 @@ import {
 import { ChatInput } from "../Common/CustomInputs";
 import { ChatSendButton } from "../Common/CustomButtons";
 import MessageChannel from "../Common/MessageChannel";
-import { LinearGradient } from "expo-linear-gradient";
 import { MessageType } from "../../utils/types";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
 import { useSettings } from "../../contexts/SettingsContext";
 import { SignOutButton } from "../Common/AuthButtons"
+import { useUser } from "../../contexts/UserContext"
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -31,13 +31,15 @@ const ChatScreen = () => {
   const [messages, setMessages] = React.useState<MessageType[]>([]);
   const [message, setMessage] = React.useState<string>("");
 
+  const user = useUser();
+
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
     if (message.trim() !== "") {
       const newMessage: MessageType = {
         msgID: Crypto.randomUUID(),
         messageContent: message.trim(),
-        author: generateName(),
+        author: user.username,
       };
 
       setMessages([...messages, newMessage]);
