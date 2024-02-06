@@ -3,8 +3,6 @@ import { initializeAuth, getReactNativePersistence, getAuth, Auth } from "fireba
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID} from "@env"; // Don't worry about this env error!
 
-
-
 const firebaseConfig = {
   apiKey: API_KEY || "Mock-Key",
   authDomain: AUTH_DOMAIN,
@@ -14,10 +12,8 @@ const firebaseConfig = {
   appId: APP_ID,
 };
 
-
 let app;
 let auth: Auth;
-
 
 // Checks if auth and app have already been initilized as Firebase will throw an error if we try to initialize twice!
 if (!getApps().length) {

@@ -35,8 +35,6 @@ export const NearbyHeader: React.FC<CounterProps> = ({ count }) => {
     )
   }
 
-
-
   const styles = StyleSheet.create({
   nearbyContainer: {
     paddingTop: Dimensions.get('window').height * 0.01,

@@ -5,8 +5,6 @@ import { Link, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { WelcomeEmailInput } from '../Common/CustomInputs';
 
-
-
 const WelcomeScreen = () => {
 
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
