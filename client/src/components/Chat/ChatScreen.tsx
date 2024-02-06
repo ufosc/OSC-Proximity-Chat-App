@@ -19,7 +19,7 @@ import { MessageType } from "../../utils/types";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
 import { useSettings } from "../../contexts/SettingsContext";
-import SignOutButton from "../Auth/SignOutButton";
+import { SignOutButton } from "../Common/AuthButtons"
 
 const ChatScreen = () => {
   const settings = useSettings();
