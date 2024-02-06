@@ -1,19 +1,12 @@
 import React from "react";
 import { useFonts } from "expo-font";
 import {
-  View,
   Text,
   StyleSheet,
   Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
   TouchableOpacity
 } from "react-native";
-import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
-import LogInButton from "../Common/LogInButton";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { appSignOut } from "../../services/store";
 
 const SignOutButton = () => {
