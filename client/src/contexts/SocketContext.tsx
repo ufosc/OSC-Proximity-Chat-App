@@ -16,7 +16,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     let isMounted = true;
 
-    const socketIo = io('http://10.144.50.42:8080'); // Hardcoded IP address
+    const socketIo = io('http://{your-expo-ip}:8080'); // Hardcoded IP address
 
     socketIo.on('connect', () => {
       if (isMounted) {
