@@ -59,18 +59,18 @@ io.on('connection', (socket: any) => {
     console.log(message)
     try{
       if(isNaN(message.timeSent)) throw new Error("The timeSent parameter must be a valid number.")
-      if(isNaN(message.lat)) throw new Error("The lat parameter must be a valid number.")
-      if(isNaN(message.lon)) throw new Error("The lon parameter must be a valid number.")
+      if(isNaN(message.location.lat)) throw new Error("The lat parameter must be a valid number.")
+      if(isNaN(message.location.lon)) throw new Error("The lon parameter must be a valid number.")
 
-      if (message.geohash == undefined || message.geohash === "") {
-        message.geohash = geohashForLocation([Number(message.lat), Number(message.lon)])
-        console.log(`New geohash generated: ${message.geohash}`)
+      if (message.location.geohash == undefined || message.location.geohash === "") {
+        message.location.geohash = geohashForLocation([Number(message.location.lat), Number(message.location.lon)])
+        console.log(`New geohash generated: ${message.location.geohash}`)
       }
 
       createMessage(message); 
 
       // Get nearby users and push the message's id to them.
-      const nearbyUserSockets = await findNearbyUsers(Number(message.lat), Number(message.lon), Number(process.env.message_outreach_radius))
+      const nearbyUserSockets = await findNearbyUsers(Number(message.location.lat), Number(message.location.lon), Number(process.env.message_outreach_radius))
       for (const recievingSocket of nearbyUserSockets) {
         // Don't send the message to the sender (who will be included in list of nearby users).
         if (recievingSocket !== socket.id) {
