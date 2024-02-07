@@ -12,3 +12,18 @@ export interface UserConfig {
     reason: string
   }
 }
+
+export interface ConnectedUser {
+    uid: string
+    socketId: string
+    displayName: string
+    userIcon?: {
+        foregroundImage: string
+        backgroundImage: string
+    }
+    location: {
+        lat: number
+        lon: number
+        geohash: string
+    }
+}

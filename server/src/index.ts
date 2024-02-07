@@ -2,14 +2,14 @@ import express from 'express'
 import 'dotenv/config'
 import 'geofire-common'
 
-// import { Message } from './types/Message';
+import { Message } from './types/Message';
+
 import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
 // import { getUserById } from './actions/getUsers'
 import { createUser } from './actions/createUser'
 import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateUser'
-import { deleteUserById } from './actions/deleteUser'
-import { Message } from './types/Message';
+import { deleteConnectedUserByIndex } from './actions/deleteUser'
 import {geohashForLocation} from 'geofire-common';
 import { findNearbyUsers } from './actions/getUsers'
 
@@ -34,19 +34,25 @@ const io = new Server(socketServer, {
 
 io.on('connection', (socket: any) => {
   console.log(`[WS] User <${socket.id}> connected.`);
-  createUser(
-    "USER",
-    socket.id,
-    "AVATARURL",
-    100,
-    100,
-    "fff"
-  )
+  createUser({
+    uid: "UID",
+    socketId: socket.id,
+    displayName: "DISPLAY NAME",
+    userIcon: { 
+      foregroundImage: "FOREGROUND IMG",
+      backgroundImage: "BACKGROUND IMG"
+    },
+    location: {
+      lat: 9999,
+      lon: 9999,
+      geohash: "F"
+    }
+  }) // TODO: Send this info from client on connection
   toggleUserConnectionStatus(socket.id)
 
   socket.on('disconnect', () => {
       console.log(`[WS] User <${socket.id}> exited.`);
-      deleteUserById(socket.id)
+      deleteConnectedUserByIndex(socket.id)
   })
   socket.on('ping', (ack) => {
   // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
@@ -54,10 +60,10 @@ io.on('connection', (socket: any) => {
       if (ack) ack('pong')      
   })
   socket.on('message', async (message: Message, ack) => {
-    // message post - when someone sends a message
+    // Runs when a user sends a message
     console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
-    try{
+    try {
       if(isNaN(message.timeSent)) throw new Error("The timeSent parameter must be a valid number.")
       if(isNaN(message.location.lat)) throw new Error("The lat parameter must be a valid number.")
       if(isNaN(message.location.lon)) throw new Error("The lon parameter must be a valid number.")
@@ -67,17 +73,18 @@ io.on('connection', (socket: any) => {
         console.log(`New geohash generated: ${message.location.geohash}`)
       }
 
-      createMessage(message); 
+      const status = await createMessage(message); 
+      if(status === false) throw new Error("Error creating message: ")
 
-      // Get nearby users and push the message's id to them.
+      // Get nearby users and push the message to them.
       const nearbyUserSockets = await findNearbyUsers(Number(message.location.lat), Number(message.location.lon), Number(process.env.message_outreach_radius))
       for (const recievingSocket of nearbyUserSockets) {
         // Don't send the message to the sender (who will be included in list of nearby users).
-        if (recievingSocket !== socket.id) {
-          console.log(`Sending new message to socket ${recievingSocket}`)
-          socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
+        if (recievingSocket === socket.id) {
+          continue
         } else {
-          console.log("Will not send message to sender.")
+          console.log(`Sending new message to socket ${recievingSocket}`)
+          socket.broadcast.to(recievingSocket).emit("message", message)
         }
       }
 
@@ -90,14 +97,14 @@ io.on('connection', (socket: any) => {
   socket.on('updateLocation', async (message, ack) => {
     console.log(`[WS] Recieved new location from user <${socket.id}>.`)
     try {
-      const lat = Number(message.lat)
-      const lon = Number(message.lon)
+      const lat = Number(message.location.lat)
+      const lon = Number(message.location.lon)
       const success = await updateUserLocation(socket.id, lat, lon)
       if (success) {
         console.log("[WS] Location updated in database successfully.")
         if (ack) ack("location updated")
       } else {
-        throw Error("updateUserLocation() failed.")
+        throw new Error("updateUserLocation() failed.")
       }
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message)
@@ -138,15 +145,21 @@ app.get('/users', async (req, res) => {
 
 app.post('/users', async (req, res) => {
     try {
-        await createUser(
-          req.body.displayName,
-          req.body.userId,
-          req.body.avatarUrl,
-          Number(req.body.lat),
-          Number(req.body.lon),
-          req.body.geohash
-        )
-        // Sends back true if new user was created!
+        const status = await createUser({
+          uid: req.body.uid,
+          socketId: req.body.socketId,
+          displayName: req.body.displayName,
+          userIcon: { 
+            foregroundImage: req.body.userIcon.foregroundImage,
+            backgroundImage: req.body.userIcon.backgroundImage,
+          },
+          location: {
+            lat: Number(req.body.location.lat),
+            lon: Number(req.body.location.lon),
+            geohash: req.body.location.geohash,
+          }
+        }) 
+        if (status === false) throw new Error("Error creating user: ")
         res.json("Operation <POST /user> was handled successfully.")
         console.log("[EXP] Request <POST /users> returned successfully.")
     } catch (error) {
@@ -194,7 +207,7 @@ app.delete('/users', async (req, res) => {
     const userId = req.query.userId
     if (typeof userId != "string") throw Error("  [userId] is not a string.")
 
-    const success = await deleteUserById(userId)
+    const success = await deleteConnectedUserByIndex(userId)
     if (!success) throw Error("     deleteUserById() failed.")
 
     console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`)

@@ -1,19 +1,16 @@
-// Uploads a new document in the Users collection.
+// Uploads a new document in the ConnectedUsers collection.
 import { doc, setDoc } from '@firebase/firestore'
-import { users } from '../utilities/firebaseInit'
-import { User } from '../types/User'
+import { connectedUsers } from '../utilities/firebaseInit'
+import { ConnectedUser } from '../types/User'
 
-export const createUser = async (displayName: string, userId: string, avatarUrl: string, lat: number, lon: number, geohash: string) => {
-   const newMsgRef = doc(users, userId) 
-   const docData: User = {
-       displayName: displayName,
-       userId: userId,
-       avatarUrl: avatarUrl,
-       lat: lat,
-       lon: lon,
-       geohash: geohash,
-       isConnected: false
-   } 
+export const createUser = async (connectedUser: ConnectedUser) => {
+  try {
+    const ref = doc(connectedUsers, connectedUser.socketid) // Use the socketid as the index
+    await setDoc(ref, connectedUser)
+    return true
 
-   await setDoc(newMsgRef, docData)
+  } catch (error) {
+    console.error(error.message)
+    return false
+  }
 }

@@ -1,5 +1,5 @@
 import { doc, endAt, getDocs, orderBy, query, startAt } from 'firebase/firestore'
-import { users } from '../utilities/firebaseInit'
+import { connectedUsers } from '../utilities/firebaseInit'
 import { distanceBetween, geohashForLocation, geohashQueryBounds } from 'geofire-common'
 
 export const findNearbyUsers = async (centerLat: number, centerLon: number, radius: number) => {
@@ -20,7 +20,7 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
 
    for (const b of bounds) {
     const q = query(
-     users,
+     connectedUsers,
      orderBy('geohash'),
      startAt(b[0]),
      endAt(b[1])
@@ -49,12 +49,12 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    }
 
    // Extract userIds from matched documents
-   const userIds = []
+   const userSocketIds = []
    for (const doc of matchingDocs) {
-    userIds.push(doc.data()['userId'])
+     userSocketIds.push(doc.data()['socketId'])
    }
-   console.log(`getNearbyUsers(): ${userIds.length} users found within ${radius} meters of ${centerLat}, ${centerLon}`)
-   return userIds
+   console.log(`getNearbyUsers(): ${userSocketIds.length} users found within ${radius} meters of ${centerLat}, ${centerLon}`)
+   return userSocketIds
  } catch (error) {
    console.error("getNearbyUsers() failed.", error.message)
  }
