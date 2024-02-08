@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SignUpEmailInput, SignUpPasswordInput } from "../Common/CustomInputs";
 import SignUpButton from "../Common/SignUpButton";
+import { AuthenticationErrorMessage, AuthenticationResponse } from "./AuthenticationResponse";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
 
@@ -25,14 +26,16 @@ const SignUpScreen = () => {
   const { inputEmail } = useLocalSearchParams();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
-
+  const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
+  
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
-    const response = await appSignUp(email, password);
-    if (response?.user) {
+    setAuthResponse(await appSignUp(email, password));
+
+    if (authResponse?.user) {
       router.replace("(home)/chatchannel");
-    } else if (response?.error) {
-      console.log(response.error);
+    } else if (authResponse?.error) {
+      console.log(authResponse.error);
     }
   };
 
@@ -42,28 +45,36 @@ const SignUpScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <View style={styles.main_container}>
-          <View style={styles.header_container}>
-            <Text style={styles.header_text}>Welcome!</Text>
+      
+      <View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <View style={styles.main_container}>
+            <View style={styles.header_container}>
+              <Text style={styles.header_text}>Welcome!</Text>
+            </View>
+            <View style={styles.input_container}>
+              <SignUpEmailInput
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+              <SignUpPasswordInput
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+              />
+            </View>
+            <View style={styles.button_container}>
+              <SignUpButton onPress={onHandleSubmit} />
+            </View> 
           </View>
-          <View style={styles.input_container}>
-            <SignUpEmailInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-            />
-            <SignUpPasswordInput
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-            />
-          </View>
-          <View style={styles.button_container}>
-            <SignUpButton onPress={onHandleSubmit} />
-          </View>
+        </KeyboardAvoidingView>
+
+        <View style={styles.error_container}>
+          <AuthenticationErrorMessage response={authResponse} onPress={() => setAuthResponse(undefined)} />
         </View>
-      </KeyboardAvoidingView>
+
+      </View>
     </TouchableWithoutFeedback>
 
     // Sign up with email
@@ -94,6 +105,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     width: "100%",
+  },
+
+  error_container: {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
+    bottom: Dimensions.get("window").height * 0.10,
+    position: "absolute",
   },
 
   header_container: {
