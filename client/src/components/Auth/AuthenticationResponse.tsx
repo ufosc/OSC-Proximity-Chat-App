@@ -12,6 +12,7 @@ export type AuthenticationResponse = {
   error: unknown;
 }
 
+//Custom responses
 export const inValidEmailResponse = {user: undefined, error : "Invalid email"}
 
 //Function that decodes the error code
@@ -63,7 +64,7 @@ function handleResponse(response: AuthenticationResponse) {
 //Something
 interface AuthenticationErrorMessageProps {
   response: AuthenticationResponse | undefined;
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 export const AuthenticationErrorMessage: React.FC<AuthenticationErrorMessageProps> = ({ response, onPress }) => {
