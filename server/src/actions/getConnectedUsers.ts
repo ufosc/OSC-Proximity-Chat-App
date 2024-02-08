@@ -1,5 +1,5 @@
 import { doc, endAt, getDocs, orderBy, query, startAt } from 'firebase/firestore'
-import { users } from '../utilities/firebaseInit'
+import { connectedUsers } from '../utilities/firebaseInit'
 import { distanceBetween, geohashForLocation, geohashQueryBounds } from 'geofire-common'
 
 export const findNearbyUsers = async (centerLat: number, centerLon: number, radius: number) => {
@@ -10,7 +10,6 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
 // Additionally, GeoPoints and storing a 'center' array leads to type issues, so similar GeoPoint checks are performed.
 
  try {
-   console.log(`getNeabyUsers(): centerLat: ${centerLat}, centerLon: ${centerLon}, radius (meters): ${radius}`)
    if (centerLat < -90 || centerLat > 90) throw Error("centerLat does not fit GeoPoint bounds.")
    if (centerLon < -180 || centerLon > 180) throw Error("centerLon does not fit GeoPoint bounds.")
 
@@ -20,8 +19,8 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
 
    for (const b of bounds) {
     const q = query(
-     users,
-     orderBy('geohash'),
+     connectedUsers,
+     orderBy('location.geohash'),
      startAt(b[0]),
      endAt(b[1])
     )
@@ -35,8 +34,8 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    const matchingDocs = []
    for (const snap of snapshots) {
     for (const doc of snap.docs) {
-     const lat = doc.get('lat')
-     const lon = doc.get('lon')
+     const lat = doc.get('location.lat')
+     const lon = doc.get('location.lon')
 
      // We have to filter out a few false positives due to GeoHash
      // accuracy, but most will match
@@ -49,12 +48,12 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    }
 
    // Extract userIds from matched documents
-   const userIds = []
+   const userSocketIds = []
    for (const doc of matchingDocs) {
-    userIds.push(doc.data()['userId'])
+     userSocketIds.push(doc.data()['socketId'])
    }
-   console.log(`getNearbyUsers(): ${userIds.length} users found within ${radius} meters of ${centerLat}, ${centerLon}`)
-   return userIds
+   console.log(`getNearbyUsers(): ${userSocketIds.length} users found within ${radius} meters of ${centerLat}, ${centerLon}`)
+   return userSocketIds
  } catch (error) {
    console.error("getNearbyUsers() failed.", error.message)
  }

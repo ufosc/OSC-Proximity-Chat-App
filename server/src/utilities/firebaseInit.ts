@@ -18,10 +18,11 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 }
 
 import { Message } from '../types/Message'
-import { User } from '../types/User'
+import { ConnectedUser, UserConfig } from '../types/User'
 
-export const messages = createCollection<Message>('messages')
-export const users = createCollection<User>('users')
+export const messages = createCollection<Message>('Messages')
+export const connectedUsers = createCollection<ConnectedUser>('ConnectedUsers')
+export const userConfigs = createCollection<UserConfig>('UserConfigs')
 
 console.log("[FIRESTORE] Database synced.")
 

@@ -1,9 +1,11 @@
 export interface Message {
-    userId: string
+    uid: string
     msgId: string
     msgContent: string
-    lat: number
-    lon: number
-    geohash?: string
     timeSent: number
+    location: {
+        lat: number
+        lon: number
+        geohash?: string
+    }
 }
