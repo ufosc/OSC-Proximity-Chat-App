@@ -5,7 +5,7 @@ import { ConnectedUser } from '../types/User'
 
 export const createUser = async (connectedUser: ConnectedUser) => {
   try {
-    const ref = doc(connectedUsers, connectedUser.socketid) // Use the socketid as the index
+    const ref = doc(connectedUsers, connectedUser.socketId) // Use the socketid as the index
     await setDoc(ref, connectedUser)
     return true
 

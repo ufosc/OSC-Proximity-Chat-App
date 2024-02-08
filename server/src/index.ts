@@ -7,11 +7,11 @@ import { Message } from './types/Message';
 import { createMessage } from './actions/createMessage'
 // import { deleteMessageById } from './actions/deleteMessage'
 // import { getUserById } from './actions/getUsers'
-import { createUser } from './actions/createUser'
-import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateUser'
-import { deleteConnectedUserByIndex } from './actions/deleteUser'
+import { createUser } from './actions/createConnectedUser'
+import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateConnectedUser'
+import { deleteConnectedUserByIndex } from './actions/deleteConnectedUser'
 import {geohashForLocation} from 'geofire-common';
-import { findNearbyUsers } from './actions/getUsers'
+import { findNearbyUsers } from './actions/getConnectedUsers'
 
 const { createServer } = require('http')
 const { Server } = require('socket.io')
@@ -84,7 +84,8 @@ io.on('connection', (socket: any) => {
           continue
         } else {
           console.log(`Sending new message to socket ${recievingSocket}`)
-          socket.broadcast.to(recievingSocket).emit("message", message)
+          socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
+          // socket.broadcast.to(recievingSocket).emit("message", message)
         }
       }
 
