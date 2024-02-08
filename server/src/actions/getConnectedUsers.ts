@@ -10,7 +10,6 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
 // Additionally, GeoPoints and storing a 'center' array leads to type issues, so similar GeoPoint checks are performed.
 
  try {
-   console.log(`getNeabyUsers(): centerLat: ${centerLat}, centerLon: ${centerLon}, radius (meters): ${radius}`)
    if (centerLat < -90 || centerLat > 90) throw Error("centerLat does not fit GeoPoint bounds.")
    if (centerLon < -180 || centerLon > 180) throw Error("centerLon does not fit GeoPoint bounds.")
 
@@ -21,7 +20,7 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    for (const b of bounds) {
     const q = query(
      connectedUsers,
-     orderBy('geohash'),
+     orderBy('location.geohash'),
      startAt(b[0]),
      endAt(b[1])
     )
@@ -35,8 +34,8 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    const matchingDocs = []
    for (const snap of snapshots) {
     for (const doc of snap.docs) {
-     const lat = doc.get('lat')
-     const lon = doc.get('lon')
+     const lat = doc.get('location.lat')
+     const lon = doc.get('location.lon')
 
      // We have to filter out a few false positives due to GeoHash
      // accuracy, but most will match

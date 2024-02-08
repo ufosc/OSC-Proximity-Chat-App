@@ -119,6 +119,7 @@ describe("socket-tests", () => {
         user2.emit('updateLocation', user2Coords, (response) => {
             expect(response).toBe("location updated")
         })
+        sleep(5000)
         done()
     })
     test('Send message to user', async (done) => {
@@ -126,7 +127,7 @@ describe("socket-tests", () => {
         const user2Message: Message = {
             uid: user2.id, // a socket id
             msgId: "MESSAGE ID",
-            msgContent: "MESSAGE CONTENT",
+            msgContent: "omggg hi!!!! :3",
             timeSent: 9999,
             location: {
                 lat: user2Coords.lat,
@@ -135,7 +136,7 @@ describe("socket-tests", () => {
             }
         }
         user1.on('message', (message) => {
-            console.log(`User 2 recieved message ${message}`)
+            console.log(`User 2 recieved message: ${message}`)
             expect(message).toBe("omggg hi!!!! :3")
         })
         await sleep(200) // use sleep if test case doesn't work for some reason

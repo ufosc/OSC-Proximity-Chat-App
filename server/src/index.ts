@@ -12,6 +12,7 @@ import { toggleUserConnectionStatus, updateUserLocation } from './actions/update
 import { deleteConnectedUserByIndex } from './actions/deleteConnectedUser'
 import {geohashForLocation} from 'geofire-common';
 import { findNearbyUsers } from './actions/getConnectedUsers'
+import { ConnectedUser } from './types/User';
 
 const { createServer } = require('http')
 const { Server } = require('socket.io')
@@ -22,6 +23,7 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 
 // === SOCKET API ===
 const socketServer = createServer()
@@ -34,20 +36,21 @@ const io = new Server(socketServer, {
 
 io.on('connection', (socket: any) => {
   console.log(`[WS] User <${socket.id}> connected.`);
-  createUser({
-    uid: "UID",
-    socketId: socket.id,
-    displayName: "DISPLAY NAME",
-    userIcon: { 
-      foregroundImage: "FOREGROUND IMG",
-      backgroundImage: "BACKGROUND IMG"
-    },
-    location: {
-      lat: 9999,
-      lon: 9999,
-      geohash: "F"
-    }
-  }) // TODO: Send this info from client on connection
+  const defaultConnectedUser: ConnectedUser = {
+      uid: "UID",
+      socketId: socket.id,
+      displayName: "DISPLAY NAME",
+      userIcon: { 
+        foregroundImage: "FOREGROUND IMG",
+        backgroundImage: "BACKGROUND IMG"
+      },
+      location: {
+        lat: 9999,
+        lon: 9999,
+        geohash: "F"
+      }
+  } // TODO: Send this info from client on connection  
+  createUser(defaultConnectedUser) 
   toggleUserConnectionStatus(socket.id)
 
   socket.on('disconnect', () => {
@@ -98,8 +101,8 @@ io.on('connection', (socket: any) => {
   socket.on('updateLocation', async (message, ack) => {
     console.log(`[WS] Recieved new location from user <${socket.id}>.`)
     try {
-      const lat = Number(message.location.lat)
-      const lon = Number(message.location.lon)
+      const lat = Number(message.lat)
+      const lon = Number(message.lon)
       const success = await updateUserLocation(socket.id, lat, lon)
       if (success) {
         console.log("[WS] Location updated in database successfully.")

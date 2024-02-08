@@ -25,15 +25,14 @@ export const toggleUserConnectionStatus = async (index: string) => {
 
 export const updateUserLocation = async (userIndex: string, lat: number, lon: number) => {
     try {
-        const userRef = doc(connectedUsers, userIndex)
-        const userDoc = await getDoc(userRef)
+        const ref = doc(connectedUsers, userIndex)
+        const userDoc = await getDoc(ref)
 
         if (!userDoc.exists()) throw Error("[FIREBASE] User does not exist.")
 
-        const hash = geohashForLocation([lat, lon])
-        const location = { lat: lat, lon: lon, geohash: hash }
+        const newHash = geohashForLocation([lat, lon])
 
-        updateDoc(userRef, { location: location })
+        updateDoc(ref, { "location.lat": lat, "location.lon": lon, "location.geohash": newHash })
         return true
     } catch (error) {
         console.error(error.message)
