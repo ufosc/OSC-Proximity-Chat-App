@@ -49,9 +49,7 @@ const WelcomeScreen = () => {
 
           <View style={styles.main_container}>
 
-            <View style={styles.error_container}>
-              <AuthenticationErrorMessage response={authResponse} onPress={() => setAuthResponse(undefined)} />
-            </View>
+            
 
             <View style={styles.sub_container}>
 
@@ -76,10 +74,14 @@ const WelcomeScreen = () => {
 
                 </View>
 
+                <View style={styles.error_container}>
+                  <AuthenticationErrorMessage response={authResponse} onPress={() => setAuthResponse(undefined)} />
+                </View>
+
                 <Text>
                   Don't have an account? <Link style={styles.link} href="/signup">Sign up!</Link>
                 </Text>
-                
+
               </View>
             </View>
           </View>
