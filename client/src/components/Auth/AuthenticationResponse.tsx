@@ -12,8 +12,18 @@ export type AuthenticationResponse = {
   error: unknown;
 }
 
+class CustomError {
+  public code: string;
+  public message: string;
+
+  constructor(code: string, message: string) {
+    this.code = code;
+    this.message = message;
+  }
+}
+
 //Custom responses
-export const inValidEmailResponse = {user: undefined, error : "Invalid email"}
+export const inValidEmailResponse = new CustomError("Invalid Email", "Please provide a valid email address")
 
 //Function that decodes the error code
 function decodeFirebaseError(error: FirebaseError) {
@@ -36,12 +46,8 @@ function decodeFirebaseError(error: FirebaseError) {
   return "Unknown error"
 }
 
-function decodeCustomError(error: String) {
-  if(error === inValidEmailResponse.error) {
-    return "Please provide a valid email address";
-  }
-
-  return "Unknown error"
+function decodeCustomError(error: CustomError) {
+  return error.message;
 }
 
 //Function that handles the response depending on type
@@ -54,7 +60,7 @@ function handleResponse(response: AuthenticationResponse) {
     return decodeFirebaseError(response.error);
   }
 
-  if(response.error instanceof String) {
+  if(response.error instanceof CustomError) {
     return decodeCustomError(response.error);
   }
 
