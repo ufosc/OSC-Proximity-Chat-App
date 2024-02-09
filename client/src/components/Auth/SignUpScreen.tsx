@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { SignUpEmailInput, SignUpPasswordInput } from "../Common/CustomInputs";
+import { SignUpEmailInput, SignUpPasswordInput, SignUpConfirmPasswordInput } from "../Common/CustomInputs";
 import SignUpButton from "../Common/SignUpButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
@@ -25,10 +25,20 @@ const SignUpScreen = () => {
   const { inputEmail } = useLocalSearchParams();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [confirmPassword, setConfirmPassword] = React.useState<string>("");
+
 
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
+
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      console.log("Passwords do not match");
+      return;
+    }
+
     const response = await appSignUp(email, password);
+
     if (response?.user) {
       router.replace("(home)/chatchannel");
     } else if (response?.error) {
@@ -58,6 +68,10 @@ const SignUpScreen = () => {
               value={password}
               onChangeText={(text) => setPassword(text)}
             />
+            <SignUpConfirmPasswordInput
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
+            />
           </View>
           <View style={styles.button_container}>
             <SignUpButton onPress={onHandleSubmit} />
@@ -65,10 +79,6 @@ const SignUpScreen = () => {
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
-
-    // Sign up with email
-
-    // Make an account with Google (TEMP)
   );
 };
 
@@ -86,7 +96,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-around",
     alignItems: "center",
-    height: Dimensions.get("window").height * 0.15,
+    height: Dimensions.get("window").height * 0.2,
+    marginBottom: 20,
   },
 
   button_container: {
