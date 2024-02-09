@@ -27,6 +27,7 @@ const LoginScreen = () => {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
+  const [invalidLogin, invalidateLogin] = React.useState<boolean>(false);
 
   const onHandleSubmit = async () => {
     setAuthResponse(await appSignIn(email, password));
@@ -34,6 +35,7 @@ const LoginScreen = () => {
       router.replace("(home)/chatchannel");
     } else if (authResponse?.error) {
       console.log(authResponse.error);
+      invalidateLogin(true);
     }
   };
 
@@ -59,10 +61,12 @@ const LoginScreen = () => {
               <LogInEmailInput
                 value={email}
                 onChangeText={(text) => setEmail(text)}
+                invalid={invalidLogin}
               />
               <LogInPasswordInput
                 value={password}
                 onChangeText={(text) => setPassword(text)}
+                invalid={invalidLogin}
               />
             </View>
             <View style={styles.button_container}>
