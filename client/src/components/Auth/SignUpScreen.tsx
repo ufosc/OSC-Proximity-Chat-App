@@ -32,7 +32,7 @@ const SignUpScreen = () => {
     if (password != confirmPassword) {
       console.log("Passwords do not match")
     }
-    else{
+    else {
       const response = await appSignUp(email, password);
       if (response?.user) {
         router.replace("(home)/chatchannel");
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-around",
     alignItems: "center",
-    height: Dimensions.get("window").height * 0.15,
+    height: Dimensions.get("window").height * 0.225,
   },
 
   button_container: {
