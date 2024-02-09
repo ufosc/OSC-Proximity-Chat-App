@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { SignUpEmailInput, SignUpPasswordInput } from "../Common/CustomInputs";
+import { SignUpEmailInput, SignUpPasswordInput, SignUpPasswordConfirm } from "../Common/CustomInputs";
 import SignUpButton from "../Common/SignUpButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
@@ -25,14 +25,20 @@ const SignUpScreen = () => {
   const { inputEmail } = useLocalSearchParams();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [confirmPassword, setConfirmPassword] = React.useState<string>("");
 
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
-    const response = await appSignUp(email, password);
-    if (response?.user) {
-      router.replace("(home)/chatchannel");
-    } else if (response?.error) {
-      console.log(response.error);
+    if (password != confirmPassword) {
+      console.log("Passwords do not match")
+    }
+    else{
+      const response = await appSignUp(email, password);
+      if (response?.user) {
+        router.replace("(home)/chatchannel");
+      } else if (response?.error) {
+        console.log(response.error);
+      }
     }
   };
 
@@ -57,6 +63,10 @@ const SignUpScreen = () => {
             <SignUpPasswordInput
               value={password}
               onChangeText={(text) => setPassword(text)}
+            />
+            <SignUpPasswordConfirm
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
             />
           </View>
           <View style={styles.button_container}>

@@ -67,6 +67,18 @@ export const SignUpPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeT
     )
 }
 
+export const SignUpPasswordConfirm: React.FC<ChatInputProps> = ({ value, onChangeText}) => {
+    return (
+        <TextInput style={styles.loginInput}
+        placeholder='Confirm password'
+        multiline={false}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={true}
+        />
+    )
+}
+
 export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
 
 
