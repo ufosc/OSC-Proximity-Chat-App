@@ -4,18 +4,20 @@ import { useFonts } from 'expo-font';
 import { Link, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { WelcomeEmailInput } from '../Common/CustomInputs';
-
+import {ErrorMessage} from '../Common/ErrorMessage';
 const WelcomeScreen = () => {
 
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
-
+  
   const [fontsLoaded, fontError] = useFonts({
     'Gilroy-ExtraBold': require('../../../assets/fonts/Gilroy-ExtraBold.otf'),
     'Gilroy-Light': require('../../../assets/fonts/Gilroy-Light.otf'),
   });
 
   const [email, setEmail] = useState<string>('');
+  const [errorVisible, setErrorVisible] = React.useState<('none' | 'flex' | undefined)>("none");
+  const [errorText, setErrorText] = React.useState<string>("")
 
   if (!fontsLoaded && !fontError) {
     return null;
@@ -27,6 +29,8 @@ const WelcomeScreen = () => {
       router.push( { pathname: '/login', params: { inputEmail: preparedEmail } } );
     } else {
       console.log('Invalid email');
+      setErrorVisible("flex");
+      setErrorText("Error: Invalid Email")
     }
   }
 
@@ -70,6 +74,7 @@ const WelcomeScreen = () => {
               <Text>
                 Don't have an account? <Link style={styles.link} href="/signup">Sign up!</Link>
               </Text>
+              <ErrorMessage visible={errorVisible} text={errorText}/>
             </View>
           </View>
 

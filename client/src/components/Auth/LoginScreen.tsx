@@ -14,6 +14,7 @@ import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
 import { LogInButton } from "../Common/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/store";
+import {ErrorMessage} from "../Common/ErrorMessage";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -26,12 +27,24 @@ const LoginScreen = () => {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [invalidLogin, invalidateLogin] = React.useState<boolean>(false);
+  const [errorVisible, setErrorVisible] = React.useState<('none' | 'flex' | undefined)>("none");
+  const [errorText, setErrorText] = React.useState<string>("")
 
   const onHandleSubmit = async () => {
     const response = await appSignIn(email, password);
     if (response?.user) {
       router.replace("(home)/chatchannel");
     } else if (response?.error) {
+      const reg = /invalid-email/;
+      const reg2 = /invalid-credential/;
+      if(reg.test(JSON.stringify(response.error))) {
+        setErrorText("Error: Invalid Email")
+      } else if(reg2.test(JSON.stringify(response.error))) {
+        setErrorText("Error: Wrong Email or Password")
+      } else {
+        setErrorText("Error: Account is Disabled");
+      }
+      setErrorVisible("flex");
       console.log(response.error);
       invalidateLogin(true);
     }
@@ -69,6 +82,7 @@ const LoginScreen = () => {
           <View style={styles.button_container}>
             <LogInButton onPress={onHandleSubmit} />
           </View>
+          <ErrorMessage visible={errorVisible} text={errorText}/>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

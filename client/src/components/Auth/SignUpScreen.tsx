@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect} from "react";
 import { useFonts } from "expo-font";
 import {
   View,
@@ -14,6 +14,8 @@ import { SignUpEmailInput, SignUpPasswordInput, SignUpConfirmPasswordInput } fro
 import SignUpButton from "../Common/SignUpButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
+import {ErrorMessage} from "../Common/ErrorMessage";
+
 
 const SignUpScreen = () => {
   const router = useRouter();
@@ -26,7 +28,13 @@ const SignUpScreen = () => {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [confirmPassword, setConfirmPassword] = React.useState<string>("");
-
+  const [errorVisible, setErrorVisible] = React.useState<('none' | 'flex' | undefined)>("none");
+  const [errorText, setErrorText] = React.useState<string>("")
+  const clearForm = () => {
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+  }
 
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
@@ -34,6 +42,9 @@ const SignUpScreen = () => {
     // Check if password and confirm password match
     if (password !== confirmPassword) {
       console.log("Passwords do not match");
+      setErrorVisible("flex");
+      setErrorText("Error: Passwords do not match")
+      clearForm();
       return;
     }
 
@@ -42,6 +53,17 @@ const SignUpScreen = () => {
     if (response?.user) {
       router.replace("(home)/chatchannel");
     } else if (response?.error) {
+      clearForm();
+      setErrorVisible("flex");
+      const reg = /invalid-email/;
+      const reg2 = /email-already-in-use/;
+      if(reg.test(JSON.stringify(response.error))) {
+        setErrorText("Error: Invalid Email");
+      } else if(reg2.test(JSON.stringify(response.error))){
+        setErrorText("Error: Email already in use");
+      } else {
+        setErrorText("Error: Password should be at least 6 characters");
+      }
       console.log(response.error);
     }
   };
@@ -49,7 +71,6 @@ const SignUpScreen = () => {
   if (!fontsLoaded && !fontError) {
     return null;
   }
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -76,6 +97,7 @@ const SignUpScreen = () => {
           <View style={styles.button_container}>
             <SignUpButton onPress={onHandleSubmit} />
           </View>
+          <ErrorMessage visible={errorVisible} text={errorText}/>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -118,6 +140,10 @@ const styles = StyleSheet.create({
     fontFamily: "Gilroy-ExtraBold",
     fontSize: 30,
   },
+  errorText: {
+    color: "red", 
+    justifyContent: "center",
+  }
 });
 
 export default SignUpScreen;
