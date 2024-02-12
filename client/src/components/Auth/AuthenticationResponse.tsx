@@ -26,7 +26,7 @@ class CustomError {
 export const inValidEmailResponse = new CustomError("Invalid Email", "Please provide a valid email address")
 
 //Function that decodes the error code
-function decodeFirebaseError(error: FirebaseError) {
+const decodeFirebaseError = (error: FirebaseError) => {
   if(error.code === "auth/missing-email" || error.code === "auth/invalid-email") {
     return "Please provide a valid email address";
   }
@@ -46,7 +46,7 @@ function decodeFirebaseError(error: FirebaseError) {
   return "Unknown error"
 }
 
-function decodeCustomError(error: CustomError) {
+const decodeCustomError = (error: CustomError) => {
   return error.message;
 }
 
