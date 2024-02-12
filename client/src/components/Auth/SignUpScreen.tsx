@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SignUpEmailInput, SignUpPasswordInput, SignUpConfirmPasswordInput } from "../Common/CustomInputs";
 import SignUpButton from "../Common/SignUpButton";
+import { AuthenticationErrorMessage, AuthenticationResponse } from "./AuthenticationResponse";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
 import {ErrorMessage} from "../Common/ErrorMessage";
@@ -36,9 +37,12 @@ const SignUpScreen = () => {
       setConfirmPassword("");
   }
 
+  const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
+  
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
-
+    setAuthResponse(await appSignUp(email, password));
+      
     // Check if password and confirm password match
     if (password !== confirmPassword) {
       console.log("Passwords do not match");
@@ -48,24 +52,23 @@ const SignUpScreen = () => {
       return;
     }
 
-    const response = await appSignUp(email, password);
+    if (authResponse?.user) {
 
-    if (response?.user) {
       router.replace("(home)/chatchannel");
-    } else if (response?.error) {
+    } else if (authResponse?.error) {
       clearForm();
       setErrorVisible("flex");
       const reg = /invalid-email/;
       const reg2 = /email-already-in-use/;
-      if(reg.test(JSON.stringify(response.error))) {
+      if(reg.test(JSON.stringify(authResponse.error))) {
         setErrorText("Error: Invalid Email");
-      } else if(reg2.test(JSON.stringify(response.error))){
+      } else if(reg2.test(JSON.stringify(authResponse.error))){
         setErrorText("Error: Email already in use");
       } else {
         setErrorText("Error: Password should be at least 6 characters");
       }
-      console.log(response.error);
-    }
+      console.log(authResponse.error);
+    } 
   };
 
   if (!fontsLoaded && !fontError) {
@@ -73,33 +76,31 @@ const SignUpScreen = () => {
   }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <View style={styles.main_container}>
-          <View style={styles.header_container}>
-            <Text style={styles.header_text}>Welcome!</Text>
-          </View>
-          <View style={styles.input_container}>
-            <SignUpEmailInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-            />
-            <SignUpPasswordInput
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-            />
-            <SignUpConfirmPasswordInput
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
-            />
-          </View>
-          <View style={styles.button_container}>
-            <SignUpButton onPress={onHandleSubmit} />
+      <View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <View style={styles.main_container}>
+            <View style={styles.header_container}>
+              <Text style={styles.header_text}>Welcome!</Text>
+            </View>
+            <View style={styles.input_container}>
+              <SignUpEmailInput
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+              <SignUpPasswordInput
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+              />
+            </View>
+            <View style={styles.button_container}>
+              <SignUpButton onPress={onHandleSubmit} />
+            </View> 
           </View>
           <ErrorMessage visible={errorVisible} text={errorText}/>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </View>
     </TouchableWithoutFeedback>
   );
 };
@@ -127,6 +128,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     width: "100%",
+  },
+
+  error_container: {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
+    bottom: Dimensions.get("window").height * 0.10,
+    position: "absolute",
   },
 
   header_container: {

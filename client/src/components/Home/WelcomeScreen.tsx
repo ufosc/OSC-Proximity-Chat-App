@@ -5,6 +5,9 @@ import { Link, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { WelcomeEmailInput } from '../Common/CustomInputs';
 import {ErrorMessage} from '../Common/ErrorMessage';
+import { AuthenticationErrorMessage, AuthenticationResponse, inValidEmailResponse } from '../Auth/AuthenticationResponse';
+import { FirebaseError } from 'firebase/app';
+
 const WelcomeScreen = () => {
 
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
@@ -18,6 +21,7 @@ const WelcomeScreen = () => {
   const [email, setEmail] = useState<string>('');
   const [errorVisible, setErrorVisible] = React.useState<('none' | 'flex' | undefined)>("none");
   const [errorText, setErrorText] = React.useState<string>("")
+  const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
 
   if (!fontsLoaded && !fontError) {
     return null;
@@ -27,6 +31,7 @@ const WelcomeScreen = () => {
     const preparedEmail = email.trim();
     if ((preparedEmail.length !== 0) && isValidEmail(preparedEmail)) {
       router.push( { pathname: '/login', params: { inputEmail: preparedEmail } } );
+      setAuthResponse(undefined)
     } else {
       console.log('Invalid email');
       setErrorVisible("flex");
@@ -41,34 +46,45 @@ const WelcomeScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={keyboardVerticalOffest}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <View>
+      <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={keyboardVerticalOffest}>
 
-        <View style={styles.main_container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-          <View style={styles.sub_container}>
+          <View style={styles.main_container}>
 
-            <View style={styles.image_container}>
-              <Image style={styles.image} source={require('../../../assets/talking_location.png')} />
-            </View>
+            
 
-            <Text style={styles.header_text}>Welcome to Proximity Chat!</Text>
+            <View style={styles.sub_container}>
 
-            <View style={styles.info_container}>
+              <View style={styles.image_container}>
+                <Image style={styles.image} source={require('../../../assets/talking_location.png')} />
+              </View>
 
-              <View style={styles.login_container}>
+              <Text style={styles.header_text}>Welcome to Proximity Chat!</Text>
 
-                <Text style={styles.login_text}>Log in</Text>
+              <View style={styles.info_container}>
 
-                <View style={styles.login_mini_container}>
+                <View style={styles.login_container}>
+                  <Text style={styles.login_text}>Log in</Text>
 
-                  <WelcomeEmailInput value={email} onChangeText={text => setEmail(text)} />
+                  <View style={styles.login_mini_container}>
+                    <WelcomeEmailInput value={email} onChangeText={text => setEmail(text)} />
 
-                  <TouchableOpacity style={styles.login_button} onPress={handleLogin}>
-                    <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
-                  </TouchableOpacity>
+                    <TouchableOpacity style={styles.login_button} onPress={handleLogin}>
+                      <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
+                    </TouchableOpacity>
+                  </View>
 
                 </View>
+
+                <View style={styles.error_container}>
+                  <AuthenticationErrorMessage response={authResponse} onPress={() => setAuthResponse(undefined)} />
+                </View>
+
+                <Text>
+                  Don't have an account? <Link style={styles.link} href="/signup">Sign up!</Link>
+                </Text>
 
               </View>
               <Text>
@@ -77,11 +93,9 @@ const WelcomeScreen = () => {
               <ErrorMessage visible={errorVisible} text={errorText}/>
             </View>
           </View>
-
-        </View>
-
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </View>
   )
 }
 
@@ -90,6 +104,13 @@ const styles = StyleSheet.create({
     maxWidth: Dimensions.get("window").width * 1,
     maxHeight: Dimensions.get("window").height * 0.37,
     resizeMode: "contain",
+  },
+
+  error_container: {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
   },
 
   header_text: {

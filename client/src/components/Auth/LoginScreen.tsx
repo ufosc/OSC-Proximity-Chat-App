@@ -15,6 +15,7 @@ import { LogInButton } from "../Common/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/store";
 import {ErrorMessage} from "../Common/ErrorMessage";
+import { AuthenticationErrorMessage, AuthenticationResponse } from "./AuthenticationResponse";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -26,28 +27,28 @@ const LoginScreen = () => {
   const { inputEmail } = useLocalSearchParams();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
   const [invalidLogin, invalidateLogin] = React.useState<boolean>(false);
   const [errorVisible, setErrorVisible] = React.useState<('none' | 'flex' | undefined)>("none");
   const [errorText, setErrorText] = React.useState<string>("")
 
   const onHandleSubmit = async () => {
-    const response = await appSignIn(email, password);
-    if (response?.user) {
+    setAuthResponse(await appSignIn(email, password));
+    if (authResponse?.user) {
       router.replace("(home)/chatchannel");
-    } else if (response?.error) {
+    } else if (authResponse?.error) {
       const reg = /invalid-email/;
       const reg2 = /invalid-credential/;
-      if(reg.test(JSON.stringify(response.error))) {
+      if(reg.test(JSON.stringify(authResponse.error))) {
         setErrorText("Error: Invalid Email")
-      } else if(reg2.test(JSON.stringify(response.error))) {
+      } else if(reg2.test(JSON.stringify(authResponse.error))) {
         setErrorText("Error: Wrong Email or Password")
       } else {
         setErrorText("Error: Account is Disabled");
       }
       setErrorVisible("flex");
-      console.log(response.error);
-      invalidateLogin(true);
-    }
+      console.log(authResponse.error);
+    } 
   };
 
   useEffect(() => {
@@ -60,31 +61,33 @@ const LoginScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <View style={styles.main_container}>
-          <View style={styles.header_container}>
-            <Text style={styles.header_text}>Welcome back!</Text>
-          </View>
-          <View style={styles.input_container}>
-            <LogInEmailInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              invalid={invalidLogin}
-            />
-            <LogInPasswordInput
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              invalid={invalidLogin}
-            />
-          </View>
-          <View style={styles.button_container}>
-            <LogInButton onPress={onHandleSubmit} />
+      <View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <View style={styles.main_container}>
+            <View style={styles.header_container}>
+              <Text style={styles.header_text}>Welcome back!</Text>
+            </View>
+            <View style={styles.input_container}>
+              <LogInEmailInput
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                invalid={invalidLogin}
+              />
+              <LogInPasswordInput
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                invalid={invalidLogin}
+              />
+            </View>
+            <View style={styles.button_container}>
+              <LogInButton onPress={onHandleSubmit} />
+            </View>
           </View>
           <ErrorMessage visible={errorVisible} text={errorText}/>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </View>
     </TouchableWithoutFeedback>
 
     // Log In
@@ -100,6 +103,16 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  //This is an example of where the error message could be
+  error_container: {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
+    bottom: Dimensions.get("window").height * 0.10,
+    position: "absolute",
   },
 
   input_container: {
