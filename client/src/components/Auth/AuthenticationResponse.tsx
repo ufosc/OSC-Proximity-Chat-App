@@ -12,7 +12,7 @@ export type AuthenticationResponse = {
   error: unknown;
 }
 
-class CustomError {
+export class CustomError {
   public code: string;
   public message: string;
 
@@ -55,6 +55,8 @@ function handleResponse(response: AuthenticationResponse) {
   if(response?.user) {
     return "";
   }
+
+  console.log(response.error)
 
   if(response.error instanceof FirebaseError) {
     return decodeFirebaseError(response.error);
