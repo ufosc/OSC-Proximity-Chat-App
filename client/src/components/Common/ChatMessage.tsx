@@ -5,8 +5,9 @@ import { useSettings } from "../../contexts/SettingsContext";
 interface MessageProps {
   messageContent: string;
   // timestamp: Date, (This will be added later inside the message object passed in)
-  author: string;
-}
+  author: string,
+  time: Date
+};
 
 const Message: React.FC<MessageProps> = ({ messageContent, author }) => {
   const settings = useSettings();
