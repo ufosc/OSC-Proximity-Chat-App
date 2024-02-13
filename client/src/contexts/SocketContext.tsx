@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import * as Network from "expo-network";
 import { useLocation } from "./LocationContext";
 import { EXPO_IP } from "@env";
 

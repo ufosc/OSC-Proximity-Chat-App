@@ -1,7 +1,6 @@
 import { User, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { Store } from 'pullstate'
-import { auth, app } from '../configs/firebaseConfig'
-import { FirebaseError } from 'firebase/app';
+import { auth} from '../configs/firebaseConfig'
 
 interface AuthStoreInterface {
     isLoggedin: boolean,
