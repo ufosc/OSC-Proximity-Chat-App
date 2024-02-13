@@ -60,7 +60,7 @@ export const LocationProvider = ({
         } catch (error) {
           console.error("Error fetching location:", error);
         }
-      }, LOCATION_REFRESH_RATE); // Fetch location every 3 seconds
+      }, Number(LOCATION_REFRESH_RATE)); // Fetch location every 3 seconds
 
       // Cleanup function to clear interval when component unmounts
       return () => clearInterval(interval);
