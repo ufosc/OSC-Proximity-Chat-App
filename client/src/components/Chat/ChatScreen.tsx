@@ -39,7 +39,7 @@ const ChatScreen = () => {
       const newMessage: MessageType = {
         msgID: Crypto.randomUUID(),
         messageContent: message.trim(),
-        author: user.username,
+        author: user.displayName,
       };
 
       setMessages([...messages, newMessage]);

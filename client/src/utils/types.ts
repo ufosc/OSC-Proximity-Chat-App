@@ -5,6 +5,7 @@ export type MessageType = {
 };
 
 export type UserType = {
-  username: string;
+  userID: string;
+  displayName: string;
   pfp: string;
 };
