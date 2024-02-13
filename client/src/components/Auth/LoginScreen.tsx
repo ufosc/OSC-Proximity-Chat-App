@@ -30,18 +30,22 @@ const LoginScreen = () => {
   const [invalidLogin, invalidateLogin] = React.useState<boolean>(false);
 
   const onHandleSubmit = async () => {
+    Keyboard.dismiss();
     setAuthResponse(await appSignIn(email, password));
+  };
+
+  useEffect(() => {
+    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
+  }, []);
+
+  useEffect(() => {
     if (authResponse?.user) {
       router.replace("(home)/chatchannel");
     } else if (authResponse?.error) {
       console.log(authResponse.error);
       invalidateLogin(true);
     }
-  };
-
-  useEffect(() => {
-    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
-  }, []);
+  }, [authResponse])
 
   if (!fontsLoaded && !fontError) {
     return null;
@@ -76,7 +80,10 @@ const LoginScreen = () => {
         </KeyboardAvoidingView>
 
         <View style={styles.error_container}>
-          <AuthenticationErrorMessage response={authResponse} onPress={() => setAuthResponse(undefined)} />
+          <AuthenticationErrorMessage response={authResponse} onPress={() => {
+            setAuthResponse(undefined)
+            invalidateLogin(false)
+            }} />
         </View>
 
       </View>
