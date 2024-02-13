@@ -55,7 +55,6 @@ const decodeCustomError = (error: CustomError) => {
 //Function that handles the response depending on type
 const handleResponse = (response: AuthenticationResponse) => {
   if (response?.user) {
-    // If the user is not undefined
     return "";
   }
 
