@@ -51,7 +51,7 @@ const decodeCustomError = (error: CustomError) => {
 }
 
 //Function that handles the response depending on type
-function handleResponse(response: AuthenticationResponse) {
+const handleResponse = (response: AuthenticationResponse) => {
   if(response?.user) {
     return "";
   }
