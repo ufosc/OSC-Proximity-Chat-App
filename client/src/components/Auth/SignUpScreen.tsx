@@ -70,6 +70,10 @@ const SignUpScreen = () => {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
               />
+              <SignUpPasswordInput
+                value={confirmPassword}
+                onChangeText={(text) => setConfirmPassword(text)}
+              />
             </View>
             <View style={styles.button_container}>
               <SignUpButton onPress={onHandleSubmit} />
