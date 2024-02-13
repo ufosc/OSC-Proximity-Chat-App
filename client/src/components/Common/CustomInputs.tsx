@@ -4,9 +4,8 @@ import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
 interface ChatInputProps {
     value?: string,
     onChangeText?: (text: string) => void
+    invalid?: boolean,
 }
-
-
 
 export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
     return (
@@ -21,9 +20,9 @@ export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeTex
 
 // Maybe will put LogInEmailInput & LogInPasswordInput two together into a single component
 
-export const LogInEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
+export const LogInEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText, invalid }) => {
     return (
-        <TextInput style={styles.loginInput}
+        <TextInput style={[styles.loginInput, invalid && styles.invalidLoginInput]}
         placeholder='Email'
         multiline={false}
         value={value}
@@ -32,9 +31,9 @@ export const LogInEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText 
     )
 }
 
-export const LogInPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeText}) => {
+export const LogInPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeText, invalid }) => {
     return (
-        <TextInput style={styles.loginInput}
+        <TextInput style={[styles.loginInput, invalid && styles.invalidLoginInput]}
         placeholder='Password'
         multiline={false}
         value={value}
@@ -61,6 +60,18 @@ export const SignUpPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeT
     return (
         <TextInput style={styles.loginInput}
         placeholder='Password'
+        multiline={false}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={true}
+        />
+    )
+}
+
+export const SignUpConfirmPasswordInput: React.FC<ChatInputProps> = ({ value, onChangeText}) => {
+    return (
+        <TextInput style={styles.loginInput}
+        placeholder='Confirm Password'
         multiline={false}
         value={value}
         onChangeText={onChangeText}
@@ -103,6 +114,10 @@ const styles = StyleSheet.create({
         paddingBottom: Platform.OS === 'ios' ? 15 : 0,
         paddingLeft: 15,
         paddingRight: 15,
+    },
+
+    invalidLoginInput: {
+        borderColor: 'red',
     },
 
 });
