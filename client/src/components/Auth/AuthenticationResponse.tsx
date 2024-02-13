@@ -55,13 +55,15 @@ const decodeCustomError = (error: CustomError) => {
 //Function that handles the response depending on type
 const handleResponse = (response: AuthenticationResponse) => {
   if (response?.user) {
+    // If the user is not undefined
     return "";
   }
 
   if (response.error instanceof FirebaseError) {
+    // If the error is a firebase error
     return decodeFirebaseError(response.error);
   }
-
+  // If the error is a custom error
   if (response.error instanceof CustomError) {
     // If the error is a custom error
     return decodeCustomError(response.error);
