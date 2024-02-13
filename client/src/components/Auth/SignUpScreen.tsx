@@ -28,7 +28,7 @@ const SignUpScreen = () => {
   const [password, setPassword] = React.useState<string>("");
   const [confirmPassword, setConfirmPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
-  
+
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
     // Check if password and confirm password match
@@ -80,7 +80,7 @@ const SignUpScreen = () => {
             </View>
             <View style={styles.button_container}>
               <SignUpButton onPress={onHandleSubmit} />
-            </View> 
+            </View>
           </View>
         </KeyboardAvoidingView>
 
