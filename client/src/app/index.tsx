@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text } from "react-native";
 import { AuthStore } from "../services/store";
 import { useRootNavigationState, useRouter, useSegments } from "expo-router";
