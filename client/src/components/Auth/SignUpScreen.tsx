@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { SignUpEmailInput, SignUpPasswordInput, SignUpConfirmPasswordInput } from "../Common/CustomInputs";
 import SignUpButton from "../Common/SignUpButton";
-import { AuthenticationErrorMessage, AuthenticationResponse } from "./AuthenticationResponse";
+import { AuthenticationErrorMessage, AuthenticationResponse, CustomError } from "./AuthenticationResponse";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
 
@@ -31,16 +31,19 @@ const SignUpScreen = () => {
   
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
-    setAuthResponse(await appSignUp(email, password));
-      
     // Check if password and confirm password match
     if (password !== confirmPassword) {
-      console.log("Passwords do not match");
+        const nonmatching_password_error: AuthenticationResponse = {
+        error: new CustomError("Invalid password", "Passwords do not match")
+      }
+      setAuthResponse(nonmatching_password_error)
+
       return;
     }
 
-    if (authResponse?.user) {
+    setAuthResponse(await appSignUp(email, password));
 
+    if (authResponse?.user) {
       router.replace("(home)/chatchannel");
     } else if (authResponse?.error) {
       console.log(authResponse.error);
@@ -69,6 +72,10 @@ const SignUpScreen = () => {
               <SignUpPasswordInput
                 value={password}
                 onChangeText={(text) => setPassword(text)}
+              />
+              <SignUpConfirmPasswordInput
+                value={confirmPassword}
+                onChangeText={(text) => setConfirmPassword(text)}
               />
             </View>
             <View style={styles.button_container}>
