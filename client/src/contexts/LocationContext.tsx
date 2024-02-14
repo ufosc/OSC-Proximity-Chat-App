@@ -44,7 +44,7 @@ export const LocationProvider = ({
       const interval = setInterval(async () => {
         try {
           let locationData = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Highest,
+            accuracy: Location.Accuracy.High
           }); // High accuracy for now for testing!
           if (
             locationData.coords.latitude !== location.latitude ||

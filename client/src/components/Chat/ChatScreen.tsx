@@ -22,6 +22,8 @@ import { SignOutButton } from "../Common/AuthButtons"
 import { MessageType } from "../../types/Message";
 import { LocationProvider } from "../../contexts/LocationContext";
 import { useSocket } from "../../contexts/SocketContext";
+import { useLocation } from "../../contexts/LocationContext";
+import { AuthStore } from "../../services/store";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -29,6 +31,8 @@ const ChatScreen = () => {
   const screenHeight = Dimensions.get("window").height;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
   const socket = useSocket();
+  const location = useLocation();
+  const { user } = AuthStore.useState();
 
   // Message loading and sending logic
   const [messages, setMessages] = React.useState<MessageType[]>([]);
@@ -38,13 +42,13 @@ const ChatScreen = () => {
   const onHandleSubmit = () => {
     if (messageContent.trim() !== "") {
       const newMessage: MessageType = {
-        uid: "111", // TODO: get uid from firebase auth.
-        msgId: "111", // TODO: find a way to create a unique message id.
+        uid: String(user?.uid), 
+        msgId: Crypto.randomUUID(), 
         msgContent: messageContent.trim(),
         timeSent: Date.now(),
         location: {
-          lat: 10,
-          lon: 10
+          lat: Number(location?.latitude),
+          lon: Number(location?.longitude)
         }
       }
 
