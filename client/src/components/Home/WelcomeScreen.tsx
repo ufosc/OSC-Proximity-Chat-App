@@ -54,7 +54,7 @@ const WelcomeScreen = () => {
             <View style={styles.sub_container}>
 
               <View style={styles.image_container}>
-                <Image style={styles.image} source={require('../../../assets/talking_location.png')} />
+                <Image style={styles.image} source={require('../../../assets/temp_front_page_icon.png')} />
               </View>
 
               <Text style={styles.header_text}>Welcome to Proximity Chat!</Text>
@@ -62,7 +62,7 @@ const WelcomeScreen = () => {
               <View style={styles.info_container}>
 
                 <View style={styles.login_container}>
-                  <Text style={styles.login_text}>Log in</Text>
+                  <Text style={styles.login_text}>Login</Text>
 
                   <View style={styles.login_mini_container}>
                     <WelcomeEmailInput value={email} onChangeText={text => setEmail(text)} />

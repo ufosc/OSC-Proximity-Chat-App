@@ -22,7 +22,7 @@ export const LogInButton: React.FC<LogInButtonProps> = ({ onPress }) => {
 
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.button_text}>Log In</Text>
+      <Text style={styles.button_text}>Login</Text>
     </TouchableOpacity>
   );
 };
