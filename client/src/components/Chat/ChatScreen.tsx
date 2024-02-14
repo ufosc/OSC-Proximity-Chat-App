@@ -15,30 +15,31 @@ import { ChatInput } from "../Common/CustomInputs";
 import { ChatSendButton } from "../Common/CustomButtons";
 import MessageChannel from "../Common/MessageChannel";
 import { LinearGradient } from "expo-linear-gradient";
-import { MessageType } from "../../utils/types";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
 import { useSettings } from "../../contexts/SettingsContext";
 import { SignOutButton } from "../Common/AuthButtons"
-import { Message } from "../../types/Message";
+import { MessageType } from "../../types/Message";
 import { LocationProvider } from "../../contexts/LocationContext";
+import { useSocket } from "../../contexts/SocketContext";
 
 const ChatScreen = () => {
   const settings = useSettings();
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
+  const socket = useSocket();
 
   // Message loading and sending logic
-  const [messages, setMessages] = React.useState<Message[]>([]);
+  const [messages, setMessages] = React.useState<MessageType[]>([]);
   const [messageContent, setMessageContent] = React.useState<string>("");
 
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
     if (messageContent.trim() !== "") {
-      const newMessage: Message = {
-        uid: "111",
-        msgId: "111",
+      const newMessage: MessageType = {
+        uid: "111", // TODO: get uid from firebase auth.
+        msgId: "111", // TODO: find a way to create a unique message id.
         msgContent: messageContent.trim(),
         timeSent: Date.now(),
         location: {
@@ -47,6 +48,10 @@ const ChatScreen = () => {
         }
       }
 
+      if (socket !== null) {
+        socket.emit("message", newMessage)
+      }
+      
       setMessages([...messages, newMessage]);
       setMessageContent("");
     }
@@ -83,9 +88,9 @@ const ChatScreen = () => {
           </View>
           <View style={styles.footerContainer}>
             <ChatInput
-              value={message}
+              value={messageContent}
               onChangeText={(text: string) => {
-                setMessage(text);
+                setMessageContent(text);
               }}
             />
             <ChatSendButton onPress={onHandleSubmit} />
