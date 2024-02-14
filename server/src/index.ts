@@ -88,7 +88,6 @@ io.on('connection', (socket: any) => {
         } else {
           console.log(`Sending new message to socket ${recievingSocket}`)
           socket.broadcast.to(recievingSocket).emit("message", message.msgContent)
-          // socket.broadcast.to(recievingSocket).emit("message", message)
         }
       }
 
