@@ -3,6 +3,7 @@ import { io, Socket } from "socket.io-client";
 import * as Network from "expo-network";
 import { useLocation } from "./LocationContext";
 import { EXPO_IP } from "@env";
+import { Message } from "../types/Message";
 
 const SocketContext = createContext<Socket | null>(null);
 
@@ -27,8 +28,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    socketIo.on("message", (data: any) => {
-      console.log("message", data);
+    socketIo.on("message", (data: Message, ack) => {
+      console.log("Sending message to server:", data);
+      if (ack) console.log("Server acknowledged message:", ack);
     });
 
     return () => {

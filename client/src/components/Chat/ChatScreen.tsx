@@ -20,6 +20,8 @@ import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
 import { useSettings } from "../../contexts/SettingsContext";
 import { SignOutButton } from "../Common/AuthButtons"
+import { Message } from "../../types/Message";
+import { LocationProvider } from "../../contexts/LocationContext";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -28,21 +30,25 @@ const ChatScreen = () => {
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
 
   // Message loading and sending logic
-  const [messages, setMessages] = React.useState<MessageType[]>([]);
-  const [message, setMessage] = React.useState<string>("");
+  const [messages, setMessages] = React.useState<Message[]>([]);
+  const [messageContent, setMessageContent] = React.useState<string>("");
 
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
-    if (message.trim() !== "") {
-      const newMessage: MessageType = {
-        msgID: Crypto.randomUUID(),
-        messageContent: message.trim(),
-        author: generateName(),
-      };
+    if (messageContent.trim() !== "") {
+      const newMessage: Message = {
+        uid: "111",
+        msgId: "111",
+        msgContent: messageContent.trim(),
+        timeSent: Date.now(),
+        location: {
+          lat: 10,
+          lon: 10
+        }
+      }
 
       setMessages([...messages, newMessage]);
-
-      setMessage("");
+      setMessageContent("");
     }
   };
 
