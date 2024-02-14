@@ -12,7 +12,7 @@ export type AuthenticationResponse = {
   error: unknown;
 }
 
-class CustomError {
+export class CustomError {
   public code: string;
   public message: string;
 
@@ -56,6 +56,8 @@ function handleResponse(response: AuthenticationResponse) {
     return "";
   }
 
+  console.log(response.error)
+
   if(response.error instanceof FirebaseError) {
     return decodeFirebaseError(response.error);
   }
@@ -81,7 +83,7 @@ export const AuthenticationErrorMessage: React.FC<AuthenticationErrorMessageProp
   const errorMessage = handleResponse(response)
 
   return (
-    errorMessage && 
+    errorMessage &&
     <TouchableOpacity style={styles.error_container} onPressIn={onPress}>
         <Text style={styles.error_text}>{errorMessage}</Text>
     </TouchableOpacity>
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     height: Dimensions.get("window").height * 0.05,
     marginTop: Dimensions.get("window").height * 0.005,
-    width: Dimensions.get("window").width * 0.8,
+    width: Dimensions.get("window").width * 0.9,
     borderRadius: 10,
     padding: 10
   }

@@ -63,7 +63,8 @@ io.on('connection', (socket: any) => {
       if (ack) ack('pong')      
   })
   socket.on('message', async (message: Message, ack) => {
-    // Runs when a user sends a message
+    // message post - when someone sends a message
+    
     console.log(`[WS] Recieved message from user <${socket.id}>.`)
     console.log(message)
     try {
@@ -184,6 +185,7 @@ app.put('/users', async (req, res) => {
       if (!success) throw Error("     toggleUserConnectionStatus() failed.")
     }
     else if(req.query.userId && req.query.lat && req.query.lon) {
+      query = "?userId&lat&lon"
       const userId = req.query.userId
       const lat = Number(req.query.lat)
       const lon = Number(req.query.lon)
