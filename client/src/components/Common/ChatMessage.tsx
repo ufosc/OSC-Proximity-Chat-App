@@ -8,9 +8,9 @@ interface MessageProps {
   time: number // Unix timestamp; Date.now() returns a Number.
 };
 
-const Message: React.FC<MessageProps> = ({ messageContent, author }) => {
+const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
   const settings = useSettings();
-  const timestamp = new Date().toLocaleTimeString([], {
+  const timestamp = new Date(time).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
