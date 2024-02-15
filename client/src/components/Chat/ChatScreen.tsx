@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -38,6 +38,13 @@ const ChatScreen = () => {
   const [messages, setMessages] = React.useState<MessageType[]>([]);
   const [messageContent, setMessageContent] = React.useState<string>("");
 
+  if (socket === null) return // Might need to be changed.
+  socket.on("message", (data: MessageType, ack) => {
+    console.log("Message recieved from server:", data);
+    if (ack) console.log("Server acknowledged message:", ack);
+    setMessages([...messages, data])
+  })
+
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
     if (messageContent.trim() !== "") {
@@ -60,6 +67,18 @@ const ChatScreen = () => {
       setMessageContent("");
     }
   };
+
+  // useEffect(() => {
+  //   if (socket === null) {
+  //     return
+  //   }
+  //   console.log("flag")
+  //   socket.on("message", (data: MessageType, ack) => {
+  //     console.log("Message recieved from server:", data);
+  //     if (ack) console.log("Server acknowledged message:", ack);
+  //     setMessages([...messages, data])
+  //   })
+  // }, [])
 
   return (
     <View

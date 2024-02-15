@@ -3,7 +3,6 @@ import { io, Socket } from "socket.io-client";
 import * as Network from "expo-network";
 import { useLocation } from "./LocationContext";
 import { EXPO_IP } from "@env";
-import { MessageType } from "../types/Message";
 
 const SocketContext = createContext<Socket | null>(null);
 
@@ -28,10 +27,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    socketIo.on("message", (data: MessageType, ack) => {
-      console.log("Sending message to server:", data);
-      if (ack) console.log("Server acknowledged message:", ack);
-    });
+    // socketIo.on("message", (data: MessageType, ack) => {
+    //   console.log("Sending message to server:", data);
+    //   if (ack) console.log("Server acknowledged message:", ack);
+    // });
 
     return () => {
       isMounted = false;
@@ -40,6 +39,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
+    // TODO: Refactor this useEffect into a different file (service?) outside of the context, as it is not part of the purpose of a context.
     if (
       socket &&
       locationContext?.latitude != 9999 &&

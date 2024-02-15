@@ -15,6 +15,12 @@ interface LocationType {
 
 const LocationContext = createContext<LocationContextProps | null>(null);
 
+const getLocation = async () => {
+  return await Location.getCurrentPositionAsync({
+    accuracy: Location.Accuracy.Balanced
+  }); // Change accuracy while testing. Could become .env variable.
+}
+
 export const useLocation = () => {
   return useContext(LocationContext);
 };
@@ -31,6 +37,7 @@ export const LocationProvider = ({
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
 
   useEffect(() => {
+    // TODO: Refactor this useEffect into a different file (service?) outside of the context, as it is not part of the purpose of a context.
     (async () => {
       // Request location permissions, if not granted, return
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -42,10 +49,9 @@ export const LocationProvider = ({
       setIsLocationEnabled(true);
 
       const interval = setInterval(async () => {
+        // FIXME: This loop does not stop after refreshing app. Must completely close out and restart app when LOCATION_REFRESH_RATE is changed.
         try {
-          let locationData = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.High
-          }); // High accuracy for now for testing!
+          const locationData = await getLocation();
           if (
             locationData.coords.latitude !== location.latitude ||
             locationData.coords.longitude !== location.longitude
