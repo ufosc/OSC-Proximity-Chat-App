@@ -86,7 +86,7 @@ const SettingsScreen : React.FC = () => {
     )
                             
     return (
-            <SafeAreaView style={{ flex: 1}}>
+            <SafeAreaView style={styles.safeAreaStyle}>
                 <ScrollView style={styles.container}>
                     <View style={styles.header}>
                         <Text style={styles.headerText}>Settings</Text>
@@ -112,6 +112,10 @@ const SettingsScreen : React.FC = () => {
 
 const styles = StyleSheet.create({
     // Styles
+    safeAreaStyle: {
+        flex: 1,
+        backgroundColor: '#f6f6f6',
+    },
     container: {
         paddingVertical: 24,
     },
