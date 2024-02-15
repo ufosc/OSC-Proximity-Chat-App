@@ -38,12 +38,17 @@ const ChatScreen = () => {
   const [messages, setMessages] = React.useState<MessageType[]>([]);
   const [messageContent, setMessageContent] = React.useState<string>("");
 
-  if (socket === null) return // This line might need to be changed.
-  socket.on("message", (data: MessageType, ack) => {
-    console.log("Message recieved from server:", data);
-    if (ack) console.log("Server acknowledged message:", ack);
-    setMessages([...messages, data])
-  })
+  useEffect(() => {
+    if (socket === null) return // This line might need to be changed.
+    socket.on("message", (data: MessageType, ack) => {
+      console.log("Message recieved from server:", data);
+      if (ack) console.log("Server acknowledged message:", ack);
+      setMessages([...messages, data])
+    })
+    return () => {
+      socket.off()
+    }
+  }, [messages])
 
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
@@ -67,6 +72,7 @@ const ChatScreen = () => {
       setMessageContent("");
     }
   };
+
 
   return (
     <View
