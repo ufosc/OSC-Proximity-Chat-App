@@ -62,7 +62,6 @@ const SettingsScreen : React.FC = () => {
         <TouchableOpacity onPress={() => {}}>
             <View style={styles.row}>
                 <Text style={styles.rowTitle}>{title}</Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     {type === 'toggle' && (
                         <Switch
                             onValueChange={(val) => { setData({ ...data, [id]: Boolean(val) }); }} // Convert val to boolean using Boolean() function
@@ -70,16 +69,14 @@ const SettingsScreen : React.FC = () => {
                         />
                     )}
                     
-                    {type === 'select' && (
-                        <Text style={styles.rowValueText}>{data[id as keyof typeof data]}</Text>
-                    )}
 
-                    {(type === 'select' || type === 'link') && (
-                        
-                        <Image source={require('../../../assets/angle-right.png')} style={styles.rightArrow} />
-                        
+                    {(type === 'select') && (
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <Text style={styles.rowValueText}>{data[id as keyof typeof data]}</Text>
+                            <Image source={require('../../../assets/angle-right.png')} style={styles.rightArrow} />
+                        </View>
+                    
                     )}
-                </View>
             </View>
         </TouchableOpacity>
         
