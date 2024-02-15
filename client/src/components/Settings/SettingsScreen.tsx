@@ -8,10 +8,9 @@ import {SafeAreaView,
     Switch,
     TouchableOpacity,
     Image,
+    Dimensions,
 
 } from 'react-native';
-
-import angleRight from '../../../assets/angle-right.png';
 
 
 // List of settings items
@@ -32,7 +31,7 @@ const Sections = [
     {
         header: 'Privacy',
         items: [
-            {id: 'messageDeletionDelay', title: 'Message deletion delay', type: 'slider'},
+            {id: 'deleteMessages', title: 'Delete messages', type: 'toggle'},
         ]
     },
 
@@ -54,12 +53,12 @@ const SettingsScreen : React.FC = () => {
         notifyNewMessage: true,
         darkMode: false,
         language: 'English',
-        messageDeletionDelay: 30,
+        deleteMessages: false,
         
     });
 
-    const SettingsItem = ({id, title, type}: SettingsProps) => (
-        
+    // The component for a row that contains a single setting
+    const SettingsRow = ({id, title, type}: SettingsProps) => (
         <TouchableOpacity onPress={() => {}}>
             <View style={styles.row}>
                 <Text style={styles.rowTitle}>{title}</Text>
@@ -77,7 +76,7 @@ const SettingsScreen : React.FC = () => {
 
                     {(type === 'select' || type === 'link') && (
                         
-                        <Image source={angleRight} style={{height: 20, width: 20}} />
+                        <Image source={require('../../../assets/angle-right.png')} style={styles.rightArrow} />
                         
                     )}
                 </View>
@@ -87,12 +86,11 @@ const SettingsScreen : React.FC = () => {
     )
                             
     return (
-            <SafeAreaView style={{ backgroundColor: '#f6f6f6' }}>
+            <SafeAreaView style={{ flex: 1}}>
                 <ScrollView style={styles.container}>
                     <View style={styles.header}>
                         <Text style={styles.headerText}>Settings</Text>
                     </View>
-
                     {Sections.map(({header, items}) => (
                         <View style={styles.section} key={header}>
                             <View style={styles.sectionHeader}>
@@ -101,7 +99,7 @@ const SettingsScreen : React.FC = () => {
                             <View style={styles.sectionContent}>
                                 {items.map(({id, title, type}) => (
                                     <View key = {id} style={styles.rowWrapper}>
-                                        <SettingsItem id={id} title={title} type={type} />
+                                        <SettingsRow id={id} title={title} type={type} />
                                     </View>
                                 ))}
                             </View>
@@ -152,7 +150,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingRight: 24,
+        paddingRight: 22,
         height: 50,
         
     },
@@ -172,6 +170,10 @@ const styles = StyleSheet.create({
         color: '#616161',
         fontSize: 16,
     },
+    rightArrow: {
+        height: Dimensions.get('window').height * 0.024,
+        width: Dimensions.get('window').height * 0.024,
+    },
 });
 
-export default SettingsScreen; // Good for standalone components/Screens
+export default SettingsScreen;
