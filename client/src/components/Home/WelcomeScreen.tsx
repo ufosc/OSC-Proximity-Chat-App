@@ -54,7 +54,7 @@ const WelcomeScreen = () => {
             <View style={styles.sub_container}>
 
               <View style={styles.image_container}>
-                <Image style={styles.image} source={require('../../../assets/temp_front_page_icon.png')} />
+                <Image style={styles.image} source={require('../../../assets/talking_location.png')} />
               </View>
 
               <Text style={styles.header_text}>Welcome to Proximity Chat!</Text>
