@@ -24,6 +24,7 @@ import { LocationProvider } from "../../contexts/LocationContext";
 import { useSocket } from "../../contexts/SocketContext";
 import { useLocation } from "../../contexts/LocationContext";
 import { AuthStore } from "../../services/store";
+import { ChatMessageFooter } from "../Common/ChatMessageFooter"
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -104,7 +105,7 @@ const ChatScreen = () => {
             <MessageChannel messages={messages} />
           </View>
           <View style={styles.footerContainer}>
-            <ChatInput
+            <ChatMessageFooter
               value={messageContent}
               onChangeText={(text: string) => {
                 setMessageContent(text);
