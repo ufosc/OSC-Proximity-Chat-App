@@ -1,10 +1,12 @@
 import React from 'react'
 import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
+import { ChatSendButton } from './CustomButtons'
 
 interface ChatInputProps {
     value?: string,
     onChangeText?: (text: string) => void
     invalid?: boolean,
+    onHandleSubmit?: () => void,
 }
 
 export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
@@ -80,17 +82,23 @@ export const SignUpConfirmPasswordInput: React.FC<ChatInputProps> = ({ value, on
     )
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText, onHandleSubmit }) => {
 
 
     
     return (
-        <TextInput style={styles.loginInput} 
-        placeholder='Say Something...'
-        multiline={true}
-        value={value}
-        onChangeText={onChangeText}
-        maxLength={500} />
+        <View style={styles.messsageContainer}>
+            
+            <TextInput 
+            placeholder='Say Something...'
+            multiline={true}
+            value={value}
+            onChangeText={onChangeText}
+            maxLength={500}
+            style={styles.messageInput}/>
+            
+            <ChatSendButton onPress={onHandleSubmit} />
+        </View>
     )
 };
 
@@ -115,7 +123,24 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 15,
     },
-
+    messsageContainer: {
+        width: Dimensions.get('window').width * 0.75,
+        borderWidth: 1,
+        borderRadius: 30,
+        paddingTop: Platform.OS === 'ios' ?6 : 0,
+        paddingBottom: Platform.OS === 'ios' ? 6 : 0,
+        paddingLeft: 15,
+        paddingRight: 7,
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderColor: "#8E8E8E"
+    },
+    messageInput: {
+        width: Dimensions.get('window').height * 0.35,
+        fontSize: 16,
+    },
     invalidLoginInput: {
         borderColor: 'red',
     },

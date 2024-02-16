@@ -8,25 +8,26 @@ interface ChatSendButtonProps {
 export const ChatSendButton: React.FC<ChatSendButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.sendButton} onPress={onPress}>
-        <Image style={styles.sendButtonImage} source={require('../../../assets/send.png')}/>
+        <Image style={styles.sendButtonImage} source={require('../../../assets/transparentSend.png')}/>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
     sendButton: {
-        height: Dimensions.get('window').height * 0.055,
-        width: Dimensions.get('window').height * 0.055,
+        height: Dimensions.get('window').height * 0.044,
+        width: Dimensions.get('window').height * 0.044,
         borderRadius: 30,
-        backgroundColor: 'blue',
+        backgroundColor: '#34D1BF',
         justifyContent: 'center',
         alignItems: 'center',
     },
 
     sendButtonImage:{
-        height: Dimensions.get('window').height * 0.033,
-        width: Dimensions.get('window').height * 0.033,
+        height: Dimensions.get('window').height * 0.027,
+        width: Dimensions.get('window').height * 0.027,
         marginLeft: Dimensions.get('window').width * 0.01,
+        tintColor: 'white',
     },
 })
 
