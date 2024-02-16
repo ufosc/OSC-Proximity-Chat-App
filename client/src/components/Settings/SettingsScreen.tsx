@@ -11,9 +11,12 @@ import {SafeAreaView,
     Dimensions,
 
 } from 'react-native';
+import {SettingsItem} from './SettingsItem';
 
 
 // List of settings items
+// toggle type: a switch
+// select type: arrow to the right to switch pages
 const Sections = [
     {
         header: 'Notications',
@@ -37,12 +40,6 @@ const Sections = [
 
 ]
 
-// props to pass into settings
-type SettingsProps = {
-    id: string,
-    title: string,
-    type: string,
-}
 
 
 
@@ -57,30 +54,6 @@ const SettingsScreen : React.FC = () => {
         
     });
 
-    // The component for a row that contains a single setting
-    const SettingsRow = ({id, title, type}: SettingsProps) => (
-        <TouchableOpacity onPress={() => {}}>
-            <View style={styles.row}>
-                <Text style={styles.rowTitle}>{title}</Text>
-                    {type === 'toggle' && (
-                        <Switch
-                            onValueChange={(val) => { setData({ ...data, [id]: Boolean(val) }); }} // Convert val to boolean using Boolean() function
-                            value={Boolean(data[id as keyof typeof data])} // Convert data[id] to boolean using Boolean() function
-                        />
-                    )}
-                    
-
-                    {(type === 'select') && (
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <Text style={styles.rowValueText}>{data[id as keyof typeof data]}</Text>
-                            <Image source={require('../../../assets/angle-right.png')} style={styles.rightArrow} />
-                        </View>
-                    
-                    )}
-            </View>
-        </TouchableOpacity>
-        
-    )
                             
     return (
             <SafeAreaView style={styles.safeAreaStyle}>
@@ -95,9 +68,7 @@ const SettingsScreen : React.FC = () => {
                             </View>
                             <View style={styles.sectionContent}>
                                 {items.map(({id, title, type}) => (
-                                    <View key = {id} style={styles.rowWrapper}>
-                                        <SettingsRow id={id} title={title} type={type} />
-                                    </View>
+                                    <SettingsItem id={id} title={title} type={type} setter={setData} data={data} />
                                 ))}
                             </View>
                         </View>
@@ -143,36 +114,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderColor: '#e3e3e3',
-    },
-    
-    // Row styles
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingRight: 22,
-        height: 50,
-        
-    },
-    rowWrapper: {
-        paddingLeft: 24,
-        backgroundColor: '#fff',
-        borderTopWidth: 1,
-        borderColor: '#e3e3e3',
-    },
-    rowTitle: {
-        fontSize: 17,
-        color: '#616161',
-        marginRight: 4,
-    },
-    rowValueText: {
-        marginRight: 5,
-        color: '#616161',
-        fontSize: 16,
-    },
-    rightArrow: {
-        height: Dimensions.get('window').height * 0.024,
-        width: Dimensions.get('window').height * 0.024,
     },
 });
 
