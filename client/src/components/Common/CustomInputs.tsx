@@ -6,7 +6,7 @@ interface ChatInputProps {
     value?: string,
     onChangeText?: (text: string) => void
     invalid?: boolean,
-    onHandleSubmit?: () => void,
+    onSend?: () => void,
 }
 
 export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
@@ -82,7 +82,7 @@ export const SignUpConfirmPasswordInput: React.FC<ChatInputProps> = ({ value, on
     )
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText, onHandleSubmit }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText, onSend }) => {
 
 
     
@@ -97,7 +97,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ value, onChangeText, onHan
             maxLength={500}
             style={styles.messageInput}/>
             
-            <ChatSendButton onPress={onHandleSubmit} />
+            <ChatSendButton onPress={(onSend)} />
         </View>
     )
 };
@@ -127,10 +127,10 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * 0.75,
         borderWidth: 1,
         borderRadius: 30,
-        paddingTop: Platform.OS === 'ios' ?6 : 0,
-        paddingBottom: Platform.OS === 'ios' ? 6 : 0,
+        paddingTop: Dimensions.get('window').height * 0.006,
+        paddingBottom: Dimensions.get('window').height * 0.006,
         paddingLeft: 15,
-        paddingRight: 7,
+        paddingRight: Dimensions.get('window').height * 0.006,
         flexDirection: 'row',
         flex: 1,
         justifyContent: 'space-between',

@@ -109,8 +109,8 @@ const ChatScreen = () => {
               onChangeText={(text: string) => {
                 setMessageContent(text);
               }}
+              onSend={onHandleSubmit}
             />
-            <ChatSendButton onPress={onHandleSubmit} />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -143,16 +143,17 @@ const styles = StyleSheet.create({
 
   footerContainer: {
     width: "95%",
-    minHeight: Dimensions.get("window").height * 0.1,
+    
     maxHeight: Dimensions.get("window").height * 0.15,
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "space-evenly",
-    paddingBottom: Dimensions.get("window").height * 0.02,
-    paddingTop: Dimensions.get("window").height * 0.02,
-    marginTop: 10,
-    borderTopWidth: 1,
+    paddingBottom: Dimensions.get("window").height * 0.003,
+    paddingTop: Dimensions.get("window").height * 0.004,
+    marginTop: 0,
+    borderTopWidth: 0,
+    borderColor: "#8E8E8E",
   },
 });
 
