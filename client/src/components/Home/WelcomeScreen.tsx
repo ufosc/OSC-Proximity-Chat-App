@@ -62,7 +62,7 @@ const WelcomeScreen = () => {
               <View style={styles.info_container}>
 
                 <View style={styles.login_container}>
-                  <Text style={styles.login_text}>Log in</Text>
+                  <Text style={styles.login_text}>Login</Text>
 
                   <View style={styles.login_mini_container}>
                     <WelcomeEmailInput value={email} onChangeText={text => setEmail(text)} />
