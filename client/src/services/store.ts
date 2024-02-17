@@ -1,6 +1,6 @@
 import { User, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { Store } from 'pullstate'
-import { auth} from '../configs/firebaseConfig'
+import { auth } from '../configs/firebaseConfig'
 
 interface AuthStoreInterface {
     isLoggedin: boolean,
@@ -30,7 +30,7 @@ export const appSignIn = async (email: string, password: string) => {
             store.user = response?.user;
             store.isLoggedin = response?.user ? true : false;
         });
-
+        console.log('appSignIn', await response.user.getIdToken()); // This is the token we need to send to the server
         return { user: auth.currentUser };
     } catch (e) {
         return { error: e };

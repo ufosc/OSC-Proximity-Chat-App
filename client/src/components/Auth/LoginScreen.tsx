@@ -27,17 +27,15 @@ const LoginScreen = () => {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
-  const [invalidLogin, invalidateLogin] = React.useState<boolean>(false);
+  const [invalidLogin, invalidateLogin] = React.useState<boolean>(false); // Possbily change this?
 
+  // Sign in function with email and password
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
     setAuthResponse(await appSignIn(email, password));
   };
 
-  useEffect(() => {
-    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
-  }, []);
-
+  // Listens for the response from the sign in function
   useEffect(() => {
     if (authResponse?.user) {
       router.replace("(home)/chatchannel");
@@ -46,6 +44,10 @@ const LoginScreen = () => {
       invalidateLogin(true);
     }
   }, [authResponse])
+
+  useEffect(() => {
+    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
+  }, []);
 
   if (!fontsLoaded && !fontError) {
     return null;

@@ -132,6 +132,9 @@ dist
 # Build files
 build
 
+# Private Key JSON
+private_key/
+
 # Other
 .env
 build/
