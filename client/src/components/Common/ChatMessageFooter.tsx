@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
+import { TextInput, View, StyleSheet, Dimensions, Platform, TouchableOpacity } from 'react-native'
 import { ChatSendButton } from './CustomButtons'
 import { Smile, Image } from "react-native-feather";
 
@@ -19,12 +19,16 @@ export const ChatMessageFooter: React.FC<ChatInputProps> = ({ value, onChangeTex
             <View style={styles.sendButtonContainer}>
                 <View style={{flex:1}}/>
                 <View style={styles.iconContainer}>
-                    <Image color={"black"} strokeWidth={1.8} style={styles.icons}/>
-                    <Smile color={"black"} strokeWidth={1.8} style={styles.icons}/>
+                    <TouchableOpacity>
+                        <Image color={"black"} strokeWidth={1.8} style={styles.icons}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Smile color={"black"} strokeWidth={1.8} style={styles.icons}/>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.chatboxContainer}>
-                <TextInput 
+                <TextInput
                 placeholder='Say Something...'
                 multiline={true}
                 value={value}
