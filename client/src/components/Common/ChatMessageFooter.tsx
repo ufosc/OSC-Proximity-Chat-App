@@ -16,9 +16,12 @@ export const ChatMessageFooter: React.FC<ChatInputProps> = ({ value, onChangeTex
     
     return (
         <View style={styles.container}>
-            <View style={styles.iconContainer}>
-                <Image color={"black"} strokeWidth={1.8} style={styles.icons}/>
-                <Smile color={"black"} strokeWidth={1.8} style={styles.icons}/>
+            <View style={styles.sendButtonContainer}>
+                <View style={{flex:1}}/>
+                <View style={styles.iconContainer}>
+                    <Image color={"black"} strokeWidth={1.8} style={styles.icons}/>
+                    <Smile color={"black"} strokeWidth={1.8} style={styles.icons}/>
+                </View>
             </View>
             <View style={styles.chatboxContainer}>
                 <TextInput 
@@ -29,7 +32,13 @@ export const ChatMessageFooter: React.FC<ChatInputProps> = ({ value, onChangeTex
                 maxLength={500}
                 style={styles.messageInput}/>
             </View>
-            <ChatSendButton onPress={(onSend)} />
+            <View style={styles.sendButtonContainer}>
+                {/*Buffer view to push sendButton to the bottom*/}
+                <View style={{flex:1}}/>
+                <View style={{flex:0}}>
+                    <ChatSendButton onPress={(onSend)} />
+                </View>
+            </View>
         </View>
     )
 };
@@ -48,22 +57,28 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: "#8E8E8E",
         borderWidth: 1,
-        borderRadius: Dimensions.get('window').height * 0.027,
+        borderRadius: Dimensions.get('window').width * 0.058,
     },
     messageInput: {
-        //width: Dimensions.get('window').width * 0.66,
         maxWidth: Dimensions.get('window').width * 0.66,
         fontSize: 16,
     },
     icons: {
-        marginLeft: 5,
+        marginLeft: Dimensions.get('window').width * 0.013,
     },
     iconContainer: {
-        marginRight: 5,
+        marginRight: Dimensions.get('window').width * 0.013,
         flexDirection: 'row',
+        flex: 0,
+        marginBottom: 5,
     },
     chatboxContainer: {
         flex: 1,
+    },
+    sendButtonContainer: {
+        flex: 0,
+        alignItems: "flex-end",
+        flexDirection: "column",
     }
 
 });
