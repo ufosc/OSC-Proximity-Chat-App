@@ -16,6 +16,10 @@ import { ConnectedUser } from './types/User';
 
 const { createServer } = require('http')
 const { Server } = require('socket.io')
+const passport = require('passport')
+const JWTStrategy = require('passport-jwt').Strategy
+const ExtractJWT = require('passport-jwt').ExtractJwt
+
 
 const socket_port = process.env.socket_port
 const express_port = process.env.express_port
