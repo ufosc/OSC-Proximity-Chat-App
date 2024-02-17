@@ -1,6 +1,7 @@
 import React from 'react'
 import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
 import { ChatSendButton } from './CustomButtons'
+import { Smile, Image } from "react-native-feather";
 
 interface ChatInputProps {
     value?: string,
@@ -14,16 +15,20 @@ export const ChatMessageFooter: React.FC<ChatInputProps> = ({ value, onChangeTex
 
     
     return (
-        <View style={styles.messsageContainer}>
-            
-            <TextInput 
-            placeholder='Say Something...'
-            multiline={true}
-            value={value}
-            onChangeText={onChangeText}
-            maxLength={500}
-            style={styles.messageInput}/>
-            
+        <View style={styles.container}>
+            <View style={styles.iconContainer}>
+                <Image color={"black"} strokeWidth={1.8} style={styles.icons}/>
+                <Smile color={"black"} strokeWidth={1.8} style={styles.icons}/>
+            </View>
+            <View style={styles.chatboxContainer}>
+                <TextInput 
+                placeholder='Say Something...'
+                multiline={true}
+                value={value}
+                onChangeText={onChangeText}
+                maxLength={500}
+                style={styles.messageInput}/>
+            </View>
             <ChatSendButton onPress={(onSend)} />
         </View>
     )
@@ -31,23 +36,34 @@ export const ChatMessageFooter: React.FC<ChatInputProps> = ({ value, onChangeTex
 
 const styles = StyleSheet.create({
 
-    messsageContainer: {
+    container: {
         width: Dimensions.get('window').width * 0.75,
-        borderWidth: 1,
-        borderRadius: 30,
-        paddingTop: Dimensions.get('window').height * 0.006,
-        paddingBottom: Dimensions.get('window').height * 0.006,
-        paddingLeft: 15,
-        paddingRight: Dimensions.get('window').height * 0.006,
+        paddingTop: Dimensions.get('window').width * 0.013,
+        paddingBottom: Dimensions.get('window').width * 0.013,
+        paddingLeft: Dimensions.get('window').width * 0.02,
+        paddingRight: Dimensions.get('window').width * 0.014,
         flexDirection: 'row',
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderColor: "#8E8E8E"
+        borderColor: "#8E8E8E",
+        borderWidth: 1,
+        borderRadius: Dimensions.get('window').height * 0.027,
     },
     messageInput: {
-        width: Dimensions.get('window').height * 0.35,
+        //width: Dimensions.get('window').width * 0.66,
+        maxWidth: Dimensions.get('window').width * 0.66,
         fontSize: 16,
     },
+    icons: {
+        marginLeft: 5,
+    },
+    iconContainer: {
+        marginRight: 5,
+        flexDirection: 'row',
+    },
+    chatboxContainer: {
+        flex: 1,
+    }
 
 });
