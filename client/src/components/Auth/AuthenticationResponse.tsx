@@ -1,16 +1,18 @@
 import React from "react";
-import { StyleSheet, Text, Dimensions, TouchableOpacity} from "react-native";
+import { StyleSheet, Text, Dimensions, TouchableOpacity } from "react-native";
 import { FirebaseError } from "firebase/app";
 import { User } from "firebase/auth";
 
 //Type to handle Authentication Responses from firebase
-export type AuthenticationResponse = {
-  user: User | null;
-  error?: undefined;
-} | {
-  user?: undefined;
-  error: unknown;
-}
+export type AuthenticationResponse =
+  | {
+      user: User | null;
+      error?: undefined;
+    }
+  | {
+      user?: undefined;
+      error: unknown;
+    };
 
 export class CustomError {
   public code: string;
@@ -23,79 +25,81 @@ export class CustomError {
 }
 
 //Custom responses
-export const inValidEmailResponse = new CustomError("Invalid Email", "Please provide a valid email address")
+export const inValidEmailResponse = new CustomError(
+  "Invalid Email",
+  "Please provide a valid email address"
+);
 
 //Function that decodes the error code
 const decodeFirebaseError = (error: FirebaseError) => {
-  if(error.code === "auth/missing-email" || error.code === "auth/invalid-email") {
-    return "Please provide a valid email address";
+  switch (error.code) {
+    case "auth/missing-email" || "auth/invalid-email":
+      return "Please provide a valid email address";
+    case "auth/weak-password":
+      return "Password must be 6 characters or more";
+    case "auth/missing-password":
+      return "Please provide a password";
+    case "auth/invalid-credential":
+      return "The password or email is incorrect";
+    case "auth/too-many-requests":
+      return "Too many requests, please try again later";
+    default:
+      return "Unknown error";
   }
-
-  if(error.code === "auth/weak-password") {
-    return "Password must be 6 characters or more";
-  }
-
-  if(error.code === "auth/missing-password") {
-    return "Please provide a password";
-  }
-
-  if(error.code === "auth/invalid-credential") {
-    return "The password or email is incorrect";
-  }
-
-  return "Unknown error"
-}
+};
 
 const decodeCustomError = (error: CustomError) => {
   return error.message;
-}
+};
 
 //Function that handles the response depending on type
-function handleResponse(response: AuthenticationResponse) {
-  if(response?.user) {
+const handleResponse = (response: AuthenticationResponse) => {
+  if (response?.user) {
+    // If the user is not undefined
     return "";
   }
 
-  console.log(response.error)
-
-  if(response.error instanceof FirebaseError) {
+  if (response.error instanceof FirebaseError) {
+    // If the error is a firebase error
     return decodeFirebaseError(response.error);
   }
-
-  if(response.error instanceof CustomError) {
+  // If the error is a custom error
+  if (response.error instanceof CustomError) {
+    // If the error is a custom error
     return decodeCustomError(response.error);
   }
 
-  return "Unknown error"
-}
+  return "Unknown error";
+};
 
-//Something
+// Authentication Message Component Props
 interface AuthenticationErrorMessageProps {
   response: AuthenticationResponse | undefined;
   onPress?: () => void;
 }
 
-export const AuthenticationErrorMessage: React.FC<AuthenticationErrorMessageProps> = ({ response, onPress }) => {
-  if( response === undefined ) {
+export const AuthenticationErrorMessage: React.FC<
+  AuthenticationErrorMessageProps
+> = ({ response, onPress }) => {
+  if (response === undefined) {
     return null;
   }
 
-  const errorMessage = handleResponse(response)
+  const errorMessage = handleResponse(response);
 
   return (
-    errorMessage &&
-    <TouchableOpacity style={styles.error_container} onPressIn={onPress}>
+    errorMessage && (
+      <TouchableOpacity style={styles.error_container} onPressIn={onPress}>
         <Text style={styles.error_text}>{errorMessage}</Text>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    )
   );
-}
-
+};
 
 const styles = StyleSheet.create({
   error_text: {
     color: "white",
     fontSize: Dimensions.get("window").height * 0.02,
-
   },
   error_container: {
     display: "flex",
@@ -106,7 +110,6 @@ const styles = StyleSheet.create({
     marginTop: Dimensions.get("window").height * 0.005,
     width: Dimensions.get("window").width * 0.9,
     borderRadius: 10,
-    padding: 10
-  }
+    padding: 10,
+  },
 });
-
