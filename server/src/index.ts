@@ -17,9 +17,6 @@ import { adminApp } from './utilities/adminInit';
 
 const { createServer } = require('http')
 const { Server } = require('socket.io')
-const passport = require('passport')
-const JWTStrategy = require('passport-jwt').Strategy
-const ExtractJWT = require('passport-jwt').ExtractJwt
 
 adminApp.firestore()
 
@@ -31,18 +28,6 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// == Passport JWT Strategy ==
-const secret = 'secret' // TODO: Replace with process.env.JWT_SECRET
-passport.use(new JWTStrategy({
-  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-  jsonWebTokenOptions: {
-    ignoreExpiration: false,
-  },
-  secretOrKey: secret,
-  algorithims: ['HS256'],
-}, (jwt_payload: any, done: any) => {
-  
-}))
 
 
 // === SOCKET API ===
