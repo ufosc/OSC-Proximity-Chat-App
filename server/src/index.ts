@@ -13,9 +13,13 @@ import { deleteConnectedUserByIndex } from './actions/deleteConnectedUser'
 import {geohashForLocation} from 'geofire-common';
 import { findNearbyUsers } from './actions/getConnectedUsers'
 import { ConnectedUser } from './types/User';
+import { adminApp } from './utilities/adminInit';
 
 const { createServer } = require('http')
 const { Server } = require('socket.io')
+
+adminApp.firestore()
+
 
 const socket_port = process.env.socket_port
 const express_port = process.env.express_port
@@ -23,6 +27,7 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 
 
 // === SOCKET API ===

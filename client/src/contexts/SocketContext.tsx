@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import * as Network from "expo-network";
 import { useLocation } from "./LocationContext";
 import { EXPO_IP } from "@env";
 
@@ -17,7 +16,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     let isMounted = true;
 
-    const socketIo = io(`http://${EXPO_IP}:8080`); // Hardcoded IP address
+    const socketIo = io(`http://${ EXPO_IP }:8080`); // Hardcoded IP address
 
     socketIo.on("connect", () => {
       if (isMounted) {
@@ -34,7 +33,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       isMounted = false;
-      socket?.disconnect();
+      socketIo.disconnect();
     };
   }, []);
 
