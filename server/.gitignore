@@ -133,7 +133,7 @@ dist
 build
 
 # Private Key JSON
-private_key/
+./private_key/*
 
 # Other
 .env
