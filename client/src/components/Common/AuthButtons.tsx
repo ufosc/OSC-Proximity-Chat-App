@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, Dimensions, Alert, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Dimensions, Alert } from "react-native";
 import { router, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import { appSignOut } from "../../services/store";
@@ -50,11 +50,7 @@ export const SignOutButton: React.FC<SignOutButtonProps> = () => {
 
   return (
     <TouchableOpacity style={styles.sign_out_button} onPress={handleSignOut} disabled={loading}>
-      {loading ? (
-        <ActivityIndicator size="small" color="white" />
-      ) : (
         <Text style={styles.button_text}>Sign Out</Text>
-      )}
     </TouchableOpacity>
   );
 };
