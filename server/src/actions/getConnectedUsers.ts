@@ -1,6 +1,7 @@
 import { doc, endAt, getDocs, orderBy, query, startAt } from 'firebase/firestore'
 import { connectedUsers } from '../utilities/firebaseInit'
 import { distanceBetween, geohashForLocation, geohashQueryBounds } from 'geofire-common'
+import { connectedUsersCollection } from '../utilities/adminInit'
 
 export const findNearbyUsers = async (centerLat: number, centerLon: number, radius: number) => {
 // Return an array of nearby userIds (which are also socket ids) given a center latitude and longitude.
@@ -19,13 +20,13 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
 
    for (const b of bounds) {
     const q = query(
-     connectedUsers,
+     connectedUsersCollection, // This is the collection of connected users (does this work?)
      orderBy('location.geohash'),
      startAt(b[0]),
      endAt(b[1])
     )
 
-    promises.push(getDocs(q))
+    promises.push(connectedUsersCollection.getDocs(q))
    }
 
    // Collect query results and append into a single array

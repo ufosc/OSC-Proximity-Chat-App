@@ -1,22 +1,16 @@
 import { doc, getDoc, updateDoc } from '@firebase/firestore'
 import { connectedUsers } from '../utilities/firebaseInit'
 import { geohashForLocation} from 'geofire-common'
+import { connectedUsersCollection } from '../utilities/adminInit'
 
 export const toggleUserConnectionStatus = async (index: string) => {
     try {
-        const userRef = doc(connectedUsers, index)
-        const userDoc = await getDoc(userRef)
-
-        if (!userDoc.exists()) throw Error("[FIREBASE] User does not exist.")
-
-        let status = userDoc.data()['isConnected']
-
+        let status = connectedUsersCollection.doc(index).isConnected
         // Flip the connection status
         status = !status
 
-        updateDoc(userRef, { isConnected: status })
+        await connectedUsersCollection.doc(index).update({ isConnected: status })
         return true
-        
     } catch (error) {
         console.error(error.message)
         return false

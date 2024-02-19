@@ -5,11 +5,9 @@ import 'geofire-common'
 import { Message } from './types/Message';
 
 import { createMessage } from './actions/createMessage'
-// import { deleteMessageById } from './actions/deleteMessage'
-// import { getUserById } from './actions/getUsers'
 import { createUser } from './actions/createConnectedUser'
 import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateConnectedUser'
-import { deleteConnectedUserByIndex } from './actions/deleteConnectedUser'
+import { deleteConnectedUserByUID } from './actions/deleteConnectedUser'
 import {geohashForLocation} from 'geofire-common';
 import { findNearbyUsers } from './actions/getConnectedUsers'
 import { ConnectedUser } from './types/User';
@@ -60,7 +58,7 @@ io.on('connection', (socket: any) => {
 
   socket.on('disconnect', () => {
       console.log(`[WS] User <${socket.id}> exited.`);
-      deleteConnectedUserByIndex(socket.id)
+      deleteConnectedUserByUID(socket.id)
   })
   socket.on('ping', (ack) => {
   // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
@@ -217,7 +215,7 @@ app.delete('/users', async (req, res) => {
     const userId = req.query.userId
     if (typeof userId != "string") throw Error("  [userId] is not a string.")
 
-    const success = await deleteConnectedUserByIndex(userId)
+    const success = await deleteConnectedUserByUID(userId)
     if (!success) throw Error("     deleteUserById() failed.")
 
     console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`)
