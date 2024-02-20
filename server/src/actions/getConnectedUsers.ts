@@ -19,21 +19,21 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
    const promises = []
 
    for (const b of bounds) {
-    const q = query(
-     connectedUsersCollection, // This is the collection of connected users (does this work?)
-     orderBy('location.geohash'),
-     startAt(b[0]),
-     endAt(b[1])
-    )
+    const q = connectedUsersCollection
+    .orderBy('location.geohash')
+    .startAt(b[0])
+    .endAt(b[1])
 
-    promises.push(connectedUsersCollection.getDocs(q))
+    promises.push(q.get())
    }
 
    // Collect query results and append into a single array
    const snapshots = await Promise.all(promises)
 
    const matchingDocs = []
+
    for (const snap of snapshots) {
+
     for (const doc of snap.docs) {
      const lat = doc.get('location.lat')
      const lon = doc.get('location.lon')
@@ -43,18 +43,13 @@ export const findNearbyUsers = async (centerLat: number, centerLon: number, radi
      const distanceInKm = distanceBetween([lat, lon], [centerLat, centerLon])
      const distanceInM = distanceInKm * 1000
      if (distanceInM <= radius) {
-      matchingDocs.push(doc)
+      matchingDocs.push(doc.get())
      }
     }
    }
 
-   // Extract userIds from matched documents
-   const userSocketIds = []
-   for (const doc of matchingDocs) {
-     userSocketIds.push(doc.data()['socketId'])
-   }
-   console.log(`getNearbyUsers(): ${userSocketIds.length} users found within ${radius} meters of ${centerLat}, ${centerLon}`)
-   return userSocketIds
+   console.log(`getNearbyUsers(): ${matchingDocs.length} users found within ${radius} meters of ${centerLat}, ${centerLon}`)
+   return matchingDocs
  } catch (error) {
    console.error("getNearbyUsers() failed.", error.message)
  }
