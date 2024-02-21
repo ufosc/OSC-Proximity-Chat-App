@@ -1,6 +1,4 @@
 // Uploads a new document in the ConnectedUsers collection.
-import { doc, setDoc } from '@firebase/firestore'
-import { connectedUsers } from '../utilities/firebaseInit'
 import { ConnectedUser } from '../types/User'
 import { connectedUsersCollection } from '../utilities/adminInit';
 
