@@ -1,12 +1,6 @@
 import React from 'react'
 import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
-
-interface ChatInputProps {
-    value?: string,
-    onChangeText?: (text: string) => void
-}
-
-
+import { ChatInputProps } from '../../types/CommonComponentProps';
 
 export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
     return (

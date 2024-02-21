@@ -1,10 +1,7 @@
 
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native'
 import React from 'react'
-
-interface CounterProps {
-    count: number;
-  }
+import { CounterProps } from '../../utils/types'
 
 export const NearbyHeader: React.FC<CounterProps> = ({ count }) => {
     return (
@@ -34,8 +31,6 @@ export const NearbyHeader: React.FC<CounterProps> = ({ count }) => {
         </View>
     )
   }
-
-
 
   const styles = StyleSheet.create({
   nearbyContainer: {

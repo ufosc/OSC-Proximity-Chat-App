@@ -2,11 +2,8 @@ import { router } from "expo-router";
 import React from "react";
 import { useFonts } from "expo-font";
 import { StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
+import { LogInButtonProps } from "../../utils/types";
 
-// Interface for props function onPress
-interface LogInButtonProps {
-  onPress?: () => void;
-}
 
 const LogInButton: React.FC<LogInButtonProps> = ({ onPress }) => {
 

@@ -1,12 +1,7 @@
 import React, { useContext } from "react";
 import { View, StyleSheet, Text, Image, Dimensions } from "react-native";
 import { useSettings } from "../../contexts/SettingsContext";
-
-interface MessageProps {
-  messageContent: string;
-  // timestamp: Date, (This will be added later inside the message object passed in)
-  author: string;
-}
+import { MessageProps } from "../../utils/types";
 
 const Message: React.FC<MessageProps> = ({ messageContent, author }) => {
   const settings = useSettings();

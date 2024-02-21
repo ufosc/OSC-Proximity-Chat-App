@@ -1,11 +1,8 @@
 import React from 'react'
 import Message from './ChatMessage'
 import { FlatList, StyleSheet, View } from 'react-native'
-import { MessageType } from '../../utils/types';
+import { MessageChannelProps } from '../../utils/types';
 
-interface MessageChannelProps {
-  messages: MessageType[],
-}
 
 const MessageChannel: React.FC<MessageChannelProps> = ({ messages }) => {
   const reverseMessages = [...messages].reverse()
