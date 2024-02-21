@@ -43,10 +43,12 @@ const decodeFirebaseError = (error: FirebaseError) => {
       return "The password or email is incorrect";
     case "auth/too-many-requests":
       return "Too many requests, please try again later";
+    case "auth/email-already-in-use":
+      return "Email already in use";
     default:
       return "Unknown error";
   }
-};
+}
 
 const decodeCustomError = (error: CustomError) => {
   return error.message;
