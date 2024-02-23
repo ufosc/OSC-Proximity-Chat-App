@@ -11,14 +11,26 @@ jobs:
         node-version: [21.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install
+
+      - name: Install dependencies
         run: npm ci
         working-directory: server/
-      - name: tests
+
+      - name: Start index.ts in background
+        run: npm start &
+        working-directory: server/
+
+      - name: Wait for server to start
+        run: sleep 5  # Adjust sleep time as needed to allow the server to start
+        timeout-minutes: 1
+
+      - name: Run tests
         run: npm test
         working-directory: server/
