@@ -9,6 +9,7 @@ import { deleteConnectedUserByUID } from './actions/deleteConnectedUser'
 import {geohashForLocation} from 'geofire-common';
 import { findNearbyUsers } from './actions/getConnectedUsers'
 import { ConnectedUser } from './types/User';
+import { adminApp } from './utilities/adminInit';
 
 
 const { createServer } = require('http')
