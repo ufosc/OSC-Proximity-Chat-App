@@ -33,7 +33,7 @@ const connectClients = async () => {
 
   for (let i = 0; i < NUM_CLIENTS; i++) {
     const client = io(`http://localhost:${socket_test_client_port}`);
-    await new Promise(resolve => client.on('connect', resolve)); // Why is this an error? IDK
+    await new Promise<void>(resolve => client.on('connect', resolve)); // Why is this an error? IDK
     clients.push(client);
   }
 
