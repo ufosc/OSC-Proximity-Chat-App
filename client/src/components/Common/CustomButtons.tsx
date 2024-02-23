@@ -15,18 +15,18 @@ export const ChatSendButton: React.FC<ChatSendButtonProps> = ({ onPress }) => {
 
 const styles = StyleSheet.create({
     sendButton: {
-        height: Dimensions.get('window').width * 0.0865,
-        width: Dimensions.get('window').width * 0.0865,
-        borderRadius: 30,
+        height: Dimensions.get('window').width * 0.0975,
+        width: Dimensions.get('window').width * 0.0975,
+        borderRadius: 100,
         backgroundColor: '#34D1BF',
         justifyContent: 'center',
         alignItems: 'center',
     },
 
     sendButtonImage:{
-        height: Dimensions.get('window').width * 0.0522,
-        width: Dimensions.get('window').width * 0.052,
-        marginLeft: Dimensions.get('window').width * 0.01,
+        height: "64%",
+        width: "64%",
+        marginLeft: "13%",
         tintColor: 'white',
     },
 })
