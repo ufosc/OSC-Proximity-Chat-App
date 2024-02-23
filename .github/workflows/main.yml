@@ -48,6 +48,10 @@ jobs:
           echo "socket_test_client_port=${SOCKET_TEST_CLIENT_PORT}" >> .env
         working-directory: server/
 
+      - name: Compile TypeScript files
+        run: npx tsc
+        working-directory: server/
+
       - name: Start index.ts in background
         run: npm start &
         working-directory: server/
