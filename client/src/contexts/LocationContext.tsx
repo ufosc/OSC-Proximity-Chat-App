@@ -71,6 +71,9 @@ export const LocationProvider = ({
       // Cleanup function to clear interval when component unmounts
       return () => clearInterval(interval);
     })();
+
+    return () => console.log("Location dismounted");
+
   }, []);
 
   return (
