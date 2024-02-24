@@ -36,6 +36,9 @@ export const SettingsProvider = ({
   children: React.ReactNode;
 }) => {
   const [theme, setTheme] = useState("light");
+  const [displayName, setDisplayName] = useState("");
+  const [foregroundPfpImage, setForegroundPfpImage] = useState("");
+  const [backgroundPfpImage, setBackgroundPfpImage] = useState("");
 
   // Initial settings load
   useEffect(() => {

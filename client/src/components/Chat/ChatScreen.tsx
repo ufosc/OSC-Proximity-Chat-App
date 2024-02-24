@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -15,35 +15,64 @@ import { ChatInput } from "../Common/CustomInputs";
 import { ChatSendButton } from "../Common/CustomButtons";
 import MessageChannel from "../Common/MessageChannel";
 import { LinearGradient } from "expo-linear-gradient";
-import { MessageType } from "../../utils/types";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
 import { useSettings } from "../../contexts/SettingsContext";
+import { SignOutButton } from "../Common/AuthButtons"
+import { MessageType } from "../../types/Message";
+import { LocationProvider } from "../../contexts/LocationContext";
+import { useSocket } from "../../contexts/SocketContext";
+import { useLocation } from "../../contexts/LocationContext";
+import { AuthStore } from "../../services/store";
 
 const ChatScreen = () => {
   const settings = useSettings();
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
+  const socket = useSocket();
+  const location = useLocation();
+  const { user } = AuthStore.useState();
 
   // Message loading and sending logic
   const [messages, setMessages] = React.useState<MessageType[]>([]);
-  const [message, setMessage] = React.useState<string>("");
+  const [messageContent, setMessageContent] = React.useState<string>("");
+
+  useEffect(() => {
+    if (socket === null) return // This line might need to be changed.
+    socket.on("message", (data: MessageType, ack) => {
+      console.log("Message recieved from server:", data);
+      if (ack) console.log("Server acknowledged message:", ack);
+      setMessages([...messages, data])
+    })
+    return () => {
+      socket.off()
+    }
+  }, [messages])
 
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
-    if (message.trim() !== "") {
+    if (messageContent.trim() !== "") {
       const newMessage: MessageType = {
-        msgID: Crypto.randomUUID(),
-        messageContent: message.trim(),
-        author: generateName(),
-      };
+        uid: String(user?.uid), 
+        msgId: Crypto.randomUUID(), 
+        msgContent: messageContent.trim(),
+        timeSent: Date.now(),
+        location: {
+          lat: Number(location?.latitude),
+          lon: Number(location?.longitude)
+        }
+      }
 
+      if (socket !== null) {
+        socket.emit("message", newMessage)
+      }
+      
       setMessages([...messages, newMessage]);
-
-      setMessage("");
+      setMessageContent("");
     }
   };
+
 
   return (
     <View
@@ -70,14 +99,15 @@ const ChatScreen = () => {
               Chat Screen
             </Text>
           </View>
+          <SignOutButton />
           <View style={styles.chatContainer}>
             <MessageChannel messages={messages} />
           </View>
           <View style={styles.footerContainer}>
             <ChatInput
-              value={message}
+              value={messageContent}
               onChangeText={(text: string) => {
-                setMessage(text);
+                setMessageContent(text);
               }}
             />
             <ChatSendButton onPress={onHandleSubmit} />

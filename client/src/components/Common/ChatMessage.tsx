@@ -3,9 +3,9 @@ import { View, StyleSheet, Text, Image, Dimensions } from "react-native";
 import { useSettings } from "../../contexts/SettingsContext";
 import { MessageProps } from "../../utils/types";
 
-const Message: React.FC<MessageProps> = ({ messageContent, author }) => {
+const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
   const settings = useSettings();
-  const timestamp = new Date().toLocaleTimeString([], {
+  const timestamp = new Date(time).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });

@@ -4,11 +4,12 @@ export type MessageType = {
   messageContent: string;
   author: string;
   msgID: string;
+  timeSent: Date;
 };
 
 export type MessageProps =  {
   messageContent: string;
-  // timestamp: Date, (This will be added later inside the message object passed in)
+  time: Date;
   author: string;
 }
 
