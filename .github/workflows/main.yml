@@ -24,28 +24,9 @@ jobs:
         working-directory: server/
 
       - name: Set up environment variables
-        env:
-          API_KEY: ${{ secrets.API_KEY }}
-          AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
-          MESSAGING_SENDER_ID: ${{ secrets.MESSAGING_SENDER_ID }}
-          APP_ID: ${{ secrets.APP_ID }}
-          MESSAGE_OUTREACH_RADIUS: ${{ secrets.MESSAGE_OUTREACH_RADIUS }}
-          EXPRESS_PORT: ${{ secrets.EXPRESS_PORT }}
-          SOCKET_PORT: ${{ secrets.SOCKET_PORT }}
-          SOCKET_TEST_CLIENT_PORT: ${{ secrets.SOCKET_TEST_CLIENT_PORT }}
         run: |
-          echo "API_KEY=${API_KEY}" >> .env
-          echo "AUTH_DOMAIN=${AUTH_DOMAIN}" >> .env
-          echo "PROJECT_ID=${PROJECT_ID}" >> .env
-          echo "STORAGE_BUCKET=${STORAGE_BUCKET}" >> .env
-          echo "MESSAGING_SENDER_ID=${MESSAGING_SENDER_ID}" >> .env
-          echo "APP_ID=${APP_ID}" >> .env
-          echo "message_outreach_radius=${MESSAGE_OUTREACH_RADIUS}" >> .env
-          echo "express_port=${EXPRESS_PORT}" >> .env
-          echo "socket_port=${SOCKET_PORT}" >> .env
-          echo "socket_test_client_port=${SOCKET_TEST_CLIENT_PORT}" >> .env
+          mkdir private_key
+          echo "${{ secrets.SERVICE_ACCOUNT_SECRET }}" > private_key/private.json
         working-directory: server/
 
       - name: Compile TypeScript files
