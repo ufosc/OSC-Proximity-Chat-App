@@ -35,10 +35,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       setMounted(true);
     }
 
+
     if (!mounted) {
       initializeSocket();
     }
-
     return () => {
       console.log("[LOG]: Cleaning up intializeSocket useEffect");
     };
