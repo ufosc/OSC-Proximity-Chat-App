@@ -1,39 +1,21 @@
 import React, { createContext, useContext } from 'react';
-import { UserType } from '../utils/types';
-import { useState, useEffect } from 'react';
-import { generateName } from '../utils/scripts';
+import { UserType } from '../types/User';
+import { useState } from 'react';
 
-const UserContext = createContext<UserType>({
-    userID: "something",
-    displayName: "default",
-    pfp: "picture"
-});
+const UserContext = createContext<UserType | null>(null);
 
 export const useUser = () => {
     return useContext(UserContext);
 }
 
-/*
-export const changeUsername = (newUsername: string) => {
-    setUser
-}
-*/
-const user = useUser();
-
 export const UserProvider = ({ children }: {children: React.ReactNode}) => {
-    // const [userID, setUserID] = useState<string>();
-    // const [displayName, setDisplayName] = useState<string>();
-    // const [pfp, setPfp] = useState<string>();
-
     const [user, setUser] = useState<UserType>({
-        userID: "something",
-        displayName: "default",
-        pfp: "picture"
-    })
-
-    useEffect(() => {
-        user.displayName = generateName();
-    }, []);
+        displayName: "DefaultDisplayName",
+        userIcon: {
+            imagePath: "DefaultImagePath",
+            colorHex: "#fff"
+        },
+    });
 
     return (
         <UserContext.Provider value={user}>

@@ -26,10 +26,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    socketIo.on("message", (data: any) => {
-      console.log("message", data);
-    });
-
     return () => {
       isMounted = false;
       socket?.disconnect();
@@ -37,6 +33,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
+    // TODO: Refactor this useEffect into a different file (service?) outside of the context, as it is not part of the purpose of a context.
     if (
       socket &&
       locationContext?.latitude != 9999 &&
