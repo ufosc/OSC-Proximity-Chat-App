@@ -1,15 +1,9 @@
 import React from "react";
-
-export type MessageType = {
-  messageContent: string;
-  author: string;
-  msgID: string;
-  timeSent: Date;
-};
+import { MessageType } from "./Message";
 
 export type MessageProps =  {
   messageContent: string;
-  time: Date;
+  time: number;
   author: string;
 }
 

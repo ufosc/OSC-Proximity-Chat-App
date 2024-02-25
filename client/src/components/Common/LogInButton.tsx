@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import React from "react";
 import { useFonts } from "expo-font";
 import { StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
-import { LogInButtonProps } from "../../utils/types";
+import { LogInButtonProps } from "../../types/Props";
 
 
 const LogInButton: React.FC<LogInButtonProps> = ({ onPress }) => {

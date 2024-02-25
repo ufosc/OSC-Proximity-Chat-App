@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { View, StyleSheet, Text, Image, Dimensions } from "react-native";
 import { useSettings } from "../../contexts/SettingsContext";
-import { MessageProps } from "../../utils/types";
+import { MessageProps } from "../../types/Props";
 
 const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
   const settings = useSettings();

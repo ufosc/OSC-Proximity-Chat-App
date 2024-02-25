@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, Image, Dimensions } from 'react-native'
-import { ChatSendButtonProps } from '../../utils/types';
+import { ChatSendButtonProps } from '../../types/Props';
 
 export const ChatSendButton: React.FC<ChatSendButtonProps> = ({ onPress }) => {
   return (
