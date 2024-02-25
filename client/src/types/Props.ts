@@ -1,29 +1,37 @@
 import React from "react";
 import { MessageType } from "./Message";
 
-export type MessageProps =  {
-  messageContent: string;
-  time: number;
-  author: string;
+/* button props */
+export type LogInButtonProps = {
+  onPress?: () => void;
+}
+
+export type SignUpButtonProps = {
+    onPress?: () => void;
 }
 
 export type ChatSendButtonProps = {
-  onPress?: () => void,
+    onPress?: () => void,
 }
-
+  
+/* input props */
 export type ChatInputProps = {
-  value?: string,
-  onChangeText?: (text: string) => void
+    value?: string,
+    onChangeText?: (text: string) => void
 }
 
-export type LogInButtonProps = {
-  onPress?: () => void;
+/* message related props */
+export type MessageProps =  {
+    messageContent: string;
+    time: number;
+    author: string;
 }
 
 export type MessageChannelProps = {
   messages: MessageType[],
 }
 
+/* misc props*/
 export type CounterProps = {
   count: number;
 }
@@ -32,6 +40,4 @@ export type SafeAreaWrapperProps = {
   children: React.ReactNode;
 }
 
-export type SignUpButtonProps = {
-  onPress?: () => void;
-}
+
