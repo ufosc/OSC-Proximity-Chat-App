@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir private_key
           echo "${{ secrets.SERVICE_ACCOUNT_SECRET }}" > private_key/private.json
-        working-directory: server/
+        working-directory: server/src
 
       - name: Compile TypeScript files
         run: npx tsc
