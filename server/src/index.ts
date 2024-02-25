@@ -9,7 +9,7 @@ import { deleteConnectedUserByUID } from './actions/deleteConnectedUser'
 import {geohashForLocation} from 'geofire-common';
 import { findNearbyUsers } from './actions/getConnectedUsers'
 import { ConnectedUser } from './types/User';
-import { adminApp } from './utilities/adminInit';
+import { getAuth } from 'firebase-admin/auth';
 
 
 const { createServer } = require('http')
@@ -32,6 +32,23 @@ const io = new Server(socketServer, {
     methods: ['GET', 'POST'],
   },
 });
+
+io.use(async (socket, next) => {
+  const token = socket.handshake.auth.token;
+  console.log(`[WS] Recieved token: ${token}`)
+
+  if (token) {
+    const decodedToken = await getAuth().verifyIdToken(token);
+    const userId = decodedToken.uid;
+    console.log(`[WS] User <${userId}> authenticated.`);
+    console.log(decodedToken)
+
+    next();
+  } else {
+    console.error("[WS] User not authenticated.")
+    next(new Error('User not authenticated.'));
+  }
+})
 
 io.on('connection', async (socket: any) => {
   console.log(`[WS] User <${socket.id}> connected.`);
