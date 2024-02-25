@@ -20,7 +20,7 @@ const MessageChannel: React.FC<MessageChannelProps> = ({ messages }) => {
         renderItem={({ item }) => (
           <Message
             messageContent={item.msgContent}
-            author={item.uid} // TODO: call server to get author name from UID. Or should this stored with MessageType?
+            author={item.author.uid} 
             time={item.timeSent}
           />
         )}

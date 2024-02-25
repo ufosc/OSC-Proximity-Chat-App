@@ -1,6 +1,8 @@
 export interface MessageType {
-    uid: string
-    authorName?: string // To be only used for display purposes (i.e. do not send to server)
+    author: {
+        uid: string
+        displayName?: string // To be only used for display purposes (do not send to server)
+    }
     msgId: string
     msgContent: string
     timeSent: number // Unix timestamp; Date.now() returns a Number.
