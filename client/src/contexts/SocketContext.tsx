@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import * as Network from "expo-network";
 import { useLocation } from "./LocationContext";
 import { EXPO_IP } from "@env";
 
@@ -26,11 +25,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Socket not mounted");
       }
     });
-
-    // socketIo.on("message", (data: MessageType, ack) => {
-    //   console.log("Sending message to server:", data);
-    //   if (ack) console.log("Server acknowledged message:", ack);
-    // });
 
     return () => {
       isMounted = false;
