@@ -1,17 +1,19 @@
 import { User, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { Store } from 'pullstate'
 import { auth, app } from '../configs/firebaseConfig'
+import { FirebaseError } from 'firebase/app';
+import { useUser } from '../contexts/UserContext';
 
 interface AuthStoreInterface {
     isLoggedin: boolean,
     initialized: boolean,
-    user: User | null,
+    userAuthInfo: User | null,
 }
 
 export const AuthStore = new Store<AuthStoreInterface>({
     isLoggedin: false,
     initialized: false,
-    user: null,
+    userAuthInfo: null,
 })
 
 const unsub = onAuthStateChanged(auth, (user) => {
@@ -19,7 +21,7 @@ const unsub = onAuthStateChanged(auth, (user) => {
     AuthStore.update((store) => {
         store.initialized = true,
         store.isLoggedin = user ? true : false,
-        store.user = user
+        store.userAuthInfo = user
     })
 });
 
@@ -27,7 +29,7 @@ export const appSignIn = async (email: string, password: string) => {
     try {
         const response = await signInWithEmailAndPassword(auth, email, password);
         AuthStore.update((store) => {
-            store.user = response?.user;
+            store.userAuthInfo = response?.user;
             store.isLoggedin = response?.user ? true : false;
         });
 
@@ -41,7 +43,7 @@ export const appSignOut = async () => {
     try {
         await signOut(auth);
         AuthStore.update((store) => {
-            store.user = null;
+            store.userAuthInfo = null;
             store.isLoggedin = false;
         });
         return { user: null}
@@ -55,7 +57,7 @@ export const appSignUp = async (email: string, password: string) => {
         const response = await createUserWithEmailAndPassword(auth, email, password);
         
         AuthStore.update((store) => {
-            store.user = response.user;
+            store.userAuthInfo = response.user;
             store.isLoggedin = response.user ? true : false;
         });
         return { user: auth.currentUser}

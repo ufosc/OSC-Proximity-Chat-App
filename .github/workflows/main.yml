@@ -1,0 +1,46 @@
+name: Unit Tests
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [21.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: server/
+
+      - name: Set up environment variables
+        run: |
+          mkdir private_key
+          echo "${{ secrets.SERVICE_ACCOUNT_SECRET }}" > private_key/private.json
+        working-directory: server/src
+
+      - name: Compile TypeScript files
+        run: npx tsc
+        working-directory: server/
+
+      - name: Start index.ts in background
+        run: npm start &
+        working-directory: server/
+
+      - name: Wait for server to start
+        run: sleep 5  # Adjust sleep time as needed to allow the server to start
+        timeout-minutes: 1
+
+      - name: Run tests
+        run: npm test
+        working-directory: server/
