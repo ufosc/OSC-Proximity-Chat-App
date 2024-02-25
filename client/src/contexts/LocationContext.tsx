@@ -72,7 +72,7 @@ export const LocationProvider = ({
       return () => clearInterval(interval);
     })();
 
-    return () => console.log("Location dismounted");
+    return () => console.log("[LOG]: Cleaning up location useEffect");
 
   }, []);
 

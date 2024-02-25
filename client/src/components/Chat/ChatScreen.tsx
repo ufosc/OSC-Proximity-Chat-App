@@ -14,15 +14,15 @@ import {
 import { ChatInput } from "../Common/CustomInputs";
 import { ChatSendButton } from "../Common/CustomButtons";
 import MessageChannel from "../Common/MessageChannel";
-import { LinearGradient } from "expo-linear-gradient";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
-import { useSettings } from "../../contexts/SettingsContext";
 import { SignOutButton } from "../Common/AuthButtons"
 import { MessageType } from "../../types/Message";
 import { LocationProvider } from "../../contexts/LocationContext";
 import { useSocket } from "../../contexts/SocketContext";
+import { useSettings } from "../../contexts/SettingsContext";
 import { useLocation } from "../../contexts/LocationContext";
+import { useUser } from "../../contexts/UserContext"; // imported for when it needs to be used
 import { AuthStore } from "../../services/store";
 
 const ChatScreen = () => {
@@ -32,8 +32,10 @@ const ChatScreen = () => {
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
   const socket = useSocket();
   const location = useLocation();
-  const { user } = AuthStore.useState();
-
+  const user = useUser();  
+  const userAuth = AuthStore.useState()
+  // Note: To prevent complexity, all user information is grabbed from different contexts and services. If we wanted most information inside of UserContext, we would have to import contexts within contexts and have state change as certain things mount, which could cause errors that are difficult to pinpoint.
+  
   // Message loading and sending logic
   const [messages, setMessages] = React.useState<MessageType[]>([]);
   const [messageContent, setMessageContent] = React.useState<string>("");
@@ -54,7 +56,9 @@ const ChatScreen = () => {
   const onHandleSubmit = () => {
     if (messageContent.trim() !== "") {
       const newMessage: MessageType = {
-        uid: String(user?.uid), 
+        author: {
+          uid: String(userAuth.userAuthInfo?.uid), 
+        },
         msgId: Crypto.randomUUID(), 
         msgContent: messageContent.trim(),
         timeSent: Date.now(),
