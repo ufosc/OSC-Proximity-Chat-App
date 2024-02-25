@@ -2,6 +2,8 @@ import { User, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEma
 import { Store } from 'pullstate'
 import { auth, app } from '../configs/firebaseConfig'
 
+
+
 interface AuthStoreInterface {
     isLoggedin: boolean,
     initialized: boolean,

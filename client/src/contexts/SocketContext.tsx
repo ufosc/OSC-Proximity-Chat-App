@@ -22,7 +22,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Token:", token);
       return token;
     }
-
+    
     const initializeSocket = async () => {
       const token = await getToken();
       const socketIo = io(`http://${EXPO_IP}:8080`, {

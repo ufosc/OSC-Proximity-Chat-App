@@ -33,6 +33,7 @@ const io = new Server(socketServer, {
   },
 });
 
+// Firebase JWT Authorization Custom Middleware
 io.use(async (socket, next) => {
   const token = socket.handshake.auth.token;
   console.log(`[WS] Recieved token: ${token}`)
@@ -49,6 +50,7 @@ io.use(async (socket, next) => {
     next(new Error('User not authenticated.'));
   }
 })
+
 
 io.on('connection', async (socket: any) => {
   console.log(`[WS] User <${socket.id}> connected.`);
