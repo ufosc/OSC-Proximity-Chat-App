@@ -71,6 +71,9 @@ export const LocationProvider = ({
       // Cleanup function to clear interval when component unmounts
       return () => clearInterval(interval);
     })();
+
+    return () => console.log("[LOG]: Cleaning up location useEffect");
+
   }, []);
 
   return (
