@@ -1,8 +1,8 @@
 // Testing for socket.io endpoints
 
 import { createServer } from "node:http";
-import { io as ioc, type Socket as ClientSocket } from "socket.io-client";
-import { Server, type Socket as ServerSocket } from "socket.io";
+import { io as ioc } from "socket.io-client";
+import { Server } from "socket.io";
 import { v4 as uuidv4 } from "uuid";
 
 const SECONDS_MULTIPLIER = 1000;
