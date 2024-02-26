@@ -27,8 +27,9 @@ jobs:
         id: create-service-acount-json
         uses: jsdaniell/create-json@1.1.2
         with:
-          name: "server/src/private_key/private.json"
+          name: "private.json"
           json: ${{ secrets.SERVICE_ACCOUNT_SECRET }}
+          dir: 'server/src/private_key/'
         
       - name: Compile TypeScript files
         run: npx tsc
