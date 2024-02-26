@@ -182,6 +182,7 @@ describe("socket-tests", () => {
     }
     clientSockets[1].emit("message", user2Message);
     done();
+    // TODO: This test case will return true, but the sent message is actually never verified.
+    // The real verification of this message to lead to a pass/fail should be worked on.
   });
-  // TODO: Find a way for expect() to be verified after messages return.
 });
