@@ -6,10 +6,10 @@ import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, A
 const firebaseConfig = {
   apiKey: API_KEY || "Mock-Key",
   authDomain: AUTH_DOMAIN,
-  projectId: PROJECT_ID,
-  storageBucket: STORAGE_BUCKET,
-  messagingSenderId: MESSAGING_SENDER_ID,
-  appId: APP_ID,
+  // projectId: PROJECT_ID,
+  // storageBucket: STORAGE_BUCKET,
+  // messagingSenderId: MESSAGING_SENDER_ID,
+  // appId: APP_ID,
 };
 
 let app;
