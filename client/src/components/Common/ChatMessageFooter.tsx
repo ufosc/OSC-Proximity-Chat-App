@@ -48,11 +48,13 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: Dimensions.get('window').width * 0.058,
         marginHorizontal: Dimensions.get('window').width * 0.005,
-        minHeight: Dimensions.get('window').height * 0.054,
+        minHeight: Dimensions.get('window').width * 0.113,
+        maxHeight: Dimensions.get('window').width * 0.3,
     },
     messageInput: {
         fontSize: 16,
         flex: 1,
+        marginBottom: Platform.OS === 'ios' ? 2 : 0,
         
     },
     icons: {
@@ -61,6 +63,8 @@ const styles = StyleSheet.create({
     iconContainer: {
         marginLeft: Dimensions.get('window').width * 0.02,
         marginRight: Dimensions.get('window').width * 0.009,
+        marginBottom: Dimensions.get('window').width * 0.025,
+        marginTop: Dimensions.get('window').width * 0.025,
         flexDirection: 'row',
         alignItems: "flex-end",
         justifyContent: "flex-end",
@@ -73,6 +77,9 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
         flexDirection: "row",
         alignSelf: "stretch",
+        marginRight: Dimensions.get('window').width * 0.01,
+        marginBottom: Dimensions.get('window').width * 0.01,
+        marginTop: Dimensions.get('window').width * 0.01,
     }
 
 });
