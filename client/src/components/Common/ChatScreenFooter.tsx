@@ -10,7 +10,7 @@ interface ChatInputProps {
     onSend?: () => void,
 }
 
-export const ChatMessageFooter: React.FC<ChatInputProps> = ({ value, onChangeText, onSend }) => {
+export const ChatScreenFooter: React.FC<ChatInputProps> = ({ value, onChangeText, onSend }) => {
 
 
     
