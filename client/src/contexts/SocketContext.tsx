@@ -31,6 +31,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         }
       });
 
+      socketIo.connect()
       setSocket(socketIo);
       setMounted(true);
     }
