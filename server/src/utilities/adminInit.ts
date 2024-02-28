@@ -6,7 +6,10 @@ export const adminApp = admin.initializeApp({
 });
 
 export const db = admin.firestore();
-export const connectedUsersCollection = db.collection('users');
-export const messagesCollection = db.collection('messages');
+export const connectedUsersCollection = db.collection('ConnectedUsers');
+export const messagesCollection = db.collection('Messages');
 
 console.log("[FIREBASE-ADMIN] Firebase admin SDK synced.")
+
+// TODO: refactor file name to 'firebase' for accuracy.
+// TODO: move key info to .env
