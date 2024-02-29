@@ -1,28 +1,27 @@
 import express from 'express'
 import 'dotenv/config'
 import 'geofire-common'
-
 import { Message } from './types/Message';
-
 import { createMessage } from './actions/createMessage'
-// import { deleteMessageById } from './actions/deleteMessage'
-// import { getUserById } from './actions/getUsers'
 import { createUser } from './actions/createConnectedUser'
 import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateConnectedUser'
-import { deleteConnectedUserByIndex } from './actions/deleteConnectedUser'
+import { deleteConnectedUserByUID } from './actions/deleteConnectedUser'
 import {geohashForLocation} from 'geofire-common';
 import { findNearbyUsers } from './actions/getConnectedUsers'
 import { ConnectedUser } from './types/User';
+import { getAuth } from 'firebase-admin/auth';
+
 
 const { createServer } = require('http')
 const { Server } = require('socket.io')
-
 const socket_port = process.env.socket_port
 const express_port = process.env.express_port
 const app = express()
 
+// Middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 
 
 // === SOCKET API ===
@@ -34,7 +33,26 @@ const io = new Server(socketServer, {
   },
 });
 
-io.on('connection', (socket: any) => {
+// Firebase JWT Authorization Custom Middleware
+io.use(async (socket, next) => {
+  const token = socket.handshake.auth.token;
+  console.log(`[WS] Recieved token: ${token}`)
+
+  if (token) {
+    const decodedToken = await getAuth().verifyIdToken(token);
+    const userId = decodedToken.uid;
+    console.log(`[WS] User <${userId}> authenticated.`);
+    console.log(decodedToken)
+
+    next();
+  } else {
+    console.error("[WS] User not authenticated.")
+    next(new Error('User not authenticated.'));
+  }
+})
+
+
+io.on('connection', async (socket: any) => {
   console.log(`[WS] User <${socket.id}> connected.`);
   const defaultConnectedUser: ConnectedUser = {
       uid: "UID",
@@ -50,12 +68,12 @@ io.on('connection', (socket: any) => {
         geohash: "F"
       }
   } // TODO: Send this info from client on connection  
-  createUser(defaultConnectedUser) 
-  toggleUserConnectionStatus(socket.id)
+  await createUser(defaultConnectedUser) 
+  await toggleUserConnectionStatus(socket.id)
 
   socket.on('disconnect', () => {
       console.log(`[WS] User <${socket.id}> exited.`);
-      deleteConnectedUserByIndex(socket.id)
+      deleteConnectedUserByUID(socket.id)
   })
   socket.on('ping', (ack) => {
   // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
@@ -98,11 +116,11 @@ io.on('connection', (socket: any) => {
       console.error("[WS] Error sending message:", error.message)
     }
   })
-  socket.on('updateLocation', async (message, ack) => {
+  socket.on('updateLocation', async (location, ack) => {
     console.log(`[WS] Recieved new location from user <${socket.id}>.`)
     try {
-      const lat = Number(message.lat)
-      const lon = Number(message.lon)
+      const lat = Number(location.lat)
+      const lon = Number(location.lon)
       const success = await updateUserLocation(socket.id, lat, lon)
       if (success) {
         console.log("[WS] Location updated in database successfully.")
@@ -212,7 +230,7 @@ app.delete('/users', async (req, res) => {
     const userId = req.query.userId
     if (typeof userId != "string") throw Error("  [userId] is not a string.")
 
-    const success = await deleteConnectedUserByIndex(userId)
+    const success = await deleteConnectedUserByUID(userId)
     if (!success) throw Error("     deleteUserById() failed.")
 
     console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`)

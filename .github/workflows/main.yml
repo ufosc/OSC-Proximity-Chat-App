@@ -23,12 +23,19 @@ jobs:
         run: npm ci
         working-directory: server/
 
-      - name: Set up environment variables
+      - name: Create subdirectory for service account JSON
         run: |
           mkdir private_key
-          echo "${{ secrets.SERVICE_ACCOUNT_SECRET }}" > private_key/private.json
         working-directory: server/src
 
+      - name: Create service account JSON
+        id: create-service-account-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "private.json"
+          json: ${{ secrets.SERVICE_ACCOUNT_SECRET }}
+          dir: 'server/src/private_key/'
+        
       - name: Compile TypeScript files
         run: npx tsc
         working-directory: server/

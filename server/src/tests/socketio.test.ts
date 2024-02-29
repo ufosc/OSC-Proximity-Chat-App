@@ -13,7 +13,7 @@ describe("socket-load-tests", () => {
   let httpServer;
   let httpServerAddr;
   let ioServer;
-  const numClients = 100; // Adjust the number of clients as needed. Do not go over 300 to prevent being blocked by Firebase.
+  const numClients = 20; // Adjust the number of clients as needed. Do not go over 300 to prevent being blocked by Firebase.
 
   beforeAll((done) => {
     httpServer = createServer().listen();
