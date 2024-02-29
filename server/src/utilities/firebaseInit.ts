@@ -9,7 +9,7 @@ export const db = admin.firestore();
 export const connectedUsersCollection = db.collection('ConnectedUsers');
 export const messagesCollection = db.collection('Messages');
 
-console.log("[FIREBASE-ADMIN] Firebase admin SDK synced.")
+console.log("[FIREBASE] Firestore synced.")
 
 // TODO: refactor file name to 'firebase' for accuracy.
 // TODO: move key info to .env
