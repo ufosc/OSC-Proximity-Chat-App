@@ -19,8 +19,8 @@ import { AuthenticationErrorMessage, AuthenticationResponse } from "./Authentica
 const LoginScreen = () => {
   const router = useRouter();
   const [fontsLoaded, fontError] = useFonts({
-    "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
-    "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
+    "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
+    "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
   });
 
   const { inputEmail } = useLocalSearchParams();
@@ -62,6 +62,7 @@ const LoginScreen = () => {
           <View style={styles.main_container}>
             <View style={styles.header_container}>
               <Text style={styles.header_text}>Welcome back!</Text>
+              <Text style={styles.subheader_text}>How have you been?</Text>
             </View>
             <View style={styles.input_container}>
               <LogInEmailInput
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    padding: Dimensions.get("window").width * 0.12,
   },
 
   //This is an example of where the error message could be
@@ -134,13 +136,18 @@ const styles = StyleSheet.create({
   header_container: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
     width: "100%",
+    
   },
 
   header_text: {
-    fontFamily: "Gilroy-ExtraBold",
-    fontSize: 30,
+    fontFamily: "Quicksand-Bold",
+    fontSize: 37,
+  },
+  subheader_text: {
+    fontFamily: "Quicksand-Medium",
+    fontSize: 20,
   },
 });
 

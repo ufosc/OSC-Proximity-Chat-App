@@ -114,14 +114,14 @@ const styles = StyleSheet.create({
     },
 
     loginInput: {
-        width: Dimensions.get('window').width * 0.75,
+        width: "100%",
         minHeight: Dimensions.get('window').height * 0.055,
         borderWidth: 1,
-        borderRadius: 30,
+        borderRadius: Dimensions.get('window').height * 0.015,
         paddingTop: Platform.OS === 'ios' ? 15 : 0,
         paddingBottom: Platform.OS === 'ios' ? 15 : 0,
-        paddingLeft: 15,
-        paddingRight: 15,
+        paddingLeft: 20,
+        paddingRight: 20,
     },
     messsageContainer: {
         width: Dimensions.get('window').width * 0.75,
