@@ -1,6 +1,6 @@
 // Uploads a new document in the ConnectedUsers collection.
 import { ConnectedUser } from '../types/User'
-import { connectedUsersCollection } from '../utilities/adminInit';
+import { connectedUsersCollection } from '../utilities/firebaseInit';
 
 export const createUser = async (connectedUser: ConnectedUser) => {
   try {

@@ -1,5 +1,5 @@
 import { distanceBetween, geohashForLocation, geohashQueryBounds } from 'geofire-common'
-import { connectedUsersCollection } from '../utilities/adminInit'
+import { connectedUsersCollection } from '../utilities/firebaseInit'
 
 export const findNearbyUsers = async (centerLat: number, centerLon: number, radius: number) => {
 // Return an array of nearby userIds (which are also socket ids) given a center latitude and longitude.

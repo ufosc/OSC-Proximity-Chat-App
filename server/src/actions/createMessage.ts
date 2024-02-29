@@ -1,6 +1,6 @@
 // Uploads a new document in the Messages collection.
 import { Message } from '../types/Message'
-import { messagesCollection } from '../utilities/adminInit'
+import { messagesCollection } from '../utilities/firebaseInit'
 
 export const createMessage = async (msg : Message) => {
   try {
