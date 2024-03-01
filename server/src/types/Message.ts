@@ -8,4 +8,5 @@ export interface Message {
         lon: number
         geohash?: string
     }
+    visibleToUids?: Array<string>
 }
