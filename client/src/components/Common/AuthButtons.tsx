@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: Dimensions.get("window").height / 2,
   },
 
   button_text: {
     color: "white",
-    fontFamily: "Gilroy-ExtraBold",
-    fontSize: Dimensions.get("window").height * 0.03,
+    fontFamily: "Quicksand-Medium",
+    fontSize: Dimensions.get("window").height * 0.027,
   },
 
   sign_out_button: {

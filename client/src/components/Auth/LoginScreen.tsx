@@ -9,6 +9,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
 import { LogInButton } from "../Common/AuthButtons";
@@ -79,6 +80,16 @@ const LoginScreen = () => {
             <View style={styles.button_container}>
               <LogInButton onPress={onHandleSubmit} />
             </View>
+            <TouchableOpacity>
+              <Text style={[styles.regular_text, {textDecorationLine: 'underline'}]}>Forgot password?</Text>
+            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={styles.horizontal_line} />
+                <View>
+                  <Text style={[styles.regular_text, {marginHorizontal: 10}]}>Or Log In With</Text>
+                </View>
+              <View style={styles.horizontal_line} />
+            </View>
           </View>
         </KeyboardAvoidingView>
 
@@ -105,7 +116,9 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    padding: Dimensions.get("window").width * 0.12,
+    padding: Dimensions.get("window").width * 0.11,
+    backgroundColor: "white",
+    gap: Dimensions.get("window").height * 0.025,
   },
 
   //This is an example of where the error message could be
@@ -138,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
     width: "100%",
-    
+    marginVertical: Dimensions.get("window").height * 0.03,
   },
 
   header_text: {
@@ -148,6 +161,15 @@ const styles = StyleSheet.create({
   subheader_text: {
     fontFamily: "Quicksand-Medium",
     fontSize: 20,
+  },
+  regular_text: {
+    fontFamily: "Quicksand-Medium",
+    color: "#8E8E8E",
+  },
+  horizontal_line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#8E8E8E',
   },
 });
 

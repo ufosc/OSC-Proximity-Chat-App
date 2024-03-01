@@ -1,5 +1,6 @@
 import React from 'react'
 import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
+import { useFonts } from 'expo-font'
 import { ChatSendButton } from './CustomButtons'
 
 interface ChatInputProps {
@@ -116,12 +117,16 @@ const styles = StyleSheet.create({
     loginInput: {
         width: "100%",
         minHeight: Dimensions.get('window').height * 0.055,
-        borderWidth: 1,
+        borderWidth: 1.5,
+        borderColor: "#D6D6D6",
         borderRadius: Dimensions.get('window').height * 0.015,
         paddingTop: Platform.OS === 'ios' ? 15 : 0,
         paddingBottom: Platform.OS === 'ios' ? 15 : 0,
         paddingLeft: 20,
         paddingRight: 20,
+        backgroundColor: "#F7F7F7",
+        fontFamily: "Quicksand-Medium",
+
     },
     messsageContainer: {
         width: Dimensions.get('window').width * 0.75,
