@@ -17,9 +17,9 @@ const LocationContext = createContext<LocationContextProps | null>(null);
 
 const getLocation = async () => {
   return await Location.getCurrentPositionAsync({
-    accuracy: Location.Accuracy.Balanced
+    accuracy: Location.Accuracy.Balanced,
   }); // Change accuracy while testing. Could become .env variable.
-}
+};
 
 export const useLocation = () => {
   return useContext(LocationContext);
@@ -66,13 +66,13 @@ export const LocationProvider = ({
         } catch (error) {
           console.error("Error fetching location:", error);
         }
-      }, Number(LOCATION_REFRESH_RATE)); // Send location every few seconds
+      }, Number(LOCATION_REFRESH_RATE)); // Fetch location every 3 seconds
 
       // Cleanup function to clear interval when component unmounts
       return () => clearInterval(interval);
     })();
 
-    return () => console.log("Location dismounted");
+    return () => console.log("[LOG]: Cleaning up location useEffect");
 
   }, []);
 

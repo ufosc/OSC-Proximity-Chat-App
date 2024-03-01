@@ -1,12 +1,10 @@
 // Uploads a new document in the Messages collection.
-import { doc, setDoc } from '@firebase/firestore'
-import { messages } from '../utilities/firebaseInit'
 import { Message } from '../types/Message'
+import { messagesCollection } from '../utilities/firebaseInit'
 
 export const createMessage = async (msg : Message) => {
   try {
-    const ref = doc(messages, msg.msgId)
-    const status = await setDoc(ref, msg)
+    await messagesCollection.doc(msg.msgId).set(msg)
     return true
 
   } catch (error) {

@@ -32,7 +32,6 @@ export const appSignIn = async (email: string, password: string) => {
             store.userAuthInfo = response?.user;
             store.isLoggedin = response?.user ? true : false;
         });
-
         return { user: auth.currentUser };
     } catch (e) {
         return { error: e };
