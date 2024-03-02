@@ -36,7 +36,8 @@
     "react-native-uuid": "^2.0.1",
     "react-native-web": "~0.19.6",
     "socket.io-client": "^4.7.4",
-    "expo-network": "~5.4.0"
+    "expo-network": "~5.4.0",
+    "undefined": "@expo/vector-icons/FontAwesome"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
