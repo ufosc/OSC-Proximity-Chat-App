@@ -4,10 +4,11 @@ import 'geofire-common'
 import { Message } from './types/Message';
 import { createMessage } from './actions/createMessage'
 import { createUser } from './actions/createConnectedUser'
-import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateConnectedUser'
+import { toggleUserConnectionStatus, updateUserLocation, updateUserDisplayName } from './actions/updateConnectedUser'
 import { deleteConnectedUserByUID } from './actions/deleteConnectedUser'
+import { getConnectedUserDisplayName } from './actions/getSingleConnectedUser'
 import {geohashForLocation} from 'geofire-common';
-import { findNearbyUsers } from './actions/getConnectedUsers'
+import { findNearbyUsers } from './actions/getMultipleConnectedUsers'
 import { ConnectedUser } from './types/User';
 import { getAuth } from 'firebase-admin/auth';
 
@@ -132,8 +133,33 @@ io.on('connection', async (socket: any) => {
       console.error("[WS] Error calling updateLocation:", error.message)
     }
   })
+  socket.on('updateDisplayName', async (newDisplayName, ack) => {
+    try {
+      const success = await updateUserDisplayName(socket.id, newDisplayName)
+      if (success) {
+        console.log(`[WS] Updated display name of user <${socket.id}> to <${newDisplayName}> successfully.`)
+        if (ack) ack("display name updated")
+      } else {
+        throw new Error("updateDisplayName() failed.")
+      }
+    } catch (error) {
+      console.error("[WS] Error calling updateDisplayName:", error.message)
+    }
+  })
+  socket.on('retrieveDisplayName', async (ack) => {
+    try {
+      const success = await getConnectedUserDisplayName(socket.id)
+      if (success) {
+        console.log(`[WS] Retrieved display name of user <${socket.id}> successfully.`)
+        if (ack) ack("display name retrieved")
+      } else {
+        throw new Error("retrieveDisplayName() failed.")
+      }
+    } catch (error) {
+      console.error("[WS] Error calling retrieveDisplayName:", error.message)
+    }
+  })
 })
-
 socketServer.listen(socket_port, () => {
   console.log(`[WS] Listening for new connections on port ${socket_port}.`)
 })
