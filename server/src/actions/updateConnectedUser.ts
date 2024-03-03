@@ -1,5 +1,9 @@
 import { geohashForLocation} from 'geofire-common'
+<<<<<<< HEAD
 import { connectedUsersCollection } from '../utilities/adminInit'
+=======
+import { connectedUsersCollection } from '../utilities/firebaseInit'
+>>>>>>> a15bd2c79af0ae980877f70f54f541fc55ae7ff0
 
 export const toggleUserConnectionStatus = async (socketID: string) => {
     try {
