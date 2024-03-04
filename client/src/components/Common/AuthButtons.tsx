@@ -72,19 +72,25 @@ export const LogInButton: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
   );
 };
 
-export const ExternalLoginButton: React.FC<{ onPress?: () => void; imageSource: string  }> = ({ onPress, imageSource }) => {
+export const ExternalLoginButton: React.FC<{ onPress?: () => void; companyName: string; imageSource?: ImageSourcePropType }> = ({ onPress, companyName, imageSource }) => {
+  const images: { [key: string]: ImageSourcePropType } = {
+    "google": require("../../../assets/google_logo.png"),
+    "apple": require("../../../assets/apple_logo.png"),
+    "github": require("../../../assets/github_logo.png"),
+    "facebook": require("../../../assets/facebook_logo.png"),
+  };
 
-  const image = require(imageSource);
+  const clicked  = () => {
+    console.log(companyName);
+  }
 
   return (
-    <View style={styles.external_login_button}>
-      <TouchableOpacity  onPress={onPress}>
+      <TouchableOpacity onPress={clicked} style={styles.external_login_button}>
         <Image 
         style={styles.login_logo}
-        source={image}
+        source={images[companyName] || require("../../../assets/adaptive-icon.png")}
         />
       </TouchableOpacity>
-    </View>
   );
 };
 
@@ -120,8 +126,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white",
-    height: Dimensions.get("window").height * 0.076,
-    width: Dimensions.get("window").height * 0.076,
+    height: Dimensions.get("window").height * 0.072,
+    width: Dimensions.get("window").height * 0.072,
     borderRadius: 10,
     padding: 10,
     shadowColor: "#8E8E8E",
@@ -130,10 +136,11 @@ const styles = StyleSheet.create({
     shadowOffset: {
       width: 0,
       height: 2,
-    }
+    },
   },
   login_logo: {
     resizeMode: "contain",
     height: "100%",
+    width: "100%",
   },
 });

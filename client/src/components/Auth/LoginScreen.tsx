@@ -60,6 +60,22 @@ const LoginScreen = () => {
     return null;
   }
 
+  const handleGoogleSignIn = async () => {
+    console.log("Google Sign In");
+  }
+
+  const handleFacebookSignIn = async () => {
+    console.log("Facebook Sign In");
+  }
+
+  const handleAppleSignIn = async () => {
+    console.log("Apple Sign In");
+  }
+
+  const handleGithubSignIn = async () => {
+    console.log("Github Sign In");
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
@@ -68,7 +84,7 @@ const LoginScreen = () => {
         >
           <View style={styles.main_container}>
             <View style={styles.header_container}>
-              <Text style={styles.header_text}>Welcome back!</Text>
+              <Text style={styles.header_text}>Welcome back, Friend!</Text>
               <Text style={styles.subheader_text}>How have you been?</Text>
             </View>
             <View style={styles.input_container}>
@@ -89,14 +105,21 @@ const LoginScreen = () => {
             <TouchableOpacity>
               <Text style={[styles.regular_text, {textDecorationLine: 'underline'}]}>Forgot password?</Text>
             </TouchableOpacity>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
               <View style={styles.horizontal_line} />
                 <View>
                   <Text style={[styles.regular_text, {marginHorizontal: 10}]}>Or Log In With</Text>
                 </View>
               <View style={styles.horizontal_line} />
             </View>
-            <ExternalLoginButton onPress={() => {}} imageSource={"../../../assets/google_logo.png"} />
+
+            
+            <View style={styles.externalLinkContainer}>
+              <ExternalLoginButton onPress={handleGoogleSignIn} companyName="google" />
+              <ExternalLoginButton onPress={handleAppleSignIn} companyName="apple" />
+              <ExternalLoginButton onPress={handleFacebookSignIn} companyName="facebook" />
+              <ExternalLoginButton onPress={handleGithubSignIn} companyName="github" />
+            </View>
           </View>
         </KeyboardAvoidingView>
 
@@ -158,12 +181,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
     width: "100%",
-    marginVertical: Dimensions.get("window").height * 0.03,
+    marginBottom: Dimensions.get("window").height * 0.01,
   },
 
   header_text: {
     fontFamily: "Quicksand-Bold",
     fontSize: 37,
+    marginBottom: Dimensions.get("window").height * 0.01,
   },
   subheader_text: {
     fontFamily: "Quicksand-Medium",
@@ -177,6 +201,13 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 1,
     backgroundColor: '#8E8E8E',
+  },
+  externalLinkContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
   },
 });
 
