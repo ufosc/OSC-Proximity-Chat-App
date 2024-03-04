@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, Dimensions, Alert } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Dimensions, Alert, Image, View, ImageSourcePropType } from "react-native";
 import { router, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import { appSignOut } from "../../services/store";
@@ -72,6 +72,22 @@ export const LogInButton: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
   );
 };
 
+export const ExternalLoginButton: React.FC<{ onPress?: () => void; imageSource: string  }> = ({ onPress, imageSource }) => {
+
+  const image = require(imageSource);
+
+  return (
+    <View style={styles.external_login_button}>
+      <TouchableOpacity  onPress={onPress}>
+        <Image 
+        style={styles.login_logo}
+        source={image}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   button: {
     backgroundColor: "#5dbea3",
@@ -98,5 +114,26 @@ const styles = StyleSheet.create({
     marginTop: Dimensions.get("window").height * 0.01,
     borderRadius: 8,
     padding: 5,
+  },
+  external_login_button: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    height: Dimensions.get("window").height * 0.076,
+    width: Dimensions.get("window").height * 0.076,
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: "#8E8E8E",
+    shadowRadius: 2,
+    shadowOpacity: 0.7,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    }
+  },
+  login_logo: {
+    resizeMode: "contain",
+    height: "100%",
   },
 });

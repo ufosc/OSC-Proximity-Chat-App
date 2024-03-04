@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
-import { LogInButton } from "../Common/AuthButtons";
+import { LogInButton, ExternalLoginButton } from "../Common/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/store";
 import { AuthenticationErrorMessage, AuthenticationResponse } from "./AuthenticationResponse";
@@ -29,6 +29,12 @@ const LoginScreen = () => {
   const [password, setPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
   const [invalidLogin, invalidateLogin] = React.useState<boolean>(false); // Possbily change this?
+
+  const externalLoginIcons = {
+    google: require("../../../assets/google_logo.png"),
+    facebook: require("../../../assets/facebook_logo.png"),
+    apple: require("../../../assets/apple_logo.png"),
+  };
 
   // Sign in function with email and password
   const onHandleSubmit = async () => {
@@ -90,6 +96,7 @@ const LoginScreen = () => {
                 </View>
               <View style={styles.horizontal_line} />
             </View>
+            <ExternalLoginButton onPress={() => {}} imageSource={"../../../assets/google_logo.png"} />
           </View>
         </KeyboardAvoidingView>
 
