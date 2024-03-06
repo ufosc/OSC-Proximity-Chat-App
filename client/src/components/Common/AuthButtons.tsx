@@ -86,7 +86,7 @@ export const LogInButton: React.FC<{ onPress?: () => void }> = ({
 
   return (
     <TouchableOpacity style={styles.login_button} onPress={onPress}>
-      <Text style={styles.button_text}>Log In</Text>
+      <Text style={styles.button_text}>Login</Text>
     </TouchableOpacity>
   );
 };

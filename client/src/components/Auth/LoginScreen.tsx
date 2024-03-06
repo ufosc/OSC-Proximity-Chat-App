@@ -126,7 +126,7 @@ const LoginScreen = () => {
             <View style={styles.horizontal_line} />
             <View>
               <Text style={[styles.regular_text, { marginHorizontal: 10 }]}>
-                Or Log In With
+                Or Login With
               </Text>
             </View>
             <View style={styles.horizontal_line} />
