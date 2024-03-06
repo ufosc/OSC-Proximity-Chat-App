@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
       height: 2,
     },
     elevation: 2,
-    borderWidth: 1.3,
+    borderWidth: 1,
     borderColor: "#8E8E8E",
   },
   login_logo: {

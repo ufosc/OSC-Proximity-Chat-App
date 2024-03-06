@@ -97,7 +97,7 @@ const LoginScreen = () => {
             />
           </TouchableOpacity>
           <View style={styles.header_container}>
-            <Text style={styles.header_text}>Welcome back, Friend!</Text>
+            <Text style={styles.header_text}>Welcome back!</Text>
             <Text style={styles.subheader_text}>How have you been?</Text>
           </View>
           <View style={styles.input_container}>
@@ -228,8 +228,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
     width: "100%",
-    marginBottom: Dimensions.get("window").height * 0.016,
-    marginTop: Dimensions.get("window").height * 0.18,
+    marginBottom: Dimensions.get("window").height * 0.019,
+    marginTop: Dimensions.get("window").height * 0.23,
   },
 
   header_text: {
