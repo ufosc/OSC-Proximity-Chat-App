@@ -139,9 +139,7 @@ const LoginScreen = () => {
             />
           </View>
           <View style={styles.footer_text_container}>
-            <Text style={styles.footer_text}>
-              Don't have an account with us?
-            </Text>
+            <Text style={styles.footer_text}>Don't have an account?</Text>
             <TouchableOpacity
               onPress={() => router.replace({ pathname: "/signup" })}
             >
