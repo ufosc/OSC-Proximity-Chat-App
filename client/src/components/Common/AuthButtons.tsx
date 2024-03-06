@@ -103,7 +103,7 @@ export const ExternalLoginButton: React.FC<{
   };
 
   const clicked = () => {
-    console.log(companyName);
+    onPress && onPress();
   };
 
   return (
