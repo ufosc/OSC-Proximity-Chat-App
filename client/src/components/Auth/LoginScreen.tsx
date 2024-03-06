@@ -192,7 +192,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: Dimensions.get("window").width * 0.11,
+    paddingHorizontal: Dimensions.get("window").width * 0.11,
+    paddingVertical: Dimensions.get("window").height * 0.01,
     backgroundColor: "white",
     gap: Dimensions.get("window").height * 0.029,
   },
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     width: "100%",
     marginBottom: Dimensions.get("window").height * 0.016,
-    marginTop: Dimensions.get("window").height * 0.14,
+    marginTop: Dimensions.get("window").height * 0.18,
   },
 
   header_text: {
@@ -269,7 +270,6 @@ const styles = StyleSheet.create({
     gap: 7,
     flex: 1,
     paddingBottom: Dimensions.get("window").height * 0.01,
-    flexWrap: "nowrap",
   },
   divider_container: {
     flexDirection: "row",
