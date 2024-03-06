@@ -8,6 +8,7 @@ import {
   Image,
   View,
   ImageSourcePropType,
+  Platform,
 } from "react-native";
 import { router, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
@@ -134,6 +135,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
+    elevation: 2,
   },
 
   button_text: {
@@ -168,6 +170,9 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
+    elevation: 2,
+    borderWidth: 1.3,
+    borderColor: "#8E8E8E",
   },
   login_logo: {
     resizeMode: "contain",

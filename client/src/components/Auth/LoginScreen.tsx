@@ -19,6 +19,7 @@ import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
 } from "./AuthenticationResponse";
+import { ArrowLeftCircle } from "react-native-feather";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -84,6 +85,17 @@ const LoginScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
         <View style={styles.main_container}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.back_button}
+          >
+            <ArrowLeftCircle
+              color={"black"}
+              strokeWidth={1.4}
+              width={34}
+              height={34}
+            />
+          </TouchableOpacity>
           <View style={styles.header_container}>
             <Text style={styles.header_text}>Welcome back, Friend!</Text>
             <Text style={styles.subheader_text}>How have you been?</Text>
@@ -263,6 +275,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: Dimensions.get("window").height * 0.011,
+  },
+  back_button: {
+    position: "absolute",
+    top: Dimensions.get("window").height * 0.075,
+    left: Dimensions.get("window").width * 0.075,
   },
 });
 
