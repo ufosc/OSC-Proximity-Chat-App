@@ -110,7 +110,7 @@ const LoginScreen = () => {
               Forgot password?
             </Text>
           </TouchableOpacity>
-          <View style={styles.divider}>
+          <View style={styles.divider_container}>
             <View style={styles.horizontal_line} />
             <View>
               <Text style={[styles.regular_text, { marginHorizontal: 10 }]}>
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     width: "100%",
-    bottom: Dimensions.get("window").height * 0.1,
+    top: Dimensions.get("window").height * 0.1,
     position: "absolute",
   },
 
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     paddingBottom: Dimensions.get("window").height * 0.01,
     flexWrap: "nowrap",
   },
-  divider: {
+  divider_container: {
     flexDirection: "row",
     alignItems: "center",
     marginVertical: Dimensions.get("window").height * 0.011,
