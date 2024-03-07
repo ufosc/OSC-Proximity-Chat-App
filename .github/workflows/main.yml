@@ -60,7 +60,7 @@ jobs:
 
       - name: Check for private.json and .env files
         run: |
-          if [ -e "server/.env" ] || [ -e "server/firebase-secret.json" ]; then
+          if [ -e "server/.env" ] || [ -e "server/firebase-secret.json" ] || [ -e "client/.env"]; then
           echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging.";
            exit 1;
           fi
