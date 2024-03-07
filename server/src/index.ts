@@ -1,270 +1,324 @@
-import express from 'express'
-import 'dotenv/config'
-import 'geofire-common'
-import { Message } from './types/Message';
-import { createMessage } from './actions/createMessage'
-import { createUser } from './actions/createConnectedUser'
-import { toggleUserConnectionStatus, updateUserLocation } from './actions/updateConnectedUser'
-import { deleteConnectedUserByUID } from './actions/deleteConnectedUser'
-import {geohashForLocation} from 'geofire-common';
-import { findNearbyUsers } from './actions/getConnectedUsers'
-import { ConnectedUser } from './types/User';
-import { getAuth } from 'firebase-admin/auth';
+import express from "express";
+import "dotenv/config";
+import "geofire-common";
+import { Message } from "./types/Message";
+import { createMessage } from "./actions/createMessage";
+import { createUser } from "./actions/createConnectedUser";
+import {
+  toggleUserConnectionStatus,
+  updateUserLocation,
+} from "./actions/updateConnectedUser";
+import { deleteConnectedUserByUID } from "./actions/deleteConnectedUser";
+import { geohashForLocation } from "geofire-common";
+import { findNearbyUsers } from "./actions/getConnectedUsers";
+import { ConnectedUser } from "./types/User";
+import { getAuth } from "firebase-admin/auth";
+import Mailgun from "mailgun.js";
 
-
-const { createServer } = require('http')
-const { Server } = require('socket.io')
-const socket_port = process.env.socket_port
-const express_port = process.env.express_port
-const app = express()
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const socket_port = process.env.socket_port;
+const express_port = process.env.express_port;
+const app = express();
 
 // Middleware
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // === SOCKET API ===
-const socketServer = createServer()
+const socketServer = createServer();
 const io = new Server(socketServer, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
+    origin: "*",
+    methods: ["GET", "POST"],
   },
 });
 
 // Firebase JWT Authorization Custom Middleware
 io.use(async (socket, next) => {
   const token = socket.handshake.auth.token;
-  console.log(`[WS] Recieved token: ${token}`)
+  console.log(`[WS] Recieved token: ${token}`);
 
   if (token) {
     const decodedToken = await getAuth().verifyIdToken(token);
     const userId = decodedToken.uid;
     console.log(`[WS] User <${userId}> authenticated.`);
-    console.log(decodedToken)
+    console.log(decodedToken);
 
     next();
   } else {
-    console.error("[WS] User not authenticated.")
-    next(new Error('User not authenticated.'));
+    console.error("[WS] User not authenticated.");
+    next(new Error("User not authenticated."));
   }
-})
+});
 
-
-io.on('connection', async (socket: any) => {
+io.on("connection", async (socket: any) => {
   console.log(`[WS] User <${socket.id}> connected.`);
   const defaultConnectedUser: ConnectedUser = {
-      uid: "UID",
-      socketId: socket.id,
-      displayName: "DISPLAY NAME",
-      userIcon: { 
-        foregroundImage: "FOREGROUND IMG",
-        backgroundImage: "BACKGROUND IMG"
-      },
-      location: {
-        lat: 9999,
-        lon: 9999,
-        geohash: "F"
-      }
-  } // TODO: Send this info from client on connection  
-  await createUser(defaultConnectedUser) 
-  await toggleUserConnectionStatus(socket.id)
+    uid: "UID",
+    socketId: socket.id,
+    displayName: "DISPLAY NAME",
+    userIcon: {
+      foregroundImage: "FOREGROUND IMG",
+      backgroundImage: "BACKGROUND IMG",
+    },
+    location: {
+      lat: 9999,
+      lon: 9999,
+      geohash: "F",
+    },
+  }; // TODO: Send this info from client on connection
+  await createUser(defaultConnectedUser);
+  await toggleUserConnectionStatus(socket.id);
 
-  socket.on('disconnect', () => {
-      console.log(`[WS] User <${socket.id}> exited.`);
-      deleteConnectedUserByUID(socket.id)
-  })
-  socket.on('ping', (ack) => {
-  // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
-      console.log(`[WS] Recieved ping from user <${socket.id}>.`)
-      if (ack) ack('pong')      
-  })
-  socket.on('message', async (message: Message, ack) => {
+  socket.on("disconnect", () => {
+    console.log(`[WS] User <${socket.id}> exited.`);
+    deleteConnectedUserByUID(socket.id);
+  });
+  socket.on("ping", (ack) => {
+    // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
+    console.log(`[WS] Recieved ping from user <${socket.id}>.`);
+    if (ack) ack("pong");
+  });
+  socket.on("message", async (message: Message, ack) => {
     // message post - when someone sends a message
-    
-    console.log(`[WS] Recieved message from user <${socket.id}>.`)
-    console.log(message)
-    try {
-      if(isNaN(message.timeSent)) throw new Error("The timeSent parameter must be a valid number.")
-      if(isNaN(message.location.lat)) throw new Error("The lat parameter must be a valid number.")
-      if(isNaN(message.location.lon)) throw new Error("The lon parameter must be a valid number.")
 
-      if (message.location.geohash == undefined || message.location.geohash === "") {
-        message.location.geohash = geohashForLocation([Number(message.location.lat), Number(message.location.lon)])
-        console.log(`New geohash generated: ${message.location.geohash}`)
+    console.log(`[WS] Recieved message from user <${socket.id}>.`);
+    console.log(message);
+    try {
+      if (isNaN(message.timeSent))
+        throw new Error("The timeSent parameter must be a valid number.");
+      if (isNaN(message.location.lat))
+        throw new Error("The lat parameter must be a valid number.");
+      if (isNaN(message.location.lon))
+        throw new Error("The lon parameter must be a valid number.");
+
+      if (
+        message.location.geohash == undefined ||
+        message.location.geohash === ""
+      ) {
+        message.location.geohash = geohashForLocation([
+          Number(message.location.lat),
+          Number(message.location.lon),
+        ]);
+        console.log(`New geohash generated: ${message.location.geohash}`);
       }
 
-      const status = await createMessage(message); 
-      if(status === false) throw new Error("Error creating message: ")
+      const status = await createMessage(message);
+      if (status === false) throw new Error("Error creating message: ");
 
       // Get nearby users and push the message to them.
-      const nearbyUserSockets = await findNearbyUsers(Number(message.location.lat), Number(message.location.lon), Number(process.env.message_outreach_radius))
+      const nearbyUserSockets = await findNearbyUsers(
+        Number(message.location.lat),
+        Number(message.location.lon),
+        Number(process.env.message_outreach_radius)
+      );
       for (const recievingSocket of nearbyUserSockets) {
         // Don't send the message to the sender (who will be included in list of nearby users).
         if (recievingSocket === socket.id) {
-          continue
+          continue;
         } else {
-          console.log(`Sending new message to socket ${recievingSocket}`)
-          socket.broadcast.to(recievingSocket).emit("message", message)
+          console.log(`Sending new message to socket ${recievingSocket}`);
+          socket.broadcast.to(recievingSocket).emit("message", message);
         }
       }
 
-      if (ack) ack("message recieved")
-
-    } catch(error) {
-      console.error("[WS] Error sending message:", error.message)
+      if (ack) ack("message recieved");
+    } catch (error) {
+      console.error("[WS] Error sending message:", error.message);
     }
-  })
-  socket.on('updateLocation', async (location, ack) => {
-    console.log(`[WS] Recieved new location from user <${socket.id}>.`)
+  });
+  socket.on("updateLocation", async (location, ack) => {
+    console.log(`[WS] Recieved new location from user <${socket.id}>.`);
     try {
-      const lat = Number(location.lat)
-      const lon = Number(location.lon)
-      const success = await updateUserLocation(socket.id, lat, lon)
+      const lat = Number(location.lat);
+      const lon = Number(location.lon);
+      const success = await updateUserLocation(socket.id, lat, lon);
       if (success) {
-        console.log("[WS] Location updated in database successfully.")
-        if (ack) ack("location updated")
+        console.log("[WS] Location updated in database successfully.");
+        if (ack) ack("location updated");
       } else {
-        throw new Error("updateUserLocation() failed.")
+        throw new Error("updateUserLocation() failed.");
       }
     } catch (error) {
-      console.error("[WS] Error calling updateLocation:", error.message)
+      console.error("[WS] Error calling updateLocation:", error.message);
     }
-  })
-})
+  });
+});
 
 socketServer.listen(socket_port, () => {
-  console.log(`[WS] Listening for new connections on port ${socket_port}.`)
-})
+  console.log(`[WS] Listening for new connections on port ${socket_port}.`);
+});
 
 // === REST APIs ===
 
-app.get('/', (req, res) => {
-    res.send("Echologator API")
-})
+app.get("/", (req, res) => {
+  res.send("Echologator API");
+});
 
-app.get('/users', async (req, res) => {
-  let query = ''
+app.get("/users", async (req, res) => {
+  let query = "";
   try {
     if (req.query.lat && req.query.lon && req.query.radius) {
       // Looks up all users close to a geographic location extended by a radius (in meters).
-      query = "?lat&lon&radius"
+      query = "?lat&lon&radius";
 
-      const lat = Number(req.query.lat)
-      const lon = Number(req.query.lon)
-      const radius = Number(req.query.radius)
-      
-      const userIds = await findNearbyUsers(lat, lon, radius)
-      console.log(userIds)
-      res.json(userIds)
+      const lat = Number(req.query.lat);
+      const lon = Number(req.query.lon);
+      const radius = Number(req.query.radius);
+
+      const userIds = await findNearbyUsers(lat, lon, radius);
+      console.log(userIds);
+      res.json(userIds);
     }
-  } catch(error) {
-    console.error(`[EXP] Error returning request <GET /users${query}>:\n`, error.message)
-    res.json(`Operation <GET /users${query}> failed.`)
+  } catch (error) {
+    console.error(
+      `[EXP] Error returning request <GET /users${query}>:\n`,
+      error.message
+    );
+    res.json(`Operation <GET /users${query}> failed.`);
   }
-})
+});
 
-app.post('/users', async (req, res) => {
-    try {
-        const status = await createUser({
-          uid: req.body.uid,
-          socketId: req.body.socketId,
-          displayName: req.body.displayName,
-          userIcon: { 
-            foregroundImage: req.body.userIcon.foregroundImage,
-            backgroundImage: req.body.userIcon.backgroundImage,
-          },
-          location: {
-            lat: Number(req.body.location.lat),
-            lon: Number(req.body.location.lon),
-            geohash: req.body.location.geohash,
-          }
-        }) 
-        if (status === false) throw new Error("Error creating user: ")
-        res.json("Operation <POST /user> was handled successfully.")
-        console.log("[EXP] Request <POST /users> returned successfully.")
-    } catch (error) {
-        console.error("[EXP] Error returning request <POST /users>:\n", error.message)
-        res.json(`Operation <POST /user> failed.`)
-    }
-})
+app.post("/users", async (req, res) => {
+  try {
+    const status = await createUser({
+      uid: req.body.uid,
+      socketId: req.body.socketId,
+      displayName: req.body.displayName,
+      userIcon: {
+        foregroundImage: req.body.userIcon.foregroundImage,
+        backgroundImage: req.body.userIcon.backgroundImage,
+      },
+      location: {
+        lat: Number(req.body.location.lat),
+        lon: Number(req.body.location.lon),
+        geohash: req.body.location.geohash,
+      },
+    });
+    if (status === false) throw new Error("Error creating user: ");
+    res.json("Operation <POST /user> was handled successfully.");
+    console.log("[EXP] Request <POST /users> returned successfully.");
+  } catch (error) {
+    console.error(
+      "[EXP] Error returning request <POST /users>:\n",
+      error.message
+    );
+    res.json(`Operation <POST /user> failed.`);
+  }
+});
 
-app.put('/users', async (req, res) => {
-  let query = ""
+app.put("/users", async (req, res) => {
+  let query = "";
   try {
     if (req.query.userId && req.query.toggleConnection) {
       // Note: toggleConnection should be assigned 'true', but it at least needs to contain any value. We don't perform a check on this parameter for this reason.
-      query = "?userId&toggleConnection"
-      const userId = req.query.userId
-      if (typeof userId != "string") throw Error("  [userId] is not a string.")
+      query = "?userId&toggleConnection";
+      const userId = req.query.userId;
+      if (typeof userId != "string") throw Error("  [userId] is not a string.");
 
-      const success = await toggleUserConnectionStatus(userId)
-      if (!success) throw Error("     toggleUserConnectionStatus() failed.")
+      const success = await toggleUserConnectionStatus(userId);
+      if (!success) throw Error("     toggleUserConnectionStatus() failed.");
+    } else if (req.query.userId && req.query.lat && req.query.lon) {
+      query = "?userId&lat&lon";
+      const userId = req.query.userId;
+      const lat = Number(req.query.lat);
+      const lon = Number(req.query.lon);
+      if (typeof userId != "string") throw Error("  [userId] is not a string.");
+      if (typeof lat != "number") throw Error("  [lat] is not a number.");
+      if (typeof lon != "number") throw Error("  [lon] is not a number.");
+
+      const success = await updateUserLocation(userId, lat, lon);
+      if (!success) throw Error("     toggleUserConnectionStatus() failed.");
     }
-    else if(req.query.userId && req.query.lat && req.query.lon) {
-      query = "?userId&lat&lon"
-      const userId = req.query.userId
-      const lat = Number(req.query.lat)
-      const lon = Number(req.query.lon)
-      if (typeof userId != "string") throw Error("  [userId] is not a string.")
-      if (typeof lat != "number") throw Error("  [lat] is not a number.")
-      if (typeof lon != "number") throw Error("  [lon] is not a number.")
-
-      const success = await updateUserLocation(userId, lat, lon)
-      if (!success) throw Error("     toggleUserConnectionStatus() failed.")
-    }
-    console.log(`[EXP] Request <PUT /users${query}> returned successfully.`)
-    res.json(`Operation <PUT /user${query}> was handled successfully.`)
-
+    console.log(`[EXP] Request <PUT /users${query}> returned successfully.`);
+    res.json(`Operation <PUT /user${query}> was handled successfully.`);
   } catch (error) {
-    console.error(`[EXP] Error returning request <PUT /users${query}>:\n`, error.message)
-    res.json(`Operation <PUT /user${query}> failed.`)
+    console.error(
+      `[EXP] Error returning request <PUT /users${query}>:\n`,
+      error.message
+    );
+    res.json(`Operation <PUT /user${query}> failed.`);
   }
-})
+});
 
-app.delete('/users', async (req, res) => {
-  let query = ""
+app.delete("/users", async (req, res) => {
+  let query = "";
   try {
-    query = "?userId"
-    const userId = req.query.userId
-    if (typeof userId != "string") throw Error("  [userId] is not a string.")
+    query = "?userId";
+    const userId = req.query.userId;
+    if (typeof userId != "string") throw Error("  [userId] is not a string.");
 
-    const success = await deleteConnectedUserByUID(userId)
-    if (!success) throw Error("     deleteUserById() failed.")
+    const success = await deleteConnectedUserByUID(userId);
+    if (!success) throw Error("     deleteUserById() failed.");
 
-    console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`)
-    res.json(`Operation <DELETE /users${query}> was handled successfully.`)
+    console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`);
+    res.json(`Operation <DELETE /users${query}> was handled successfully.`);
   } catch (error) {
-    console.error(`[EXP] Error returning request <DELETE /users${query}>:\n`, error.message)
-    res.json(`Operation <DELETE /user${query}> failed.`)
+    console.error(
+      `[EXP] Error returning request <DELETE /users${query}>:\n`,
+      error.message
+    );
+    res.json(`Operation <DELETE /user${query}> failed.`);
   }
-})
+});
+
+app.post("/verify", async (req, res) => {
+  let query = "";
+  try {
+    if (req.query.email) {
+      query = "?email";
+      const email = req.query.email;
+      const mailgun = new Mailgun(FormData);
+      const mg = mailgun.client({
+        username: "api",
+        key: process.env.MAILGUN_API_KEY || "key-yourkeyhere",
+      });
+      const data = {
+        from: "Mailgun Sandbox <postmaster@sandboxf8629624c26849cf8546cd0bc01ee862.mailgun.org>",
+        to: email,
+        subject: "Verify your email for echologator",
+        template: "app email verification"
+      };
+      const verifyEmailResponse = await mg.messages.create("sandboxf8629624c26849cf8546cd0bc01ee862.mailgun.org", data)
+      console.log(`[EXP] Request <POST /verify${query}>returned successfully.`);
+      res.json(verifyEmailResponse);
+    }
+  } catch (error) {
+    console.error(
+      `[EXP] Error returning request <POST /verify${query}>:\n`,
+      error
+    );
+    res.json(`Operation <POST /verify${query}> failed.`);
+  }
+});
 
 // Error handling
-app.get('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {GET}")
-    res.status(404)
-})
+app.get("*", (req, res) => {
+  res.json("404: Path could not be found! COULD NOT {GET}");
+  res.status(404);
+});
 
-app.post('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {POST}")
-    res.status(404)
-})
+app.post("*", (req, res) => {
+  res.json("404: Path could not be found! COULD NOT {POST}");
+  res.status(404);
+});
 
-app.put('*', (req, res) => {
-    res.json("404: Path could not be found! COULD NOT {PUT}")
-    res.status(404)
-})
+app.put("*", (req, res) => {
+  res.json("404: Path could not be found! COULD NOT {PUT}");
+  res.status(404);
+});
 
-app.delete('*', (req, res) => {
-   res.json("404: Path could not be found! COULD NOT {DELETE}")
-   res.status(404)
-})
+app.delete("*", (req, res) => {
+  res.json("404: Path could not be found! COULD NOT {DELETE}");
+  res.status(404);
+});
 
 app.listen(express_port, () => {
-    return console.log(`[EXP] Listening for requests at http://localhost:${express_port}.`)
-})
+  return console.log(
+    `[EXP] Listening for requests at http://localhost:${express_port}.`
+  );
+});
 
 // Some old API routes are commented out for now due to breaking type changes.
 
@@ -347,4 +401,3 @@ app.listen(express_port, () => {
 //         res.json(false)
 //     }
 // })
-
