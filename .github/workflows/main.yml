@@ -40,6 +40,30 @@ jobs:
         run: npx tsc
         working-directory: server/
 
+      - name: Run tests
+        run: npm test
+        working-directory: server/
+
+  compile:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [21.x]
+    
+    steps:
+      - name: Compile TypeScript files
+        run: npx tsc
+        working-directory: server/
+  
+  start:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [21.x]
+    
+    steps:
       - name: Start index.ts in background
         run: npm start &
         working-directory: server/
@@ -48,13 +72,18 @@ jobs:
         run: sleep 5  # Adjust sleep time as needed to allow the server to start
         timeout-minutes: 1
 
-      - name: Run tests
-        run: npm test
+  lint:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [21.x]
+    
+    steps:
+      - name: Lint server side code
+        run: npm run lint:fix
         working-directory: server/
-
-      - name: Linting
-        run: |
-          cd server/ 
-          npm run lint:fix
-          cd ../client/
-          npm run lint:fix
+      
+      - name: Lint client side code
+        run: npm run lint:fix
+        working-directory: client/
