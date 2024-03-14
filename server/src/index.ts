@@ -1,14 +1,13 @@
-import express from 'express'
-import 'dotenv/config'
-import 'geofire-common'
+import express from 'express';
+import 'dotenv/config';
+import 'geofire-common';
 import { Message } from './types/Message';
-import { createMessage } from './actions/createMessage'
-import { createUser } from './actions/createConnectedUser'
-import { toggleUserConnectionStatus, updateUserLocation, updateUserDisplayName } from './actions/updateConnectedUser'
-import { deleteConnectedUserByUID } from './actions/deleteConnectedUser'
-import { getConnectedUserDisplayName } from './actions/getSingleConnectedUser'
+import { createMessage } from './actions/createMessage';
+import { createUser } from './actions/createConnectedUser';
+import { toggleUserConnectionStatus, updateUserLocation, updateUserDisplayName } from './actions/updateConnectedUser';
+import { deleteConnectedUserByUID } from './actions/deleteConnectedUser';
+import { findNearbyUsers, getConnectedUserDisplayName } from './actions/getConnectedUsers';
 import {geohashForLocation} from 'geofire-common';
-import { findNearbyUsers } from './actions/getMultipleConnectedUsers'
 import { ConnectedUser } from './types/User';
 import { getAuth } from 'firebase-admin/auth';
 
@@ -142,32 +141,6 @@ io.on("connection", async (socket: any) => {
       console.error("[WS] Error calling updateLocation:", error.message);
     }
   })
-  socket.on('updateDisplayName', async (newDisplayName, ack) => {
-    try {
-      const success = await updateUserDisplayName(socket.id, newDisplayName)
-      if (success) {
-        console.log(`[WS] Updated display name of user <${socket.id}> to <${newDisplayName}> successfully.`)
-        if (ack) ack("display name updated")
-      } else {
-        throw new Error("updateDisplayName() failed.")
-      }
-    } catch (error) {
-      console.error("[WS] Error calling updateDisplayName:", error.message)
-    }
-  })
-  socket.on('retrieveDisplayName', async (ack) => {
-    try {
-      const success = await getConnectedUserDisplayName(socket.id)
-      if (success) {
-        console.log(`[WS] Retrieved display name of user <${socket.id}> successfully.`)
-        if (ack) ack("display name retrieved")
-      } else {
-        throw new Error("retrieveDisplayName() failed.")
-      }
-    } catch (error) {
-      console.error("[WS] Error calling retrieveDisplayName:", error.message)
-    }
-  })
 })
 socketServer.listen(socket_port, () => {
   console.log(`[WS] Listening for new connections on port ${socket_port}.`);
@@ -193,6 +166,13 @@ app.get("/users", async (req, res) => {
       const userIds = await findNearbyUsers(lat, lon, radius);
       console.log(userIds);
       res.json(userIds);
+    } else if (req.query.userId) {
+      query = "?userId";
+      const userId = req.query.userId;
+      if (typeof userId != "string") throw Error("  [userId] is not a string.");
+      
+      const success = await getConnectedUserDisplayName(userId);
+      if (!success) throw Error("getConnectedUserDisplayName() failed.");
     }
   } catch (error) {
     console.error(
@@ -253,6 +233,15 @@ app.put("/users", async (req, res) => {
 
       const success = await updateUserLocation(userId, lat, lon);
       if (!success) throw Error("     toggleUserConnectionStatus() failed.");
+    } else if (req.query.userId && req.query.displayName) {
+      query = "?userId&displayName";
+      const userId = req.query.userId;
+      if (typeof userId != "string") throw Error("  [userId] is not a string.");
+      const displayName = req.query.displayName;
+      if (typeof displayName != "string") throw Error("  [displayName] is not a string.");
+      
+      const success = await updateUserDisplayName(userId, displayName);
+      if (!success) throw Error("updateDisplayName() failed.");
     }
     console.log(`[EXP] Request <PUT /users${query}> returned successfully.`);
     res.json(`Operation <PUT /user${query}> was handled successfully.`);
