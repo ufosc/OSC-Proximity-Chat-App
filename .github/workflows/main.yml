@@ -51,3 +51,19 @@ jobs:
       - name: Run tests
         run: npm test
         working-directory: server/
+
+  file_existence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check for private.json and .env files
+        run: |
+          if [ -e ".env" ] || [ -e "firebase-secret.json" ]; then
+          echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging.";
+           exit 1;
+          fi
+          
+
+
