@@ -164,14 +164,16 @@ app.get("/users", async (req, res) => {
       const radius = Number(req.query.radius);
 
       const userIds = await findNearbyUsers(lat, lon, radius);
-      console.log(userIds);
       res.json(userIds);
     } else if (req.query.userId) {
       query = "?userId";
       const userId = req.query.userId;
       if (typeof userId != "string") throw Error("  [userId] is not a string.");
-      
+
       const success = await getConnectedUserDisplayName(userId);
+      if (success) {
+        res.json(success);
+      }
       if (!success) throw Error("getConnectedUserDisplayName() failed.");
     }
   } catch (error) {
