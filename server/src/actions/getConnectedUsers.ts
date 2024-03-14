@@ -1,6 +1,16 @@
 import { distanceBetween, geohashForLocation, geohashQueryBounds } from 'geofire-common'
 import { connectedUsersCollection } from '../utilities/firebaseInit'
 
+export const getConnectedUserDisplayName = async (socketID: string) => {
+    try {
+        return connectedUsersCollection.doc(socketID).displayName; 
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+
 export const findNearbyUsers = async (centerLat: number, centerLon: number, radius: number) => {
 // Return an array of nearby userIds (which are also socket ids) given a center latitude and longitude.
 // Latitude and longitude values use degrees with the same bounds as GeoPoints. Radius values use meters.
