@@ -3,7 +3,10 @@ import { connectedUsersCollection } from '../utilities/firebaseInit'
 
 export const getConnectedUserDisplayName = async (socketID: string) => {
     try {
-        return connectedUsersCollection.doc(socketID).displayName; 
+        const snap = await connectedUsersCollection.doc(socketID).get();
+        return {
+          "displayName": snap.data().displayName
+        }
     } catch (error) {
         console.error(error);
         return null;
