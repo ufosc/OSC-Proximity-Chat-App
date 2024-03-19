@@ -1,35 +1,18 @@
-import React from "react";
-import {
-  TextInput,
-  View,
-  StyleSheet,
-  Dimensions,
-  Platform,
-} from "react-native";
-import { useFonts } from "expo-font";
-import { ChatSendButton } from "./CustomButtons";
+import React from 'react'
+import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
+import { ChatInputProps } from '../../types/Props';
+import { ChatSendButton } from './CustomButtons'
 
-interface ChatInputProps {
-  value?: string;
-  onChangeText?: (text: string) => void;
-  invalid?: boolean;
-  onSend?: () => void;
+export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
+    return (
+        <TextInput style={styles.welcomeEmailInput}
+        placeholder='Email'
+        multiline={false}
+        value={value}
+        onChangeText={onChangeText}
+        />
+    )
 }
-
-export const WelcomeEmailInput: React.FC<ChatInputProps> = ({
-  value,
-  onChangeText,
-}) => {
-  return (
-    <TextInput
-      style={styles.welcomeEmailInput}
-      placeholder="Email"
-      multiline={false}
-      value={value}
-      onChangeText={onChangeText}
-    />
-  );
-};
 
 // Maybe will put LogInEmailInput & LogInPasswordInput two together into a single component
 

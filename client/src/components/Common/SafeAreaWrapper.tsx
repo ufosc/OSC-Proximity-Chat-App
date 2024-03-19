@@ -1,10 +1,7 @@
 import React from "react";
 import { useSettings } from "../../contexts/SettingsContext";
 import { SafeAreaView, Platform, StyleSheet, StatusBar } from "react-native";
-
-interface SafeAreaWrapperProps {
-  children: React.ReactNode;
-}
+import { SafeAreaWrapperProps } from "../../utils/types";
 
 const SafeAreaWrapper: React.FC<SafeAreaWrapperProps> = ({ children }) => {
   const settings = useSettings();
