@@ -10,7 +10,7 @@ import { findNearbyUsers, getConnectedUserDisplayName } from './actions/getConne
 import {geohashForLocation} from 'geofire-common';
 import { ConnectedUser } from './types/User';
 import { getAuth } from 'firebase-admin/auth';
-
+import Mailgun from "mailgun.js";
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
