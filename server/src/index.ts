@@ -6,7 +6,7 @@ import { createMessage } from './actions/createMessage';
 import { createUser } from './actions/createConnectedUser';
 import { toggleUserConnectionStatus, updateUserLocation, updateUserDisplayName } from './actions/updateConnectedUser';
 import { deleteConnectedUserByUID } from './actions/deleteConnectedUser';
-import { findNearbyUsers, getConnectedUserDisplayName } from './actions/getConnectedUsers';
+import { findNearbyUsers, getConnectedUser } from './actions/getConnectedUsers';
 import {geohashForLocation} from 'geofire-common';
 import { ConnectedUser } from './types/User';
 import { getAuth } from 'firebase-admin/auth';
@@ -165,17 +165,18 @@ app.get("/users", async (req, res) => {
 
       const userIds = await findNearbyUsers(lat, lon, radius);
       res.json(userIds);
+
     } else if (req.query.userId) {
       query = "?userId";
       const userId = req.query.userId;
       if (typeof userId != "string") throw Error("  [userId] is not a string.");
 
-      const displayName = await getConnectedUserDisplayName(userId);
-      if (displayName) {
-        res.json(displayName);
+      const user = await getConnectedUser(userId);
+      if (user) {
+        res.json(user);
       } else {
         // getConnectedUserDisplayName() will return false is an error is thrown, and print it to console. 
-        throw Error("getConnectedUserDisplayName() failed.");
+        throw Error("getConnectedUser() failed.");
       }
     }
   } catch (error) {
@@ -226,6 +227,7 @@ app.put("/users", async (req, res) => {
 
       const success = await toggleUserConnectionStatus(userId);
       if (!success) throw Error("     toggleUserConnectionStatus() failed.");
+
     } else if (req.query.userId && req.query.lat && req.query.lon) {
       query = "?userId&lat&lon";
       const userId = req.query.userId;
@@ -237,6 +239,7 @@ app.put("/users", async (req, res) => {
 
       const success = await updateUserLocation(userId, lat, lon);
       if (!success) throw Error("     toggleUserConnectionStatus() failed.");
+
     } else if (req.query.userId && req.query.displayName) {
       query = "?userId&displayName";
       const userId = req.query.userId;
@@ -249,6 +252,7 @@ app.put("/users", async (req, res) => {
     }
     console.log(`[EXP] Request <PUT /users${query}> returned successfully.`);
     res.json(`Operation <PUT /user${query}> was handled successfully.`);
+
   } catch (error) {
     console.error(
       `[EXP] Error returning request <PUT /users${query}>:\n`,

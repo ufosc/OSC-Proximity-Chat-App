@@ -1,14 +1,12 @@
 import { distanceBetween, geohashForLocation, geohashQueryBounds } from 'geofire-common'
 import { connectedUsersCollection } from '../utilities/firebaseInit'
 
-export const getConnectedUserDisplayName = async (socketID: string) => {
+export const getConnectedUser = async (socketID: string) => {
     try {
         const user = await connectedUsersCollection.doc(socketID).get();
-        return {
-          "displayName": user.data().displayName
-        }
+        return user.data();
     } catch (error) {
-        console.error("getConnectedUserDisplayName() failed:", error.message);
+        console.error("getConnectedUser failed:", error.message);
         return false;
     }
 }
