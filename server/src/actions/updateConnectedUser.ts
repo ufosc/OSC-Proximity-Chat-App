@@ -26,3 +26,13 @@ export const updateUserLocation = async (socketID: string, lat: number, lon: num
         return false
     }
 }
+
+export const updateUserDisplayName = async (socketID: string, displayName: string) => {
+    try {
+        await connectedUsersCollection.doc(socketID).update({ displayName: displayName })
+        return true
+    } catch (error) {
+        console.error(error.message)
+        return false
+    }
+}
