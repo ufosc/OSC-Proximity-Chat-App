@@ -251,7 +251,7 @@ app.put("/users", async (req, res) => {
       if (!success) throw Error("updateDisplayName() failed.");
     }
     console.log(`[EXP] Request <PUT /users${query}> returned successfully.`);
-    res.json(`Operation <PUT /user${query}> was handled successfully.`);
+    res.json(`Operation <PUT /users${query}> was handled successfully.`);
 
   } catch (error) {
     console.error(
