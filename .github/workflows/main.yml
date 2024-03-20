@@ -87,3 +87,17 @@ jobs:
       - name: Lint client side code
         run: npm run lint:fix
         working-directory: client/
+
+  file_existence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check for private.json and .env files
+        run: |
+          if [ -e "server/firebase-secret.json" ] || [ -e ".env"]; then
+          echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging.";
+           exit 1;
+          fi
+

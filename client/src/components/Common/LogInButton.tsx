@@ -2,9 +2,10 @@ import { router } from "expo-router";
 import React from "react";
 import { useFonts } from "expo-font";
 import { StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
-import { SignUpButtonProps } from "../../utils/types";
+import { LogInButtonProps } from "../../types/Props";
 
-const SignUpButton: React.FC<SignUpButtonProps> = ({ onPress }) => {
+
+const LogInButton: React.FC<LogInButtonProps> = ({ onPress }) => {
 
   const [fontsLoaded, fontError] = useFonts({
     'Gilroy-ExtraBold': require('../../../assets/fonts/Gilroy-ExtraBold.otf'),
@@ -17,12 +18,14 @@ const SignUpButton: React.FC<SignUpButtonProps> = ({ onPress }) => {
 
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.button_text}>Sign Up</Text>
+      <Text style={styles.button_text}>Log In</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
+  
+
   button: {
     backgroundColor: "#5dbea3",
     width: Dimensions.get("window").width * 0.5,
@@ -41,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpButton;
+export default LogInButton;

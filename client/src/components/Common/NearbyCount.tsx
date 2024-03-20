@@ -6,10 +6,7 @@ import {
     Text,
     Dimensions
 } from 'react-native';
-
-interface CounterProps {
-    count: number;
-}
+import { CounterProps } from '../../types/Props';
 
 const NearbyCount: React.FC<CounterProps> = ({count}) => {
     return (
