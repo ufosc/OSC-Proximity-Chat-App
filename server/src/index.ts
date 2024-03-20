@@ -170,11 +170,13 @@ app.get("/users", async (req, res) => {
       const userId = req.query.userId;
       if (typeof userId != "string") throw Error("  [userId] is not a string.");
 
-      const success = await getConnectedUserDisplayName(userId);
-      if (success) {
-        res.json(success);
+      const displayName = await getConnectedUserDisplayName(userId);
+      if (displayName) {
+        res.json(displayName);
+      } else {
+        // getConnectedUserDisplayName() will return false is an error is thrown, and print it to console. 
+        throw Error("getConnectedUserDisplayName() failed.");
       }
-      if (!success) throw Error("getConnectedUserDisplayName() failed.");
     }
   } catch (error) {
     console.error(

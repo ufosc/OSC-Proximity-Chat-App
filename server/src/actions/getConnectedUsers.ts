@@ -3,16 +3,15 @@ import { connectedUsersCollection } from '../utilities/firebaseInit'
 
 export const getConnectedUserDisplayName = async (socketID: string) => {
     try {
-        const snap = await connectedUsersCollection.doc(socketID).get();
+        const user = await connectedUsersCollection.doc(socketID).get();
         return {
-          "displayName": snap.data().displayName
+          "displayName": user.data().displayName
         }
     } catch (error) {
-        console.error(error);
-        return null;
+        console.error("getConnectedUserDisplayName() failed:", error.message);
+        return false;
     }
 }
-
 
 export const findNearbyUsers = async (centerLat: number, centerLon: number, radius: number) => {
 // Return an array of nearby userIds (which are also socket ids) given a center latitude and longitude.
