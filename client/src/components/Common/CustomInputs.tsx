@@ -16,7 +16,7 @@ export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeTex
 
 // Maybe will put LogInEmailInput & LogInPasswordInput two together into a single component
 
-export const LogInEmailInput: React.FC<ChatInputProps> = ({
+export const LogInEmailInput: React.FC<ChatInputProps & { invalid: boolean}> = ({
   value,
   onChangeText,
   invalid,
@@ -32,7 +32,7 @@ export const LogInEmailInput: React.FC<ChatInputProps> = ({
   );
 };
 
-export const LogInPasswordInput: React.FC<ChatInputProps> = ({
+export const LogInPasswordInput: React.FC<ChatInputProps & { invalid: boolean}> = ({
   value,
   onChangeText,
   invalid,
@@ -98,7 +98,7 @@ export const SignUpConfirmPasswordInput: React.FC<ChatInputProps> = ({
   );
 };
 
-export const ChatInput: React.FC<ChatInputProps> = ({
+export const ChatInput: React.FC<ChatInputProps & { onSend: () => void }> = ({
   value,
   onChangeText,
   onSend,
