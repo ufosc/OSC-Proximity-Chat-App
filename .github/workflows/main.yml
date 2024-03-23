@@ -1,103 +1,79 @@
-name: Unit Tests
+name: CI
 
 on: [pull_request]
 
 jobs:
-  test:
+  server-unit-tests:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [21.x]
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: npm ci
-        working-directory: server/
-
-      - name: Create subdirectory for service account JSON
-        run: |
-          mkdir private_key
-        working-directory: server/src
-
-      - name: Create service account JSON
-        id: create-service-account-json
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "private.json"
-          json: ${{ secrets.SERVICE_ACCOUNT_SECRET }}
-          dir: 'server/src/private_key/'
-        
-      - name: Compile TypeScript files
-        run: npx tsc
-        working-directory: server/
-
-      - name: Run tests
-        run: npm test
-        working-directory: server/
-
-  compile:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [21.x]
-    
-    steps:
-      - name: Compile TypeScript files
-        run: npx tsc
-        working-directory: server/
-  
-  start:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [21.x]
-    
-    steps:
-      - name: Start index.ts in background
-        run: npm start &
-        working-directory: server/
-
-      - name: Wait for server to start
-        run: sleep 5  # Adjust sleep time as needed to allow the server to start
-        timeout-minutes: 1
-
-  lint:
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [21.x]
-    
-    steps:
-      - name: Lint server side code
-        run: npm run lint:fix
-        working-directory: server/
-      
-      - name: Lint client side code
-        run: npm run lint:fix
-        working-directory: client/
-
-  file_existence:
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Check for private.json and .env files
-        run: |
-          if [ -e "server/firebase-secret.json" ] || [ -e ".env"]; then
-          echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging.";
-           exit 1;
-          fi
+      - name: Install dependencies
+        run: npm install
+        working-directory: server/
 
+      - name: Compile TypeScript files
+        run: npx tsc
+        working-directory: server/
+
+      - name: Run server tests
+        run: npm test
+        working-directory: server/
+
+  lint-server:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [21.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: server/
+
+      - name: Lint server-side code
+        run: npm run lint:fix
+        working-directory: server/
+
+  lint-client:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [21.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: client/
+
+      - name: Lint client-side code
+        run: npm run lint:fix
+        working-directory: client/
+
+  file-existence-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check for sensitive files
+        run: |
+          if [ -e ".env" ] || [ -e "firebase-secret.json" ]; then
+            echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging.";
+            exit 1;
+          fi
