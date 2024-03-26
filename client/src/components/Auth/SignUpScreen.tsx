@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-around",
     alignItems: "center",
-    height: Dimensions.get("window").height * 0.15,
+    gap: Dimensions.get("window").height * 0.02,
   },
 
   button_container: {
