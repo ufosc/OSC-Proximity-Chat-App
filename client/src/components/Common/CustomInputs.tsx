@@ -1,22 +1,32 @@
-import React from 'react'
-import { TextInput, View, StyleSheet, Dimensions, Platform } from 'react-native'
-import { ChatInputProps } from '../../types/Props';
-import { ChatSendButton } from './CustomButtons'
+import React from "react";
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  Dimensions,
+  Platform,
+} from "react-native";
+import { ChatInputProps } from "../../types/Props";
+import { ChatSendButton } from "./CustomButtons";
 
-export const WelcomeEmailInput: React.FC<ChatInputProps> = ({ value, onChangeText }) => {
-    return (
-        <TextInput style={styles.welcomeEmailInput}
-        placeholder='Email'
-        multiline={false}
-        value={value}
-        onChangeText={onChangeText}
-        />
-    )
-}
+export const WelcomeEmailInput: React.FC<ChatInputProps> = ({
+  value,
+  onChangeText,
+}) => {
+  return (
+    <TextInput
+      style={styles.welcomeEmailInput}
+      placeholder="Email"
+      multiline={false}
+      value={value}
+      onChangeText={onChangeText}
+    />
+  );
+};
 
 // Maybe will put LogInEmailInput & LogInPasswordInput two together into a single component
 
-export const LogInEmailInput: React.FC<ChatInputProps & { invalid: boolean}> = ({
+export const EmailInput: React.FC<ChatInputProps & { invalid: boolean }> = ({
   value,
   onChangeText,
   invalid,
@@ -32,7 +42,7 @@ export const LogInEmailInput: React.FC<ChatInputProps & { invalid: boolean}> = (
   );
 };
 
-export const LogInPasswordInput: React.FC<ChatInputProps & { invalid: boolean}> = ({
+export const PasswordInput: React.FC<ChatInputProps & { invalid: boolean }> = ({
   value,
   onChangeText,
   invalid,
@@ -50,39 +60,7 @@ export const LogInPasswordInput: React.FC<ChatInputProps & { invalid: boolean}> 
 };
 
 // sign up screen inputs
-
-export const SignUpEmailInput: React.FC<ChatInputProps> = ({
-  value,
-  onChangeText,
-}) => {
-  return (
-    <TextInput
-      style={styles.loginInput}
-      placeholder="Email"
-      multiline={false}
-      value={value}
-      onChangeText={onChangeText}
-    />
-  );
-};
-
-export const SignUpPasswordInput: React.FC<ChatInputProps> = ({
-  value,
-  onChangeText,
-}) => {
-  return (
-    <TextInput
-      style={styles.loginInput}
-      placeholder="Password"
-      multiline={false}
-      value={value}
-      onChangeText={onChangeText}
-      secureTextEntry={true}
-    />
-  );
-};
-
-export const SignUpConfirmPasswordInput: React.FC<ChatInputProps> = ({
+export const ConfirmPasswordInput: React.FC<ChatInputProps> = ({
   value,
   onChangeText,
 }) => {

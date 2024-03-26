@@ -11,7 +11,7 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
+import { EmailInput, PasswordInput } from "../Common/CustomInputs";
 import { LogInButton, ExternalLoginButton } from "../Common/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/store";
@@ -101,12 +101,12 @@ const LoginScreen = () => {
             <Text style={styles.subheader_text}>How have you been?</Text>
           </View>
           <View style={styles.input_container}>
-            <LogInEmailInput
+            <EmailInput
               value={email}
               onChangeText={(text) => setEmail(text)}
               invalid={invalidLogin}
             />
-            <LogInPasswordInput
+            <PasswordInput
               value={password}
               onChangeText={(text) => setPassword(text)}
               invalid={invalidLogin}

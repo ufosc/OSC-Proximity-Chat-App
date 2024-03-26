@@ -12,11 +12,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import {
-  SignUpEmailInput,
-  SignUpPasswordInput,
-  SignUpConfirmPasswordInput,
+  EmailInput,
+  PasswordInput,
+  ConfirmPasswordInput,
 } from "../Common/CustomInputs";
-import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
 import SignUpButton from "../Common/SignUpButton";
 import {
   AuthenticationErrorMessage,
@@ -41,6 +40,7 @@ const SignUpScreen = () => {
   const [confirmPassword, setConfirmPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] =
     React.useState<AuthenticationResponse>();
+  const [invalidLogin, invalidateLogin] = React.useState<boolean>(false);
 
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
@@ -70,20 +70,20 @@ const SignUpScreen = () => {
     return null;
   }
 
-  const handleGoogleSignIn = async () => {
-    console.log("Google Sign In");
+  const handleGoogleSignUp = async () => {
+    console.log("Google Sign Up");
   };
 
   const handleFacebookSignIn = async () => {
-    console.log("Facebook Sign In");
+    console.log("Facebook Sign Up");
   };
 
-  const handleAppleSignIn = async () => {
-    console.log("Apple Sign In");
+  const handleAppleSignUp = async () => {
+    console.log("Apple Sign Up");
   };
 
-  const handleGithubSignIn = async () => {
-    console.log("Github Sign In");
+  const handleGithubSignUp = async () => {
+    console.log("Github Sign Up");
   };
 
   return (
@@ -106,32 +106,26 @@ const SignUpScreen = () => {
             <Text style={styles.subheader_text}>Talk to people near you</Text>
           </View>
           <View style={styles.input_container}>
-            <LogInEmailInput
+            <EmailInput
               value={email}
               onChangeText={(text) => setEmail(text)}
-              // invalid={invalidLogin}
+              invalid={invalidLogin}
             />
-            <LogInPasswordInput
+            <PasswordInput
               value={password}
               onChangeText={(text) => setPassword(text)}
-              //invalid={invalidLogin}
+              invalid={invalidLogin}
             />
-            <LogInPasswordInput
+            <PasswordInput
               value={password}
-              onChangeText={(text) => setPassword(text)}
-              //invalid={invalidLogin}
+              onChangeText={(text) => setConfirmPassword(text)}
+              invalid={invalidLogin}
             />
           </View>
           <View style={styles.button_container}>
             <LogInButton onPress={onHandleSubmit} />
           </View>
-          <TouchableOpacity>
-            <Text
-              style={[styles.regular_text, { textDecorationLine: "underline" }]}
-            >
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
+
           <View style={styles.divider_container}>
             <View style={styles.horizontal_line} />
             <View>
@@ -144,11 +138,11 @@ const SignUpScreen = () => {
 
           <View style={styles.externalLinkContainer}>
             <ExternalLoginButton
-              onPress={handleGoogleSignIn}
+              onPress={handleGoogleSignUp}
               companyName="google"
             />
             <ExternalLoginButton
-              onPress={handleAppleSignIn}
+              onPress={handleAppleSignUp}
               companyName="apple"
             />
             <ExternalLoginButton
@@ -156,14 +150,14 @@ const SignUpScreen = () => {
               companyName="facebook"
             />
             <ExternalLoginButton
-              onPress={handleGithubSignIn}
+              onPress={handleGithubSignUp}
               companyName="github"
             />
           </View>
           <View style={styles.footer_text_container}>
-            <Text style={styles.footer_text}>Don't have an account?</Text>
+            <Text style={styles.footer_text}>Already have an account?</Text>
             <TouchableOpacity
-              onPress={() => router.replace({ pathname: "/signup" })}
+              onPress={() => router.replace({ pathname: "/login" })}
             >
               <Text
                 style={[
@@ -171,7 +165,7 @@ const SignUpScreen = () => {
                   { color: "#5dbea3", textDecorationLine: "underline" },
                 ]}
               >
-                Sign up
+                Log in
               </Text>
             </TouchableOpacity>
           </View>
@@ -191,45 +185,45 @@ const SignUpScreen = () => {
     // Make an account with Google (TEMP)
   );
 
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-        >
-          <View style={styles.main_container}>
-            <View style={styles.header_container}>
-              <Text style={styles.header_text}>Welcome!</Text>
-            </View>
-            <View style={styles.input_container}>
-              <SignUpEmailInput
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-              />
-              <SignUpPasswordInput
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-              />
-              <SignUpConfirmPasswordInput
-                value={confirmPassword}
-                onChangeText={(text) => setConfirmPassword(text)}
-              />
-            </View>
-            <View style={styles.button_container}>
-              <SignUpButton onPress={onHandleSubmit} />
-            </View>
-          </View>
-        </KeyboardAvoidingView>
+  // return (
+  //   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  //     <View>
+  //       <KeyboardAvoidingView
+  //         behavior={Platform.OS === "ios" ? "padding" : undefined}
+  //       >
+  //         <View style={styles.main_container}>
+  //           <View style={styles.header_container}>
+  //             <Text style={styles.header_text}>Welcome!</Text>
+  //           </View>
+  //           <View style={styles.input_container}>
+  //             <SignUpEmailInput
+  //               value={email}
+  //               onChangeText={(text) => setEmail(text)}
+  //             />
+  //             <SignUpPasswordInput
+  //               value={password}
+  //               onChangeText={(text) => setPassword(text)}
+  //             />
+  //             <SignUpConfirmPasswordInput
+  //               value={confirmPassword}
+  //               onChangeText={(text) => setConfirmPassword(text)}
+  //             />
+  //           </View>
+  //           <View style={styles.button_container}>
+  //             <SignUpButton onPress={onHandleSubmit} />
+  //           </View>
+  //         </View>
+  //       </KeyboardAvoidingView>
 
-        <View style={styles.error_container}>
-          <AuthenticationErrorMessage
-            response={authResponse}
-            onPress={() => setAuthResponse(undefined)}
-          />
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  );
+  //       <View style={styles.error_container}>
+  //         <AuthenticationErrorMessage
+  //           response={authResponse}
+  //           onPress={() => setAuthResponse(undefined)}
+  //         />
+  //       </View>
+  //     </View>
+  //   </TouchableWithoutFeedback>
+  // );
 };
 
 const styles = StyleSheet.create({
@@ -245,7 +239,6 @@ const styles = StyleSheet.create({
     gap: Dimensions.get("window").height * 0.029,
   },
 
-  //This is an example of where the error message could be
   error_container: {
     display: "flex",
     justifyContent: "space-around",
