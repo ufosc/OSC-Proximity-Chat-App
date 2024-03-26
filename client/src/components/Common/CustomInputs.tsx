@@ -60,13 +60,12 @@ export const PasswordInput: React.FC<ChatInputProps & { invalid: boolean }> = ({
 };
 
 // sign up screen inputs
-export const ConfirmPasswordInput: React.FC<ChatInputProps> = ({
-  value,
-  onChangeText,
-}) => {
+export const ConfirmPasswordInput: React.FC<
+  ChatInputProps & { invalid: boolean }
+> = ({ value, onChangeText, invalid }) => {
   return (
     <TextInput
-      style={styles.loginInput}
+      style={[styles.loginInput, invalid && styles.invalidLoginInput]}
       placeholder="Confirm Password"
       multiline={false}
       value={value}

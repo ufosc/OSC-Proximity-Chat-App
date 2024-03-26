@@ -40,7 +40,10 @@ const SignUpScreen = () => {
   const [confirmPassword, setConfirmPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] =
     React.useState<AuthenticationResponse>();
-  const [invalidLogin, invalidateLogin] = React.useState<boolean>(false);
+  //grays out password on password error
+  const [invalidPassword, invalidatePassword] = React.useState<boolean>(false);
+  //grays out email on email error
+  const [invalidEmail, invalidateEmail] = React.useState<boolean>(false);
 
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
@@ -49,6 +52,7 @@ const SignUpScreen = () => {
       const nonmatching_password_error: AuthenticationResponse = {
         error: new CustomError("Invalid password", "Passwords do not match"),
       };
+      invalidatePassword(true);
       setAuthResponse(nonmatching_password_error);
 
       return;
@@ -108,18 +112,24 @@ const SignUpScreen = () => {
           <View style={styles.input_container}>
             <EmailInput
               value={email}
-              onChangeText={(text) => setEmail(text)}
-              invalid={invalidLogin}
+              onChangeText={(text) => {
+                invalidateEmail(false);
+                setEmail(text);
+              }}
+              invalid={invalidEmail}
             />
             <PasswordInput
               value={password}
-              onChangeText={(text) => setPassword(text)}
-              invalid={invalidLogin}
+              onChangeText={(text) => {
+                invalidatePassword(false);
+                setPassword(text);
+              }}
+              invalid={invalidPassword}
             />
-            <PasswordInput
-              value={password}
+            <ConfirmPasswordInput
+              value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
-              invalid={invalidLogin}
+              invalid={invalidPassword}
             />
           </View>
           <View style={styles.button_container}>
@@ -269,7 +279,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     width: "100%",
     marginBottom: Dimensions.get("window").height * 0.019,
-    marginTop: Dimensions.get("window").height * 0.2,
+    marginTop: Dimensions.get("window").height * 0.17,
   },
 
   header_text: {
