@@ -31,8 +31,8 @@ import { LogInButton, ExternalLoginButton } from "../Common/AuthButtons";
 const SignUpScreen = () => {
   const router = useRouter();
   const [fontsLoaded, fontError] = useFonts({
-    "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
-    "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
+    "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
+    "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
   });
 
   const { inputEmail } = useLocalSearchParams();
