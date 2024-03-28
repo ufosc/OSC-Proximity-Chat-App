@@ -45,10 +45,12 @@ const decodeFirebaseError = (error: FirebaseError) => {
       return "Too many requests, please try again later";
     case "auth/email-already-in-use":
       return "Email already in use";
+    case "auth/invalid-email":
+      return "Invalid email";
     default:
       return "Unknown error";
   }
-}
+};
 
 const decodeCustomError = (error: CustomError) => {
   return error.message;

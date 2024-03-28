@@ -16,7 +16,7 @@ import {
   PasswordInput,
   ConfirmPasswordInput,
 } from "../Common/CustomInputs";
-import SignUpButton from "../Common/SignUpButton";
+
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
@@ -25,7 +25,7 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
 import { ArrowLeftCircle } from "react-native-feather";
-import { LogInButton, ExternalLoginButton } from "../Common/AuthButtons";
+import { SignUpButton, ExternalLoginButton } from "../Common/AuthButtons";
 
 const SignUpScreen = () => {
   const router = useRouter();
@@ -133,7 +133,7 @@ const SignUpScreen = () => {
             />
           </View>
           <View style={styles.button_container}>
-            <LogInButton onPress={onHandleSubmit} />
+            <SignUpButton onPress={onHandleSubmit} />
           </View>
 
           <View style={styles.divider_container}>
