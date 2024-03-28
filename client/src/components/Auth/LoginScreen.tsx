@@ -11,8 +11,8 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import { LogInEmailInput, LogInPasswordInput } from "../Common/CustomInputs";
-import { LogInButton, ExternalLoginButton } from "../Common/AuthButtons";
+import { EmailInput, PasswordInput } from "../Common/CustomInputs";
+import { LogInButton, ExternalAuthButton } from "../Common/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/store";
 import {
@@ -101,12 +101,12 @@ const LoginScreen = () => {
             <Text style={styles.subheader_text}>How have you been?</Text>
           </View>
           <View style={styles.input_container}>
-            <LogInEmailInput
+            <EmailInput
               value={email}
               onChangeText={(text) => setEmail(text)}
               invalid={invalidLogin}
             />
-            <LogInPasswordInput
+            <PasswordInput
               value={password}
               onChangeText={(text) => setPassword(text)}
               invalid={invalidLogin}
@@ -133,19 +133,19 @@ const LoginScreen = () => {
           </View>
 
           <View style={styles.externalLinkContainer}>
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleGoogleSignIn}
               companyName="google"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleAppleSignIn}
               companyName="apple"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleFacebookSignIn}
               companyName="facebook"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleGithubSignIn}
               companyName="github"
             />
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-around",
     alignItems: "center",
-    height: Dimensions.get("window").height * 0.15,
+    gap: Dimensions.get("window").height * 0.02,
   },
 
   button_container: {
