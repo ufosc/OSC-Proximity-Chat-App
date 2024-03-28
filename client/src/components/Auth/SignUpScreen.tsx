@@ -32,7 +32,6 @@ const SignUpScreen = () => {
     "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
   });
 
-  const { inputEmail } = useLocalSearchParams();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [confirmPassword, setConfirmPassword] = React.useState<string>("");
