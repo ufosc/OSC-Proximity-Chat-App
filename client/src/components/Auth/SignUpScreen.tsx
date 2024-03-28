@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
-  KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
@@ -26,6 +23,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
 import { ArrowLeftCircle } from "react-native-feather";
 import { SignUpButton, ExternalAuthButton } from "../Common/AuthButtons";
+import React from "react";
 
 const SignUpScreen = () => {
   const router = useRouter();
@@ -189,51 +187,9 @@ const SignUpScreen = () => {
         </View>
       </View>
     </TouchableWithoutFeedback>
-
-    // Log In
-
-    // Make an account with Google (TEMP)
   );
 
-  // return (
-  //   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-  //     <View>
-  //       <KeyboardAvoidingView
-  //         behavior={Platform.OS === "ios" ? "padding" : undefined}
-  //       >
-  //         <View style={styles.main_container}>
-  //           <View style={styles.header_container}>
-  //             <Text style={styles.header_text}>Welcome!</Text>
-  //           </View>
-  //           <View style={styles.input_container}>
-  //             <SignUpEmailInput
-  //               value={email}
-  //               onChangeText={(text) => setEmail(text)}
-  //             />
-  //             <SignUpPasswordInput
-  //               value={password}
-  //               onChangeText={(text) => setPassword(text)}
-  //             />
-  //             <SignUpConfirmPasswordInput
-  //               value={confirmPassword}
-  //               onChangeText={(text) => setConfirmPassword(text)}
-  //             />
-  //           </View>
-  //           <View style={styles.button_container}>
-  //             <SignUpButton onPress={onHandleSubmit} />
-  //           </View>
-  //         </View>
-  //       </KeyboardAvoidingView>
 
-  //       <View style={styles.error_container}>
-  //         <AuthenticationErrorMessage
-  //           response={authResponse}
-  //           onPress={() => setAuthResponse(undefined)}
-  //         />
-  //       </View>
-  //     </View>
-  //   </TouchableWithoutFeedback>
-  // );
 };
 
 const styles = StyleSheet.create({
