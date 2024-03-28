@@ -110,7 +110,7 @@ export const SignUpButton: React.FC<{ onPress?: () => void }> = ({
   );
 };
 
-export const ExternalLoginButton: React.FC<{
+export const ExternalAuthButton: React.FC<{
   onPress?: () => void;
   companyName: string;
   imageSource?: ImageSourcePropType;

@@ -25,7 +25,7 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/store";
 import { ArrowLeftCircle } from "react-native-feather";
-import { SignUpButton, ExternalLoginButton } from "../Common/AuthButtons";
+import { SignUpButton, ExternalAuthButton } from "../Common/AuthButtons";
 
 const SignUpScreen = () => {
   const router = useRouter();
@@ -147,19 +147,19 @@ const SignUpScreen = () => {
           </View>
 
           <View style={styles.externalLinkContainer}>
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleGoogleSignUp}
               companyName="google"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleAppleSignUp}
               companyName="apple"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleFacebookSignIn}
               companyName="facebook"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleGithubSignUp}
               companyName="github"
             />

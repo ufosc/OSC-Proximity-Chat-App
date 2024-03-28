@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { EmailInput, PasswordInput } from "../Common/CustomInputs";
-import { LogInButton, ExternalLoginButton } from "../Common/AuthButtons";
+import { LogInButton, ExternalAuthButton } from "../Common/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/store";
 import {
@@ -133,19 +133,19 @@ const LoginScreen = () => {
           </View>
 
           <View style={styles.externalLinkContainer}>
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleGoogleSignIn}
               companyName="google"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleAppleSignIn}
               companyName="apple"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleFacebookSignIn}
               companyName="facebook"
             />
-            <ExternalLoginButton
+            <ExternalAuthButton
               onPress={handleGithubSignIn}
               companyName="github"
             />
