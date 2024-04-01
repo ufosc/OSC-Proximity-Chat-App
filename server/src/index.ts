@@ -11,6 +11,7 @@ import {geohashForLocation} from 'geofire-common';
 import { ConnectedUser } from './types/User';
 import { getAuth } from 'firebase-admin/auth';
 import Mailgun from "mailgun.js";
+import { scheduleCron } from './actions/deleter';
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -30,6 +31,9 @@ const io = new Server(socketServer, {
     methods: ["GET", "POST"],
   },
 });
+
+// Begin searching and collecting Garbage (old messages)
+scheduleCron();
 
 // Firebase JWT Authorization Custom Middleware
 io.use(async (socket, next) => {
