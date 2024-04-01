@@ -91,7 +91,26 @@ export const LogInButton: React.FC<{ onPress?: () => void }> = ({
   );
 };
 
-export const ExternalLoginButton: React.FC<{
+export const SignUpButton: React.FC<{ onPress?: () => void }> = ({
+  onPress,
+}) => {
+  const [fontsLoaded, fontError] = useFonts({
+    "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
+    "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
+  });
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  return (
+    <TouchableOpacity style={styles.login_button} onPress={onPress}>
+      <Text style={styles.button_text}>Sign Up</Text>
+    </TouchableOpacity>
+  );
+};
+
+export const ExternalAuthButton: React.FC<{
   onPress?: () => void;
   companyName: string;
   imageSource?: ImageSourcePropType;
