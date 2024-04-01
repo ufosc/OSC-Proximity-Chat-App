@@ -13,6 +13,7 @@ import { getAuth } from 'firebase-admin/auth';
 import Mailgun from "mailgun.js";
 import { messagesCollection } from './utilities/firebaseInit';
 import { calculateDistanceInMeters } from './actions/calculateDistance';
+import { scheduleCron } from './actions/deleter';
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -32,6 +33,9 @@ const io = new Server(socketServer, {
     methods: ["GET", "POST"],
   },
 });
+
+// Begin searching and collecting Garbage (old messages)
+scheduleCron();
 
 // Firebase JWT Authorization Custom Middleware
 io.use(async (socket, next) => {
