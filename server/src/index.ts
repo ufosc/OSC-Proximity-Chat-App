@@ -32,9 +32,6 @@ const io = new Server(socketServer, {
   },
 });
 
-// Begin searching and collecting Garbage (old messages)
-scheduleCron();
-
 // Firebase JWT Authorization Custom Middleware
 io.use(async (socket, next) => {
   const token = socket.handshake.auth.token;
@@ -343,6 +340,9 @@ app.listen(express_port, () => {
     `[EXP] Listening for requests at http://localhost:${express_port}.`
   );
 });
+
+// Begin searching and collecting Garbage (old messages)
+scheduleCron();
 
 // Some old API routes are commented out for now due to breaking type changes.
 

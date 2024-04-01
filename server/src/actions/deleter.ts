@@ -15,8 +15,12 @@ export const scheduleCron = () => {
         q.on('value', (querySnapshot)=> {
             querySnapshot.forEach(async (doc) => {
                 //Delete the doc here
-                console.log(doc.id)
-                await doc.ref.delete()
+                console.log(doc.uid)
+                await doc.ref.delete().then(() => {
+                    console.log("Document successfully deleted!")
+                }).catch((error) => {
+                    console.error("Error removing document:", error)
+                })
             })
         })
     })
