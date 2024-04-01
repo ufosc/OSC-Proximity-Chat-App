@@ -17,7 +17,7 @@ import MessageChannel from "../Common/MessageChannel";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
 import { SignOutButton } from "../Common/AuthButtons"
-import { MessageType } from "../../types/Message";
+import { Message } from "../../types/Message";
 import { LocationProvider } from "../../contexts/LocationContext";
 import { useSocket } from "../../contexts/SocketContext";
 import { useSettings } from "../../contexts/SettingsContext";
@@ -38,42 +38,51 @@ const ChatScreen = () => {
   // Note: To prevent complexity, all user information is grabbed from different contexts and services. If we wanted most information inside of UserContext, we would have to import contexts within contexts and have state change as certain things mount, which could cause errors that are difficult to pinpoint.
   
   // Message loading and sending logic
-  const [messages, setMessages] = React.useState<MessageType[]>([]);
+  const [messages, setMessages] = React.useState<Message[]>([]);
   const [messageContent, setMessageContent] = React.useState<string>("");
 
   useEffect(() => {
-    if (socket === null) return // This line might need to be changed.
-    socket.on("message", (data: MessageType, ack) => {
-      console.log("Message recieved from server:", data);
+    if (socket === null) return; // This line might need to be changed
+  
+    const handleMessage = (data: any, ack?: any) => {
+      console.log("Message received from server:", data);
+      setMessages((prevMessages) => [...prevMessages, data]);
       if (ack) console.log("Server acknowledged message:", ack);
-      setMessages([...messages, data])
-    })
+    };
+  
+    socket.on("message", handleMessage);
+  
     return () => {
-      socket.off()
-    }
-  }, [messages])
+      socket.off("message", handleMessage);
+    };
+  }, [messages, socket]);
 
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
     if (messageContent.trim() !== "") {
-      const newMessage: MessageType = {
+      const newMessage: Message = {
         author: {
-          uid: String(userAuth.userAuthInfo?.uid), 
+          uid: String(userAuth.userAuthInfo?.uid),
+          displayName: "Anonymous",
         },
         msgId: Crypto.randomUUID(), 
         msgContent: messageContent.trim(),
-        timeSent: Date.now(),
+        timestamp: Date.now(),
+        lastUpdated: Date.now(),
         location: {
           lat: Number(location?.latitude),
           lon: Number(location?.longitude)
-        }
+        },
+        isReply: false,
+        replyTo: "",
+        reactions: {},
       }
 
       if (socket !== null) {
         socket.emit("message", newMessage)
       }
+
       
-      setMessages([...messages, newMessage]);
       setMessageContent("");
     }
   };
