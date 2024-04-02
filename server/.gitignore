@@ -133,7 +133,6 @@ dist
 build
 
 # Private Key JSON
-./private_key/*
 ./firebase-secrets.json
 
 # Other
