@@ -11,6 +11,8 @@ import {geohashForLocation} from 'geofire-common';
 import { ConnectedUser } from './types/User';
 import { getAuth } from 'firebase-admin/auth';
 import Mailgun from "mailgun.js";
+import { messagesCollection } from './utilities/firebaseInit';
+import { calculateDistanceInMeters } from './actions/calculateDistance';
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -68,9 +70,35 @@ io.on("connection", async (socket: any) => {
   await createUser(defaultConnectedUser);
   await toggleUserConnectionStatus(socket.id);
 
+  const observer = messagesCollection.where("lastUpdated", ">", Date.now()).onSnapshot((querySnapshot) => {
+    querySnapshot.docChanges().forEach((change) => {
+
+      if (change.type === "added"){
+        console.log("New message: ", change.doc.data());
+      
+        const messageLat = change.doc.data().location.lat;
+        const messageLon = change.doc.data().location.lon;
+
+        const userLat = defaultConnectedUser.location.lat;
+        const userLon = defaultConnectedUser.location.lon;
+
+        const distance = calculateDistanceInMeters(messageLat, messageLon, userLat, userLon);
+
+        if (distance < 300) {
+          console.log("Message is within 300m of user");
+          socket.emit("message", change.doc.data());
+        } else {
+          console.log("Message is not within 300m of user");
+        }
+      }
+
+    });
+  });
+
   socket.on("disconnect", () => {
     console.log(`[WS] User <${socket.id}> exited.`);
     deleteConnectedUserByUID(socket.id);
+    observer();
   });
   socket.on("ping", (ack) => {
     // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
@@ -80,46 +108,9 @@ io.on("connection", async (socket: any) => {
   socket.on("message", async (message: Message, ack) => {
     // message post - when someone sends a message
 
-    console.log(`[WS] Recieved message from user <${socket.id}>.`);
-    console.log(message);
     try {
-      if (isNaN(message.timeSent))
-        throw new Error("The timeSent parameter must be a valid number.");
-      if (isNaN(message.location.lat))
-        throw new Error("The lat parameter must be a valid number.");
-      if (isNaN(message.location.lon))
-        throw new Error("The lon parameter must be a valid number.");
-
-      if (
-        message.location.geohash == undefined ||
-        message.location.geohash === ""
-      ) {
-        message.location.geohash = geohashForLocation([
-          Number(message.location.lat),
-          Number(message.location.lon),
-        ]);
-        console.log(`New geohash generated: ${message.location.geohash}`);
-      }
-
-      const status = await createMessage(message);
-      if (status === false) throw new Error("Error creating message: ");
-
-      // Get nearby users and push the message to them.
-      const nearbyUserSockets = await findNearbyUsers(
-        Number(message.location.lat),
-        Number(message.location.lon),
-        Number(process.env.message_outreach_radius)
-      );
-      for (const recievingSocket of nearbyUserSockets) {
-        // Don't send the message to the sender (who will be included in list of nearby users).
-        if (recievingSocket === socket.id) {
-          continue;
-        } else {
-          console.log(`Sending new message to socket ${recievingSocket}`);
-          socket.broadcast.to(recievingSocket).emit("message", message);
-        }
-      }
-
+      const messageCreated = await createMessage(message);
+      if (!messageCreated) throw new Error("createMessage() failed.");
       if (ack) ack("message recieved");
     } catch (error) {
       console.error("[WS] Error sending message:", error.message);
@@ -130,6 +121,8 @@ io.on("connection", async (socket: any) => {
     try {
       const lat = Number(location.lat);
       const lon = Number(location.lon);
+      defaultConnectedUser.location.lat = lat;
+      defaultConnectedUser.location.lon = lon;
       const success = await updateUserLocation(socket.id, lat, lon);
       if (success) {
         console.log("[WS] Location updated in database successfully.");
