@@ -82,7 +82,6 @@ const ChatScreen = () => {
         socket.emit("message", newMessage)
       }
 
-      
       setMessageContent("");
     }
   };
