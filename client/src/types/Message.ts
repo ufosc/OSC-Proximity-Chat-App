@@ -1,14 +1,19 @@
-export interface MessageType {
+export interface Message {
     author: {
-        uid: string
-        displayName?: string // To be only used for display purposes (do not send to server)
+        uid: string,
+        displayName: string,
     }
     msgId: string
     msgContent: string
-    timeSent: number // Unix timestamp; Date.now() returns a Number.
+    timestamp: number
+    lastUpdated: number
     location: {
         lat: number
         lon: number
-        geohash?: string
+    }
+    isReply: boolean
+    replyTo: string
+    reactions: {
+        [key: string]: number
     }
 }

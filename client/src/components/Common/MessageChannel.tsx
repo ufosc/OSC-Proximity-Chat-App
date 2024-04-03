@@ -17,8 +17,8 @@ const MessageChannel: React.FC<MessageChannelProps> = ({ messages }) => {
         renderItem={({ item }) => (
           <Message
             messageContent={item.msgContent}
-            author={item.author.uid} // TODO: call server to get author name from UID. Or should this stored with MessageType?
-            time={item.timeSent}
+            author={item.author.displayName} // TODO: call server to get author name from UID. Or should this stored with MessageType?
+            time={item.timestamp}
           />
         )}
         inverted={true} // This will render items from the bottom
