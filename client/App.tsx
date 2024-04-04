@@ -1,14 +1,44 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
+import { AuthStore } from "./src/services/store";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import WelcomeScreen from "./src/components/Home/WelcomeScreen";
+import SignUpScreen from "./src/components/Auth/SignUpScreen";
+import LoginScreen from "./src/components/Auth/LoginScreen";
+import ChatScreen from "./src/components/Chat/ChatScreen";
+import SettingsScreen from "./src/components/Settings/SettingsScreen";
 
-export default function App() {
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const App = () => {
+  const { initialized, isLoggedin } = AuthStore.useState();
+
+  if (!initialized) return <Text>Loading...</Text>;
+
   return (
-    <View>
-      <Text>This Componenet is DEPRECATED.</Text>
-      <Text>DO NOT TOUCH. THE NEW ENTRY POINT IS AT 'app/index.tsx'</Text>
-    </View>
+    <NavigationContainer>
+      {isLoggedin ? (
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={ChatScreen} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
+        </Tab.Navigator>
+      ) : (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="Login" component={SignUpScreen} />
+          <Stack.Screen name="Register" component={LoginScreen} />
+        </Stack.Navigator>
+      )}
+    </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -18,3 +48,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default App;
