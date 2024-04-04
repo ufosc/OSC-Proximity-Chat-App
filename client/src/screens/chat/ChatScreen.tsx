@@ -11,20 +11,20 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { ChatInput } from "../Common/CustomInputs";
-import { ChatSendButton } from "../Common/CustomButtons";
-import MessageChannel from "../Common/MessageChannel";
+import { ChatInput } from "../../components/common/CustomInputs";
+import { ChatSendButton } from "../../components/common/CustomButtons";
+import MessageChannel from "../../components/common/MessageChannel";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
-import { SignOutButton } from "../Common/AuthButtons"
+import { SignOutButton } from "../../components/common/AuthButtons";
 import { Message } from "../../types/Message";
 import { LocationProvider } from "../../contexts/LocationContext";
 import { useSocket } from "../../contexts/SocketContext";
 import { useSettings } from "../../contexts/SettingsContext";
 import { useLocation } from "../../contexts/LocationContext";
 import { useUser } from "../../contexts/UserContext"; // imported for when it needs to be used
-import { AuthStore } from "../../services/store";
-import { ChatScreenFooter } from "../Common/ChatScreenFooter"
+import { AuthStore } from "../../services/AuthStore";
+import { ChatScreenFooter } from "../../components/common/ChatScreenFooter";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -33,25 +33,25 @@ const ChatScreen = () => {
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
   const socket = useSocket();
   const location = useLocation();
-  const user = useUser();  
-  const userAuth = AuthStore.useState()
+  const user = useUser();
+  const userAuth = AuthStore.useState();
   // Note: To prevent complexity, all user information is grabbed from different contexts and services. If we wanted most information inside of UserContext, we would have to import contexts within contexts and have state change as certain things mount, which could cause errors that are difficult to pinpoint.
-  
+
   // Message loading and sending logic
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [messageContent, setMessageContent] = React.useState<string>("");
 
   useEffect(() => {
     if (socket === null) return; // This line might need to be changed
-  
+
     const handleMessage = (data: any, ack?: any) => {
       console.log("Message received from server:", data);
       setMessages((prevMessages) => [...prevMessages, data]);
       if (ack) console.log("Server acknowledged message:", ack);
     };
-  
+
     socket.on("message", handleMessage);
-  
+
     return () => {
       socket.off("message", handleMessage);
     };
@@ -65,27 +65,26 @@ const ChatScreen = () => {
           uid: String(userAuth.userAuthInfo?.uid),
           displayName: "Anonymous",
         },
-        msgId: Crypto.randomUUID(), 
+        msgId: Crypto.randomUUID(),
         msgContent: messageContent.trim(),
         timestamp: Date.now(),
         lastUpdated: Date.now(),
         location: {
           lat: Number(location?.latitude),
-          lon: Number(location?.longitude)
+          lon: Number(location?.longitude),
         },
         isReply: false,
         replyTo: "",
         reactions: {},
-      }
+      };
 
       if (socket !== null) {
-        socket.emit("message", newMessage)
+        socket.emit("message", newMessage);
       }
 
       setMessageContent("");
     }
   };
-
 
   return (
     <View
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
 
   footerContainer: {
     width: "95%",
-    
+
     maxHeight: Dimensions.get("window").height * 0.15,
     display: "flex",
     flexDirection: "row",

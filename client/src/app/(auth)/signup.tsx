@@ -1,10 +1,8 @@
-import React from 'react'
-import SignUp from '../../components/Auth/SignUpScreen';
+import React from "react";
+import SignUp from "../../screens/auth/SignUpScreen";
 
 const SignUpPage = () => {
-  return (
-    <SignUp />
-  );
-}
+  return <SignUp />;
+};
 
-export default SignUpPage
+export default SignUpPage;

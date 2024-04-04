@@ -6,9 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { Store } from "pullstate";
-import { auth, app } from "../configs/firebaseConfig";
-import { FirebaseError } from "firebase/app";
-import { useUser } from "../contexts/UserContext";
+import { auth } from "../configs/firebaseConfig";
 
 interface AuthStoreInterface {
   isLoggedin: boolean;

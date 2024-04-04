@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { router, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
-import { appSignOut } from "../../services/store";
+import { appSignOut } from "../../services/AuthStore";
 
 interface SignOutButtonProps {}
 

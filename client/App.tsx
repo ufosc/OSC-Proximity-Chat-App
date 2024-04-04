@@ -1,14 +1,14 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { AuthStore } from "./src/services/store";
+import { AuthStore } from "./src/services/AuthStore";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import WelcomeScreen from "./src/components/Home/WelcomeScreen";
-import SignUpScreen from "./src/components/Auth/SignUpScreen";
-import LoginScreen from "./src/components/Auth/LoginScreen";
-import ChatScreen from "./src/components/Chat/ChatScreen";
-import SettingsScreen from "./src/components/Settings/SettingsScreen";
+import WelcomeScreen from "./src/components/home/WelcomeScreen";
+import SignUpScreen from "./src/screens/auth/SignUpScreen";
+import LoginScreen from "./src/screens/auth/LoginScreen";
+import ChatScreen from "./src/screens/chat/ChatScreen";
+import SettingsScreen from "./src/screens/settings/SettingsScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

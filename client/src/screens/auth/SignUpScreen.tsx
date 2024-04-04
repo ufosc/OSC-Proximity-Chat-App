@@ -1,84 +1,93 @@
-import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
-  KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import { EmailInput, PasswordInput } from "../Common/CustomInputs";
-import { LogInButton, ExternalAuthButton } from "../Common/AuthButtons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { appSignIn } from "../../services/store";
+import {
+  EmailInput,
+  PasswordInput,
+  ConfirmPasswordInput,
+} from "../../components/common/CustomInputs";
+
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
-} from "./AuthenticationResponse";
+  CustomError,
+} from "../../components/auth/AuthenticationResponse";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { appSignUp } from "../../services/AuthStore";
 import { ArrowLeftCircle } from "react-native-feather";
+import {
+  SignUpButton,
+  ExternalAuthButton,
+} from "../../components/common/AuthButtons";
+import React from "react";
 
-const LoginScreen = () => {
+const SignUpScreen = () => {
   const router = useRouter();
   const [fontsLoaded, fontError] = useFonts({
     "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
     "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
   });
 
-  const { inputEmail } = useLocalSearchParams();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [confirmPassword, setConfirmPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] =
     React.useState<AuthenticationResponse>();
-  const [invalidLogin, invalidateLogin] = React.useState<boolean>(false); // Possbily change this?
+  //grays out password on password error
+  const [invalidPassword, invalidatePassword] = React.useState<boolean>(false);
+  //grays out email on email error
+  const [invalidEmail, invalidateEmail] = React.useState<boolean>(false);
 
-  const externalLoginIcons = {
-    google: require("../../../assets/google_logo.png"),
-    facebook: require("../../../assets/facebook_logo.png"),
-    apple: require("../../../assets/apple_logo.png"),
-  };
-
-  // Sign in function with email and password
   const onHandleSubmit = async () => {
     Keyboard.dismiss();
-    setAuthResponse(await appSignIn(email, password));
-  };
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      const nonmatching_password_error: AuthenticationResponse = {
+        error: new CustomError("Invalid password", "Passwords do not match"),
+      };
+      invalidatePassword(true);
+      setAuthResponse(nonmatching_password_error);
 
-  // Listens for the response from the sign in function
-  useEffect(() => {
+      return;
+    }
+
+    setAuthResponse(await appSignUp(email, password));
+
     if (authResponse?.user) {
       router.replace("(home)/chatchannel");
     } else if (authResponse?.error) {
       console.log(authResponse.error);
-      invalidateLogin(true);
     }
-  }, [authResponse]);
-
-  useEffect(() => {
-    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
-  }, []);
+  };
 
   if (!fontsLoaded && !fontError) {
     return null;
   }
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
-  const handleGoogleSignIn = async () => {
-    console.log("Google Sign In");
+  const handleGoogleSignUp = async () => {
+    console.log("Google Sign Up");
   };
 
   const handleFacebookSignIn = async () => {
-    console.log("Facebook Sign In");
+    console.log("Facebook Sign Up");
   };
 
-  const handleAppleSignIn = async () => {
-    console.log("Apple Sign In");
+  const handleAppleSignUp = async () => {
+    console.log("Apple Sign Up");
   };
 
-  const handleGithubSignIn = async () => {
-    console.log("Github Sign In");
+  const handleGithubSignUp = async () => {
+    console.log("Github Sign Up");
   };
 
   return (
@@ -97,31 +106,36 @@ const LoginScreen = () => {
             />
           </TouchableOpacity>
           <View style={styles.header_container}>
-            <Text style={styles.header_text}>Welcome back!</Text>
-            <Text style={styles.subheader_text}>How have you been?</Text>
+            <Text style={styles.header_text}>Join the conversation</Text>
+            <Text style={styles.subheader_text}>Talk to people near you</Text>
           </View>
           <View style={styles.input_container}>
             <EmailInput
               value={email}
-              onChangeText={(text) => setEmail(text)}
-              invalid={invalidLogin}
+              onChangeText={(text) => {
+                invalidateEmail(false);
+                setEmail(text);
+              }}
+              invalid={invalidEmail}
             />
             <PasswordInput
               value={password}
-              onChangeText={(text) => setPassword(text)}
-              invalid={invalidLogin}
+              onChangeText={(text) => {
+                invalidatePassword(false);
+                setPassword(text);
+              }}
+              invalid={invalidPassword}
+            />
+            <ConfirmPasswordInput
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
+              invalid={invalidPassword}
             />
           </View>
           <View style={styles.button_container}>
-            <LogInButton onPress={onHandleSubmit} />
+            <SignUpButton onPress={onHandleSubmit} />
           </View>
-          <TouchableOpacity>
-            <Text
-              style={[styles.regular_text, { textDecorationLine: "underline" }]}
-            >
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
+
           <View style={styles.divider_container}>
             <View style={styles.horizontal_line} />
             <View>
@@ -134,11 +148,11 @@ const LoginScreen = () => {
 
           <View style={styles.externalLinkContainer}>
             <ExternalAuthButton
-              onPress={handleGoogleSignIn}
+              onPress={handleGoogleSignUp}
               companyName="google"
             />
             <ExternalAuthButton
-              onPress={handleAppleSignIn}
+              onPress={handleAppleSignUp}
               companyName="apple"
             />
             <ExternalAuthButton
@@ -146,14 +160,14 @@ const LoginScreen = () => {
               companyName="facebook"
             />
             <ExternalAuthButton
-              onPress={handleGithubSignIn}
+              onPress={handleGithubSignUp}
               companyName="github"
             />
           </View>
           <View style={styles.footer_text_container}>
-            <Text style={styles.footer_text}>Don't have an account?</Text>
+            <Text style={styles.footer_text}>Already have an account?</Text>
             <TouchableOpacity
-              onPress={() => router.replace({ pathname: "/signup" })}
+              onPress={() => router.replace({ pathname: "/login" })}
             >
               <Text
                 style={[
@@ -161,7 +175,7 @@ const LoginScreen = () => {
                   { color: "#5dbea3", textDecorationLine: "underline" },
                 ]}
               >
-                Sign up
+                Log in
               </Text>
             </TouchableOpacity>
           </View>
@@ -170,18 +184,11 @@ const LoginScreen = () => {
         <View style={styles.error_container}>
           <AuthenticationErrorMessage
             response={authResponse}
-            onPress={() => {
-              setAuthResponse(undefined);
-              invalidateLogin(false);
-            }}
+            onPress={() => setAuthResponse(undefined)}
           />
         </View>
       </View>
     </TouchableWithoutFeedback>
-
-    // Log In
-
-    // Make an account with Google (TEMP)
   );
 };
 
@@ -198,7 +205,6 @@ const styles = StyleSheet.create({
     gap: Dimensions.get("window").height * 0.029,
   },
 
-  //This is an example of where the error message could be
   error_container: {
     display: "flex",
     justifyContent: "space-around",
@@ -229,7 +235,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     width: "100%",
     marginBottom: Dimensions.get("window").height * 0.019,
-    marginTop: Dimensions.get("window").height * 0.23,
+    marginTop: Dimensions.get("window").height * 0.17,
   },
 
   header_text: {
@@ -283,4 +289,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignUpScreen;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, Text } from "react-native";
-import { AuthStore } from "../services/store";
+import { AuthStore } from "../services/AuthStore";
 import { useRootNavigationState, useRouter, useSegments } from "expo-router";
 
 const App = () => {

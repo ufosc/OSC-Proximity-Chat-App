@@ -15,12 +15,12 @@ import {
 import { useFonts } from "expo-font";
 import { Link, router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { WelcomeEmailInput } from "../Common/CustomInputs";
+import { WelcomeEmailInput } from "../common/CustomInputs";
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
   inValidEmailResponse,
-} from "../Auth/AuthenticationResponse";
+} from "../auth/AuthenticationResponse";
 import { FirebaseError } from "firebase/app";
 
 const WelcomeScreen = () => {
