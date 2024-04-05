@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,20 +10,16 @@ import {
   Keyboard,
   Platform,
   KeyboardAvoidingView,
-  SafeAreaView,
 } from "react-native";
 import { useFonts } from "expo-font";
-import { Link, router } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { WelcomeEmailInput } from "../common/CustomInputs";
+import { WelcomeEmailInput } from "../../components/common/CustomInputs";
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
   inValidEmailResponse,
-} from "../auth/AuthenticationResponse";
-import { FirebaseError } from "firebase/app";
+} from "../../components/auth/AuthenticationResponse";
 
-const WelcomeScreen = () => {
+const WelcomeScreen = ( { navigation } : any ) => {
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
 
@@ -43,10 +39,7 @@ const WelcomeScreen = () => {
   const handleLogin = () => {
     const preparedEmail = email.trim();
     if (preparedEmail.length !== 0 && isValidEmail(preparedEmail)) {
-      router.push({
-        pathname: "/login",
-        params: { inputEmail: preparedEmail },
-      });
+      navigation.navigate("Login", { email: preparedEmail });
       setAuthResponse(undefined);
     } else {
       console.log("Invalid email");
@@ -108,9 +101,11 @@ const WelcomeScreen = () => {
 
                 <Text>
                   Don't have an account?{" "}
-                  <Link style={styles.link} href="/signup">
-                    Sign up!
-                  </Link>
+                  <TouchableOpacity onPress={() => {
+                    navigation.navigate("Sign Up"); // Need to restyle
+                  }}>
+                    <Text style={styles.link} >Sign up.</Text>
+                  </TouchableOpacity>
                 </Text>
               </View>
             </View>

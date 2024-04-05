@@ -1,5 +1,5 @@
 import React from "react";
-import WelcomeScreen from "../../components/home/WelcomeScreen";
+import WelcomeScreen from "../../screens/auth/WelcomeScreen";
 import { router } from "expo-router";
 import SafeAreaWrapper from "../../components/common/SafeAreaWrapper";
 

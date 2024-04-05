@@ -19,7 +19,6 @@ import {
   AuthenticationResponse,
   CustomError,
 } from "../../components/auth/AuthenticationResponse";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignUp } from "../../services/AuthStore";
 import { ArrowLeftCircle } from "react-native-feather";
 import {
@@ -28,8 +27,7 @@ import {
 } from "../../components/common/AuthButtons";
 import React from "react";
 
-const SignUpScreen = () => {
-  const router = useRouter();
+const SignUpScreen = ({ navigation } : any ) => {
   const [fontsLoaded, fontError] = useFonts({
     "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
     "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
@@ -61,7 +59,7 @@ const SignUpScreen = () => {
     setAuthResponse(await appSignUp(email, password));
 
     if (authResponse?.user) {
-      router.replace("(home)/chatchannel");
+      console.log("User Logged IN!")
     } else if (authResponse?.error) {
       console.log(authResponse.error);
     }
@@ -95,7 +93,7 @@ const SignUpScreen = () => {
       <View>
         <View style={styles.main_container}>
           <TouchableOpacity
-            onPress={() => router.back()}
+            onPress={() => navigation.goBack()}
             style={styles.back_button}
           >
             <ArrowLeftCircle
@@ -167,7 +165,7 @@ const SignUpScreen = () => {
           <View style={styles.footer_text_container}>
             <Text style={styles.footer_text}>Already have an account?</Text>
             <TouchableOpacity
-              onPress={() => router.replace({ pathname: "/login" })}
+              onPress={() => navigation.navigate("Log In")}
             >
               <Text
                 style={[

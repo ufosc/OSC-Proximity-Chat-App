@@ -23,6 +23,7 @@ export const SignOutButton: React.FC<SignOutButtonProps> = () => {
   const [fontsLoaded, fontError] = useFonts({
     "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
     "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
+    "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"), // fixed loading this file!
   });
 
   const handleSignOut = async () => {

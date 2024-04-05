@@ -27,8 +27,7 @@ import {
 } from "../../components/auth/AuthenticationResponse";
 import { ArrowLeftCircle } from "react-native-feather";
 
-const LoginScreen = () => {
-  const router = useRouter();
+const LoginScreen = ({ navigation } : any) => {
   const [fontsLoaded, fontError] = useFonts({
     "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
     "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
@@ -56,7 +55,7 @@ const LoginScreen = () => {
   // Listens for the response from the sign in function
   useEffect(() => {
     if (authResponse?.user) {
-      router.replace("(home)/chatchannel");
+      console.log("user logged in!")
     } else if (authResponse?.error) {
       console.log(authResponse.error);
       invalidateLogin(true);
@@ -92,7 +91,7 @@ const LoginScreen = () => {
       <View>
         <View style={styles.main_container}>
           <TouchableOpacity
-            onPress={() => router.back()}
+            onPress={() => navigation.goBack()}
             style={styles.back_button}
           >
             <ArrowLeftCircle
@@ -159,7 +158,7 @@ const LoginScreen = () => {
           <View style={styles.footer_text_container}>
             <Text style={styles.footer_text}>Don't have an account?</Text>
             <TouchableOpacity
-              onPress={() => router.replace({ pathname: "/signup" })}
+              onPress={() => navigation.navigate("Sign Up")}
             >
               <Text
                 style={[

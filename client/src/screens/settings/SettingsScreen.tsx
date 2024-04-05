@@ -11,7 +11,7 @@ import {SafeAreaView,
     Dimensions,
 
 } from 'react-native';
-import {SettingsItem} from '../../components/Settings/SettingsItem';
+import { SettingsItem } from '../../components/settings/SettingsItem';
 
 
 // List of settings items
