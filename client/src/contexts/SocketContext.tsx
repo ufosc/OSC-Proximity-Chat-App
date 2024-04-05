@@ -39,6 +39,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       initializeSocket();
     }
     return () => {
+      socket?.disconnect();
       console.log("[LOG]: Cleaning up intializeSocket useEffect");
     };
   }, []);
