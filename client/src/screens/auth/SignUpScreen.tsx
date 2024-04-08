@@ -24,10 +24,10 @@ import { ArrowLeftCircle } from "react-native-feather";
 import {
   SignUpButton,
   ExternalAuthButton,
-} from "../../components/common/AuthButtons";
+} from "../../components/auth/AuthButtons";
 import React from "react";
 
-const SignUpScreen = ({ navigation } : any ) => {
+const SignUpScreen = ({ navigation }: any) => {
   const [fontsLoaded, fontError] = useFonts({
     "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
     "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
@@ -59,7 +59,7 @@ const SignUpScreen = ({ navigation } : any ) => {
     setAuthResponse(await appSignUp(email, password));
 
     if (authResponse?.user) {
-      console.log("User Logged IN!")
+      console.log("User Logged IN!");
     } else if (authResponse?.error) {
       console.log(authResponse.error);
     }
@@ -165,7 +165,7 @@ const SignUpScreen = ({ navigation } : any ) => {
           <View style={styles.footer_text_container}>
             <Text style={styles.footer_text}>Already have an account?</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Log In")}
+              onPress={() => navigation.navigate("Log In", { newEmail: "" })}
             >
               <Text
                 style={[

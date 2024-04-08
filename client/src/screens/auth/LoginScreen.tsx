@@ -18,7 +18,7 @@ import {
 import {
   LogInButton,
   ExternalAuthButton,
-} from "../../components/common/AuthButtons";
+} from "../../components/auth/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/AuthStore";
 import {
@@ -27,13 +27,14 @@ import {
 } from "../../components/auth/AuthenticationResponse";
 import { ArrowLeftCircle } from "react-native-feather";
 
-const LoginScreen = ({ navigation } : any) => {
+const LoginScreen = ({ route, navigation }: any) => {
   const [fontsLoaded, fontError] = useFonts({
     "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
     "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
   });
 
-  const { inputEmail } = useLocalSearchParams();
+  const { newEmail } = route.params;
+
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] =
@@ -55,7 +56,7 @@ const LoginScreen = ({ navigation } : any) => {
   // Listens for the response from the sign in function
   useEffect(() => {
     if (authResponse?.user) {
-      console.log("user logged in!")
+      console.log("user logged in!");
     } else if (authResponse?.error) {
       console.log(authResponse.error);
       invalidateLogin(true);
@@ -63,7 +64,7 @@ const LoginScreen = ({ navigation } : any) => {
   }, [authResponse]);
 
   useEffect(() => {
-    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
+    setEmail(newEmail); // On load of the page, set the email to the inputEmail if they entered it!
   }, []);
 
   if (!fontsLoaded && !fontError) {
@@ -157,9 +158,7 @@ const LoginScreen = ({ navigation } : any) => {
           </View>
           <View style={styles.footer_text_container}>
             <Text style={styles.footer_text}>Don't have an account?</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Sign Up")}
-            >
+            <TouchableOpacity onPress={() => navigation.navigate("Sign Up")}>
               <Text
                 style={[
                   styles.footer_text,

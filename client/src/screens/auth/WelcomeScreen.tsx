@@ -19,7 +19,7 @@ import {
   inValidEmailResponse,
 } from "../../components/auth/AuthenticationResponse";
 
-const WelcomeScreen = ( { navigation } : any ) => {
+const WelcomeScreen = ({ navigation }: any) => {
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
 
@@ -39,7 +39,7 @@ const WelcomeScreen = ( { navigation } : any ) => {
   const handleLogin = () => {
     const preparedEmail = email.trim();
     if (preparedEmail.length !== 0 && isValidEmail(preparedEmail)) {
-      navigation.navigate("Login", { email: preparedEmail });
+      navigation.navigate("Log In", { newEmail: preparedEmail });
       setAuthResponse(undefined);
     } else {
       console.log("Invalid email");
@@ -101,10 +101,12 @@ const WelcomeScreen = ( { navigation } : any ) => {
 
                 <Text>
                   Don't have an account?{" "}
-                  <TouchableOpacity onPress={() => {
-                    navigation.navigate("Sign Up"); // Need to restyle
-                  }}>
-                    <Text style={styles.link} >Sign up.</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Sign Up"); // Need to restyle
+                    }}
+                  >
+                    <Text style={styles.link}>Sign up.</Text>
                   </TouchableOpacity>
                 </Text>
               </View>

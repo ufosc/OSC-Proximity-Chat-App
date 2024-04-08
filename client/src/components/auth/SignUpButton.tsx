@@ -2,13 +2,12 @@ import { router } from "expo-router";
 import React from "react";
 import { useFonts } from "expo-font";
 import { StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
-import { SignUpButtonProps } from "../../utils/types";
+import { SignUpButtonProps } from "../../types/Props";
 
 const SignUpButton: React.FC<SignUpButtonProps> = ({ onPress }) => {
-
   const [fontsLoaded, fontError] = useFonts({
-    'Gilroy-ExtraBold': require('../../../assets/fonts/Gilroy-ExtraBold.otf'),
-    'Gilroy-Light': require('../../../assets/fonts/Gilroy-Light.otf'),
+    "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
+    "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
   });
 
   if (!fontsLoaded && !fontError) {
@@ -37,7 +36,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "Gilroy-ExtraBold",
     fontSize: Dimensions.get("window").height * 0.03,
-
   },
 });
 

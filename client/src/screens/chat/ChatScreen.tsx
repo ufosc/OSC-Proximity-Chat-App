@@ -13,10 +13,10 @@ import {
 } from "react-native";
 import { ChatInput } from "../../components/common/CustomInputs";
 import { ChatSendButton } from "../../components/common/CustomButtons";
-import MessageChannel from "../../components/common/MessageChannel";
+import MessageChannel from "../../components/chat/MessageChannel";
 import * as Crypto from "expo-crypto";
 import { generateName } from "../../utils/scripts";
-import { SignOutButton } from "../../components/common/AuthButtons";
+import { SignOutButton } from "../../components/auth/AuthButtons";
 import { Message } from "../../types/Message";
 import { LocationProvider } from "../../contexts/LocationContext";
 import { useSocket } from "../../contexts/SocketContext";
@@ -24,7 +24,7 @@ import { useSettings } from "../../contexts/SettingsContext";
 import { useLocation } from "../../contexts/LocationContext";
 import { useUser } from "../../contexts/UserContext"; // imported for when it needs to be used
 import { AuthStore } from "../../services/AuthStore";
-import { ChatScreenFooter } from "../../components/common/ChatScreenFooter";
+import { ChatScreenFooter } from "../../components/chat/ChatScreenFooter";
 
 const ChatScreen = () => {
   const settings = useSettings();
