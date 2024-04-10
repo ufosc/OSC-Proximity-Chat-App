@@ -11,24 +11,30 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import { EmailInput, PasswordInput } from "../Common/CustomInputs";
-import { LogInButton, ExternalAuthButton } from "../Common/AuthButtons";
+import {
+  EmailInput,
+  PasswordInput,
+} from "../../components/common/CustomInputs";
+import {
+  LogInButton,
+  ExternalAuthButton,
+} from "../../components/auth/AuthButtons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { appSignIn } from "../../services/store";
+import { appSignIn } from "../../services/AuthStore";
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
-} from "./AuthenticationResponse";
+} from "../../components/auth/AuthenticationResponse";
 import { ArrowLeftCircle } from "react-native-feather";
 
-const LoginScreen = () => {
-  const router = useRouter();
+const LoginScreen = ({ route, navigation }: any) => {
   const [fontsLoaded, fontError] = useFonts({
     "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
     "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
   });
 
-  const { inputEmail } = useLocalSearchParams();
+  const { newEmail } = route.params;
+
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [authResponse, setAuthResponse] =
@@ -50,7 +56,7 @@ const LoginScreen = () => {
   // Listens for the response from the sign in function
   useEffect(() => {
     if (authResponse?.user) {
-      router.replace("(home)/chatchannel");
+      console.log("user logged in!");
     } else if (authResponse?.error) {
       console.log(authResponse.error);
       invalidateLogin(true);
@@ -58,7 +64,7 @@ const LoginScreen = () => {
   }, [authResponse]);
 
   useEffect(() => {
-    setEmail(inputEmail?.toString() || ""); // On load of the page, set the email to the inputEmail if they entered it!
+    setEmail(newEmail); // On load of the page, set the email to the inputEmail if they entered it!
   }, []);
 
   if (!fontsLoaded && !fontError) {
@@ -86,7 +92,7 @@ const LoginScreen = () => {
       <View>
         <View style={styles.main_container}>
           <TouchableOpacity
-            onPress={() => router.back()}
+            onPress={() => navigation.goBack()}
             style={styles.back_button}
           >
             <ArrowLeftCircle
@@ -152,9 +158,7 @@ const LoginScreen = () => {
           </View>
           <View style={styles.footer_text_container}>
             <Text style={styles.footer_text}>Don't have an account?</Text>
-            <TouchableOpacity
-              onPress={() => router.replace({ pathname: "/signup" })}
-            >
+            <TouchableOpacity onPress={() => navigation.navigate("Sign Up")}>
               <Text
                 style={[
                   styles.footer_text,

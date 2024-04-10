@@ -1,24 +1,36 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, SafeAreaView } from 'react-native';
-import { useFonts } from 'expo-font';
-import { Link, router } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { WelcomeEmailInput } from '../Common/CustomInputs';
-import { AuthenticationErrorMessage, AuthenticationResponse, inValidEmailResponse } from '../Auth/AuthenticationResponse';
-import { FirebaseError } from 'firebase/app';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
+import { useFonts } from "expo-font";
+import { WelcomeEmailInput } from "../../components/common/CustomInputs";
+import {
+  AuthenticationErrorMessage,
+  AuthenticationResponse,
+  inValidEmailResponse,
+} from "../../components/auth/AuthenticationResponse";
 
-const WelcomeScreen = () => {
-
+const WelcomeScreen = ({ navigation }: any) => {
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
 
   const [fontsLoaded, fontError] = useFonts({
-    'Gilroy-ExtraBold': require('../../../assets/fonts/Gilroy-ExtraBold.otf'),
-    'Gilroy-Light': require('../../../assets/fonts/Gilroy-Light.otf'),
+    "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
+    "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
   });
 
-  const [email, setEmail] = useState<string>('');
-  const [authResponse, setAuthResponse] = React.useState<AuthenticationResponse>();
+  const [email, setEmail] = useState<string>("");
+  const [authResponse, setAuthResponse] =
+    React.useState<AuthenticationResponse>();
 
   if (!fontsLoaded && !fontError) {
     return null;
@@ -26,15 +38,14 @@ const WelcomeScreen = () => {
 
   const handleLogin = () => {
     const preparedEmail = email.trim();
-    if ((preparedEmail.length !== 0) && isValidEmail(preparedEmail)) {
-      router.push( { pathname: '/login', params: { inputEmail: preparedEmail } } );
-      setAuthResponse(undefined)
+    if (preparedEmail.length !== 0 && isValidEmail(preparedEmail)) {
+      navigation.navigate("Log In", { newEmail: preparedEmail });
+      setAuthResponse(undefined);
     } else {
-      console.log('Invalid email');
-      setAuthResponse({user: undefined, error: inValidEmailResponse})
+      console.log("Invalid email");
+      setAuthResponse({ user: undefined, error: inValidEmailResponse });
     }
-  }
-
+  };
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,53 +54,69 @@ const WelcomeScreen = () => {
 
   return (
     <View>
-      <KeyboardAvoidingView behavior={keyboardBehavior} keyboardVerticalOffset={keyboardVerticalOffest}>
-
+      <KeyboardAvoidingView
+        behavior={keyboardBehavior}
+        keyboardVerticalOffset={keyboardVerticalOffest}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
           <View style={styles.main_container}>
-
-            
-
             <View style={styles.sub_container}>
-
               <View style={styles.image_container}>
-                <Image style={styles.image} source={require('../../../assets/talking_location.png')} />
+                <Image
+                  style={styles.image}
+                  source={require("../../../assets/talking_location.png")}
+                />
               </View>
 
               <Text style={styles.header_text}>Welcome to Proximity Chat!</Text>
 
               <View style={styles.info_container}>
-
                 <View style={styles.login_container}>
                   <Text style={styles.login_text}>Login</Text>
 
                   <View style={styles.login_mini_container}>
-                    <WelcomeEmailInput value={email} onChangeText={text => setEmail(text)} />
+                    <WelcomeEmailInput
+                      value={email}
+                      onChangeText={(text) => setEmail(text)}
+                    />
 
-                    <TouchableOpacity style={styles.login_button} onPress={handleLogin}>
-                      <Image style={styles.arrow_image} source={require('../../../assets/angle-right.png')} />
+                    <TouchableOpacity
+                      style={styles.login_button}
+                      onPress={handleLogin}
+                    >
+                      <Image
+                        style={styles.arrow_image}
+                        source={require("../../../assets/angle-right.png")}
+                      />
                     </TouchableOpacity>
                   </View>
-
                 </View>
 
                 <View style={styles.error_container}>
-                  <AuthenticationErrorMessage response={authResponse} onPress={() => setAuthResponse(undefined)} />
+                  <AuthenticationErrorMessage
+                    response={authResponse}
+                    onPress={() => setAuthResponse(undefined)}
+                  />
                 </View>
 
                 <Text>
-                  Don't have an account? <Link style={styles.link} href="/signup">Sign up!</Link>
+                  Don't have an account?{" "}
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Sign Up"); // Need to restyle
+                    }}
+                  >
+                    <Text style={styles.link}>Sign up.</Text>
+                  </TouchableOpacity>
                 </Text>
-
               </View>
             </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   image: {
@@ -120,10 +147,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%",
     justifyContent: "flex-end",
-
+    backgroundColor: "white",
   },
 
   sub_container: {
@@ -142,7 +169,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     minHeight: Dimensions.get("window").height * 0.35,
-
   },
 
   login_container: {
@@ -188,8 +214,7 @@ const styles = StyleSheet.create({
   link: {
     color: "#5dbea3",
     textDecorationLine: "underline",
-  }
-
+  },
 });
 
-export default WelcomeScreen
+export default WelcomeScreen;

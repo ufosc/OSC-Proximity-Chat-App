@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageType } from "./Message";
+import { Message } from "./Message";
 
 /* button props */
 export type LogInButtonProps = {

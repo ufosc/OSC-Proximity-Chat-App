@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { router, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
-import { appSignOut } from "../../services/store";
+import { appSignOut } from "../../services/AuthStore";
 
 interface SignOutButtonProps {}
 
@@ -23,6 +23,7 @@ export const SignOutButton: React.FC<SignOutButtonProps> = () => {
   const [fontsLoaded, fontError] = useFonts({
     "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
     "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
+    "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"), // fixed loading this file!
   });
 
   const handleSignOut = async () => {
