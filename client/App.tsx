@@ -1,14 +1,26 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
+import { AuthStore } from "./src/services/AuthStore";
+import { NavigationContainer } from "@react-navigation/native";
+import AppNavigator from "./src/navigation/AppNavigator";
+import AuthNavigator from "./src/navigation/AuthNavigator";
 
-export default function App() {
+
+const App = () => {
+  const { initialized, isLoggedin } = AuthStore.useState();
+
+  if (!initialized) return <Text>Loading...</Text>;
+
   return (
-    <View>
-      <Text>This Componenet is DEPRECATED.</Text>
-      <Text>DO NOT TOUCH. THE NEW ENTRY POINT IS AT 'app/index.tsx'</Text>
-    </View>
+    <NavigationContainer>
+      {isLoggedin ? (
+        <AppNavigator />
+      ) : (
+        <AuthNavigator />
+      )}
+    </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -18,3 +30,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default App;

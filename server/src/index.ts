@@ -1,19 +1,18 @@
-import express from "express";
-import "dotenv/config";
-import "geofire-common";
-import { Message } from "./types/Message";
-import { createMessage } from "./actions/createMessage";
-import { createUser } from "./actions/createConnectedUser";
-import {
-  toggleUserConnectionStatus,
-  updateUserLocation,
-} from "./actions/updateConnectedUser";
-import { deleteConnectedUserByUID } from "./actions/deleteConnectedUser";
-import { geohashForLocation } from "geofire-common";
-import { findNearbyUsers } from "./actions/getConnectedUsers";
-import { ConnectedUser } from "./types/User";
-import { getAuth } from "firebase-admin/auth";
+import express from 'express';
+import 'dotenv/config';
+import 'geofire-common';
+import { Message } from './types/Message';
+import { createMessage } from './actions/createMessage';
+import { createUser } from './actions/createConnectedUser';
+import { toggleUserConnectionStatus, updateUserLocation, updateUserDisplayName } from './actions/updateConnectedUser';
+import { deleteConnectedUserByUID } from './actions/deleteConnectedUser';
+import { findNearbyUsers, getConnectedUser } from './actions/getConnectedUsers';
+import {geohashForLocation} from 'geofire-common';
+import { ConnectedUser } from './types/User';
+import { getAuth } from 'firebase-admin/auth';
 import Mailgun from "mailgun.js";
+import { messagesCollection } from './utilities/firebaseInit';
+import { calculateDistanceInMeters } from './actions/calculateDistance';
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -71,9 +70,35 @@ io.on("connection", async (socket: any) => {
   await createUser(defaultConnectedUser);
   await toggleUserConnectionStatus(socket.id);
 
+  const observer = messagesCollection.where("lastUpdated", ">", Date.now()).onSnapshot((querySnapshot) => {
+    querySnapshot.docChanges().forEach((change) => {
+
+      if (change.type === "added"){
+        console.log("New message: ", change.doc.data());
+      
+        const messageLat = change.doc.data().location.lat;
+        const messageLon = change.doc.data().location.lon;
+
+        const userLat = defaultConnectedUser.location.lat;
+        const userLon = defaultConnectedUser.location.lon;
+
+        const distance = calculateDistanceInMeters(messageLat, messageLon, userLat, userLon);
+
+        if (distance < 300) {
+          console.log("Message is within 300m of user");
+          socket.emit("message", change.doc.data());
+        } else {
+          console.log("Message is not within 300m of user");
+        }
+      }
+
+    });
+  });
+
   socket.on("disconnect", () => {
     console.log(`[WS] User <${socket.id}> exited.`);
     deleteConnectedUserByUID(socket.id);
+    observer();
   });
   socket.on("ping", (ack) => {
     // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
@@ -83,46 +108,9 @@ io.on("connection", async (socket: any) => {
   socket.on("message", async (message: Message, ack) => {
     // message post - when someone sends a message
 
-    console.log(`[WS] Recieved message from user <${socket.id}>.`);
-    console.log(message);
     try {
-      if (isNaN(message.timeSent))
-        throw new Error("The timeSent parameter must be a valid number.");
-      if (isNaN(message.location.lat))
-        throw new Error("The lat parameter must be a valid number.");
-      if (isNaN(message.location.lon))
-        throw new Error("The lon parameter must be a valid number.");
-
-      if (
-        message.location.geohash == undefined ||
-        message.location.geohash === ""
-      ) {
-        message.location.geohash = geohashForLocation([
-          Number(message.location.lat),
-          Number(message.location.lon),
-        ]);
-        console.log(`New geohash generated: ${message.location.geohash}`);
-      }
-
-      const status = await createMessage(message);
-      if (status === false) throw new Error("Error creating message: ");
-
-      // Get nearby users and push the message to them.
-      const nearbyUserSockets = await findNearbyUsers(
-        Number(message.location.lat),
-        Number(message.location.lon),
-        Number(process.env.message_outreach_radius)
-      );
-      for (const recievingSocket of nearbyUserSockets) {
-        // Don't send the message to the sender (who will be included in list of nearby users).
-        if (recievingSocket === socket.id) {
-          continue;
-        } else {
-          console.log(`Sending new message to socket ${recievingSocket}`);
-          socket.broadcast.to(recievingSocket).emit("message", message);
-        }
-      }
-
+      const messageCreated = await createMessage(message);
+      if (!messageCreated) throw new Error("createMessage() failed.");
       if (ack) ack("message recieved");
     } catch (error) {
       console.error("[WS] Error sending message:", error.message);
@@ -133,6 +121,8 @@ io.on("connection", async (socket: any) => {
     try {
       const lat = Number(location.lat);
       const lon = Number(location.lon);
+      defaultConnectedUser.location.lat = lat;
+      defaultConnectedUser.location.lon = lon;
       const success = await updateUserLocation(socket.id, lat, lon);
       if (success) {
         console.log("[WS] Location updated in database successfully.");
@@ -143,9 +133,8 @@ io.on("connection", async (socket: any) => {
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message);
     }
-  });
-});
-
+  })
+})
 socketServer.listen(socket_port, () => {
   console.log(`[WS] Listening for new connections on port ${socket_port}.`);
 });
@@ -168,8 +157,20 @@ app.get("/users", async (req, res) => {
       const radius = Number(req.query.radius);
 
       const userIds = await findNearbyUsers(lat, lon, radius);
-      console.log(userIds);
       res.json(userIds);
+
+    } else if (req.query.userId) {
+      query = "?userId";
+      const userId = req.query.userId;
+      if (typeof userId != "string") throw Error("  [userId] is not a string.");
+
+      const user = await getConnectedUser(userId);
+      if (user) {
+        res.json(user);
+      } else {
+        // getConnectedUserDisplayName() will return false is an error is thrown, and print it to console. 
+        throw Error("getConnectedUser() failed.");
+      }
     }
   } catch (error) {
     console.error(
@@ -219,6 +220,7 @@ app.put("/users", async (req, res) => {
 
       const success = await toggleUserConnectionStatus(userId);
       if (!success) throw Error("     toggleUserConnectionStatus() failed.");
+
     } else if (req.query.userId && req.query.lat && req.query.lon) {
       query = "?userId&lat&lon";
       const userId = req.query.userId;
@@ -230,9 +232,20 @@ app.put("/users", async (req, res) => {
 
       const success = await updateUserLocation(userId, lat, lon);
       if (!success) throw Error("     toggleUserConnectionStatus() failed.");
+
+    } else if (req.query.userId && req.query.displayName) {
+      query = "?userId&displayName";
+      const userId = req.query.userId;
+      if (typeof userId != "string") throw Error("  [userId] is not a string.");
+      const displayName = req.query.displayName;
+      if (typeof displayName != "string") throw Error("  [displayName] is not a string.");
+      
+      const success = await updateUserDisplayName(userId, displayName);
+      if (!success) throw Error("updateDisplayName() failed.");
     }
     console.log(`[EXP] Request <PUT /users${query}> returned successfully.`);
-    res.json(`Operation <PUT /user${query}> was handled successfully.`);
+    res.json(`Operation <PUT /users${query}> was handled successfully.`);
+
   } catch (error) {
     console.error(
       `[EXP] Error returning request <PUT /users${query}>:\n`,

@@ -1,12 +1,19 @@
 export interface Message {
-    uid: string
+    author: {
+        uid: string,
+        displayName: string,
+    }
     msgId: string
     msgContent: string
-    timeSent: number
+    timestamp: number
+    lastUpdated: number
     location: {
         lat: number
         lon: number
-        geohash?: string
     }
-    visibleToUids?: Array<string>
+    isReply: boolean
+    replyTo: string
+    reactions: {
+        [key: string]: number
+    }
 }

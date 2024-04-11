@@ -1,7 +1,7 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { initializeAuth, getReactNativePersistence, getAuth, Auth } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID} from "@env"; // Don't worry about this env error!
+import {API_KEY, AUTH_DOMAIN} from "@env"; // Don't worry about this env error!
 
 const firebaseConfig = {
   apiKey: API_KEY || "Mock-Key",
