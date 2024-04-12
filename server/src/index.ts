@@ -17,10 +17,6 @@ import { scheduleCron } from './actions/deleter';
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const readline = require('readline').createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
 const socket_port = process.env.socket_port;
 const express_port = process.env.express_port;
 const app = express();
