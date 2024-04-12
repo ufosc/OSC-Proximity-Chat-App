@@ -1,6 +1,6 @@
 import React from "react";
 import Message from "./ChatMessage";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList } from "react-native";
 import { MessageChannelProps } from "../../types/Props";
 
 const MessageChannel: React.FC<MessageChannelProps> = ({ messages }) => {
