@@ -138,3 +138,6 @@ build
 # Other
 .env
 build/
+
+# Firebase Secrets
+.firebase-secrets.json

@@ -13,6 +13,7 @@ import { getAuth } from 'firebase-admin/auth';
 import Mailgun from "mailgun.js";
 import { messagesCollection } from './utilities/firebaseInit';
 import { calculateDistanceInMeters } from './actions/calculateDistance';
+import { scheduleCron } from './actions/deleter';
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -332,6 +333,11 @@ app.listen(express_port, () => {
     `[EXP] Listening for requests at http://localhost:${express_port}.`
   );
 });
+
+
+//Remove the comments if you want to use the deleter !!!!!!
+//scheduleCron(); // Begin searching and collecting Garbage (old messages)
+
 
 // Some old API routes are commented out for now due to breaking type changes.
 
