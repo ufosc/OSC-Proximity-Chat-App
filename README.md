@@ -13,7 +13,7 @@ This repository holds the all of the code that our Echo app utilizes (pretty coo
 
 Unfortunately, as of Spring Semester of 2024, the app is still under development and you cannot download justttt yet. However, we promise it will be out soon! 🙏
 
-Want to speed up the development speed? Join our team by follow the instructions in [contributing](#contributing)!
+Want to speed up the development? Join our team by follow the instructions in [contributing](#contributing)!
 
 ## Contributing
 As an open source project, developers of all walks of life are encouraged to pick up issues and speed up the development of the app! However, it is probably a good idea to get yourself used to the app's structure!
