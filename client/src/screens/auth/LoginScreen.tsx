@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
-import { useFonts } from "expo-font";
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
-  KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
@@ -19,19 +16,15 @@ import {
   LogInButton,
   ExternalAuthButton,
 } from "../../components/auth/AuthButtons";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { appSignIn } from "../../services/AuthStore";
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
 } from "../../components/auth/AuthenticationResponse";
 import { ArrowLeftCircle } from "react-native-feather";
+import { useGlobalFonts } from "../../styles/fonts";
 
 const LoginScreen = ({ route, navigation }: any) => {
-  const [fontsLoaded, fontError] = useFonts({
-    "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
-    "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
-  });
 
   const { newEmail } = route.params;
 
@@ -42,9 +35,9 @@ const LoginScreen = ({ route, navigation }: any) => {
   const [invalidLogin, invalidateLogin] = React.useState<boolean>(false); // Possbily change this?
 
   const externalLoginIcons = {
-    google: require("../../../assets/google_logo.png"),
-    facebook: require("../../../assets/facebook_logo.png"),
-    apple: require("../../../assets/apple_logo.png"),
+    google: require("../../../assets/icons/auth/google_logo.png"),
+    facebook: require("../../../assets/icons/auth/facebook_logo.png"),
+    apple: require("../../../assets/icons/auth/apple_logo.png"),
   };
 
   // Sign in function with email and password
@@ -66,10 +59,6 @@ const LoginScreen = ({ route, navigation }: any) => {
   useEffect(() => {
     setEmail(newEmail); // On load of the page, set the email to the inputEmail if they entered it!
   }, []);
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   const handleGoogleSignIn = async () => {
     console.log("Google Sign In");

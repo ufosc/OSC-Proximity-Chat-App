@@ -28,7 +28,7 @@ export type MessageProps =  {
 }
 
 export type MessageChannelProps = {
-  messages: MessageType[],
+  messages: Message[],
 }
 
 /* misc props*/

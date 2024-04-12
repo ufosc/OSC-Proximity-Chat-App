@@ -13,7 +13,10 @@ const AppNavigator = () => {
     <LocationProvider>
       <SocketProvider>
         <UserProvider>
-          <Tab.Navigator>
+          <Tab.Navigator screenOptions={{
+            headerShown: false,
+          
+          }}>
             <Tab.Screen name="Home" component={ChatScreen} />
             <Tab.Screen name="Profile" component={SettingsScreen} />
           </Tab.Navigator>

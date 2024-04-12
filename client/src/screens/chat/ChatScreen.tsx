@@ -1,24 +1,16 @@
 import React, { useEffect } from "react";
 import {
-  Keyboard,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
   Platform,
   View,
   Text,
   StyleSheet,
   Dimensions,
-  SafeAreaView,
-  ScrollView,
 } from "react-native";
-import { ChatInput } from "../../components/common/CustomInputs";
-import { ChatSendButton } from "../../components/common/CustomButtons";
 import MessageChannel from "../../components/chat/MessageChannel";
 import * as Crypto from "expo-crypto";
-import { generateName } from "../../utils/scripts";
 import { SignOutButton } from "../../components/auth/AuthButtons";
 import { Message } from "../../types/Message";
-import { LocationProvider } from "../../contexts/LocationContext";
 import { useSocket } from "../../contexts/SocketContext";
 import { useSettings } from "../../contexts/SettingsContext";
 import { useLocation } from "../../contexts/LocationContext";

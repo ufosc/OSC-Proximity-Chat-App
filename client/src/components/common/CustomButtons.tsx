@@ -5,7 +5,7 @@ import { ChatSendButtonProps } from '../../types/Props';
 export const ChatSendButton: React.FC<ChatSendButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.sendButton} onPress={onPress}>
-        <Image style={styles.sendButtonImage} source={require('../../../assets/transparentSend.png')}/>
+        <Image style={styles.sendButtonImage} source={require('../../../assets/icons/arrow/transparentSend.png')}/>
     </TouchableOpacity>
   )
 }

@@ -4,11 +4,6 @@ import {SafeAreaView,
     StyleSheet,
     View,
     ScrollView,
-    FlatList,
-    Switch,
-    TouchableOpacity,
-    Image,
-    Dimensions,
 
 } from 'react-native';
 import { SettingsItem } from '../../components/settings/SettingsItem';

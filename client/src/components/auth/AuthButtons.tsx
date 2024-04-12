@@ -10,21 +10,13 @@ import {
   ImageSourcePropType,
   Platform,
 } from "react-native";
-import { router, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import { appSignOut } from "../../services/AuthStore";
 
 interface SignOutButtonProps {}
 
 export const SignOutButton: React.FC<SignOutButtonProps> = () => {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  const [fontsLoaded, fontError] = useFonts({
-    "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
-    "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
-    "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"), // fixed loading this file!
-  });
 
   const handleSignOut = async () => {
     Alert.alert(
@@ -43,7 +35,7 @@ export const SignOutButton: React.FC<SignOutButtonProps> = () => {
             setLoading(false);
 
             if (response?.user === null) {
-              router.replace("/");
+              console.log("Sign out successful");
             } else if (response?.error) {
               console.log(response.error);
               Alert.alert(
@@ -58,9 +50,6 @@ export const SignOutButton: React.FC<SignOutButtonProps> = () => {
     );
   };
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   return (
     <TouchableOpacity
@@ -76,14 +65,6 @@ export const SignOutButton: React.FC<SignOutButtonProps> = () => {
 export const LogInButton: React.FC<{ onPress?: () => void }> = ({
   onPress,
 }) => {
-  const [fontsLoaded, fontError] = useFonts({
-    "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
-    "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
-  });
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   return (
     <TouchableOpacity style={styles.login_button} onPress={onPress}>
@@ -117,10 +98,10 @@ export const ExternalAuthButton: React.FC<{
   imageSource?: ImageSourcePropType;
 }> = ({ onPress, companyName, imageSource }) => {
   const images: { [key: string]: ImageSourcePropType } = {
-    google: require("../../../assets/google_logo.png"),
-    apple: require("../../../assets/apple_logo.png"),
-    github: require("../../../assets/github_logo.png"),
-    facebook: require("../../../assets/facebook_logo.png"),
+    google: require("../../../assets/icons/auth/google_logo.png"),
+    apple: require("../../../assets/icons/auth/apple_logo.png"),
+    github: require("../../../assets/icons/auth/github_logo.png"),
+    facebook: require("../../../assets/icons/auth/facebook_logo.png"),
   };
 
   const clicked = () => {
@@ -132,7 +113,7 @@ export const ExternalAuthButton: React.FC<{
       <Image
         style={styles.login_logo}
         source={
-          images[companyName] || require("../../../assets/adaptive-icon.png")
+          images[companyName] || require("../../../assets/icons/expo/adaptive-icon.png")
         }
       />
     </TouchableOpacity>

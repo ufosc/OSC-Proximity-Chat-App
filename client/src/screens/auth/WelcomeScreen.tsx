@@ -23,18 +23,9 @@ const WelcomeScreen = ({ navigation }: any) => {
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
 
-  const [fontsLoaded, fontError] = useFonts({
-    "Gilroy-ExtraBold": require("../../../assets/fonts/Gilroy-ExtraBold.otf"),
-    "Gilroy-Light": require("../../../assets/fonts/Gilroy-Light.otf"),
-  });
-
   const [email, setEmail] = useState<string>("");
   const [authResponse, setAuthResponse] =
     React.useState<AuthenticationResponse>();
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   const handleLogin = () => {
     const preparedEmail = email.trim();
@@ -64,7 +55,7 @@ const WelcomeScreen = ({ navigation }: any) => {
               <View style={styles.image_container}>
                 <Image
                   style={styles.image}
-                  source={require("../../../assets/talking_location.png")}
+                  source={require("../../../assets/images/vector/talking_location.png")}
                 />
               </View>
 
@@ -86,7 +77,7 @@ const WelcomeScreen = ({ navigation }: any) => {
                     >
                       <Image
                         style={styles.arrow_image}
-                        source={require("../../../assets/angle-right.png")}
+                        source={require("../../../assets/icons/arrow/angle-right.png")}
                       />
                     </TouchableOpacity>
                   </View>
