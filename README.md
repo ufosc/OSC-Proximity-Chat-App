@@ -27,7 +27,7 @@ Our team consists of a handful of dedicated and talented developers from the Uni
 
 ## License
 
-GNU GENERAL PUBLIC LICENSE (GPL-3.0)
+This project is licensed under the [GNU General Public License v3.0](LICENSE) (GPL-3.0). If you intend to make a fork or a different distribution of our work, please remember to retain the same license. Other than that, happy hacking!
 
 ## Acknowledgments
 A big thanks to [Open Source Club @ UF](https://github.com/ufosc) for hosting the development of this app!
