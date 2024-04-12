@@ -1,3 +1,4 @@
+![banner](/client/assets/images/github/Echo_banner_small2.png)
 # Announcement: messages can now be sent and recieved between phones!
 # Echologator
 We're making an app that allows you to text with people within a set radius around you, anonymously. You could use this to easily chat with people at very populated places, like a library or dining hall on campus.
