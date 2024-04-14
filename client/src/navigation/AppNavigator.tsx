@@ -1,10 +1,11 @@
-import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import * as React from "react";
+
+import { LocationProvider } from "../contexts/LocationContext";
+import { SocketProvider } from "../contexts/SocketContext";
+import { UserProvider } from "../contexts/UserContext";
 import ChatScreen from "../screens/chat/ChatScreen";
 import SettingsScreen from "../screens/settings/SettingsScreen";
-import { SocketProvider } from "../contexts/SocketContext";
-import { LocationProvider } from "../contexts/LocationContext";
-import { UserProvider } from "../contexts/UserContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -13,10 +14,10 @@ const AppNavigator = () => {
     <LocationProvider>
       <SocketProvider>
         <UserProvider>
-          <Tab.Navigator screenOptions={{
-            headerShown: false,
-          
-          }}>
+          <Tab.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
             <Tab.Screen name="Home" component={ChatScreen} />
             <Tab.Screen name="Profile" component={SettingsScreen} />
           </Tab.Navigator>

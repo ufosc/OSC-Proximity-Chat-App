@@ -1,5 +1,5 @@
-import React, { useState, useContext, createContext, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, useContext, createContext, useEffect } from "react";
 
 type Settings = {
   theme: string;

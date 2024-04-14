@@ -1,3 +1,4 @@
+import { useFonts } from "expo-font";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -6,11 +7,9 @@ import {
   Dimensions,
   Alert,
   Image,
-  View,
   ImageSourcePropType,
-  Platform,
 } from "react-native";
-import { useFonts } from "expo-font";
+
 import { appSignOut } from "../../services/AuthStore";
 
 interface SignOutButtonProps {}
@@ -40,23 +39,21 @@ export const SignOutButton: React.FC<SignOutButtonProps> = () => {
               console.log(response.error);
               Alert.alert(
                 "Sign Out Failed",
-                "An error occurred during sign out. Please try again."
+                "An error occurred during sign out. Please try again.",
               );
             }
           },
         },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
-
 
   return (
     <TouchableOpacity
       style={styles.sign_out_button}
       onPress={handleSignOut}
-      disabled={loading}
-    >
+      disabled={loading}>
       <Text style={styles.button_text}>Sign Out</Text>
     </TouchableOpacity>
   );
@@ -65,7 +62,6 @@ export const SignOutButton: React.FC<SignOutButtonProps> = () => {
 export const LogInButton: React.FC<{ onPress?: () => void }> = ({
   onPress,
 }) => {
-
   return (
     <TouchableOpacity style={styles.login_button} onPress={onPress}>
       <Text style={styles.button_text}>Login</Text>
@@ -113,7 +109,8 @@ export const ExternalAuthButton: React.FC<{
       <Image
         style={styles.login_logo}
         source={
-          images[companyName] || require("../../../assets/icons/expo/adaptive-icon.png")
+          images[companyName] ||
+          require("../../../assets/icons/expo/adaptive-icon.png")
         }
       />
     </TouchableOpacity>
