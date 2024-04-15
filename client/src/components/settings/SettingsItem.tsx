@@ -39,7 +39,7 @@ export const SettingsItem = ({id, title, type, setter, data}: SettingsProps) => 
                 {(type === 'select') && (
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={styles.rowValueText}>{data[id as keyof typeof data]}</Text>
-                        <Image source={require('../../../assets/angle-right.png')} style={styles.rightArrow} />
+                        <Image source={require('../../../assets/icons/arrow/angle-right.png')} style={styles.rightArrow} />
                     </View>
                 
                 )}

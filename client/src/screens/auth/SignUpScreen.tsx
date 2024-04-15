@@ -28,11 +28,6 @@ import {
 import React from "react";
 
 const SignUpScreen = ({ navigation }: any) => {
-  const [fontsLoaded, fontError] = useFonts({
-    "Quicksand-Bold": require("../../../assets/fonts/Quicksand-Bold.ttf"),
-    "Quicksand-Medium": require("../../../assets/fonts/Quicksand-Medium.ttf"),
-  });
-
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [confirmPassword, setConfirmPassword] = React.useState<string>("");
@@ -65,12 +60,6 @@ const SignUpScreen = ({ navigation }: any) => {
     }
   };
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   const handleGoogleSignUp = async () => {
     console.log("Google Sign Up");

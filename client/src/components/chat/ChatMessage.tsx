@@ -19,7 +19,7 @@ const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
       <View style={styles.profileImageContainer}>
         <Image
           style={styles.profileImage}
-          source={require("../../../assets/user_icons/fake_pfp.jpg")}
+          source={require("../../../assets/icons/user/fake_pfp.jpg")}
         />
       </View>
       <View style={styles.contentContainer}>

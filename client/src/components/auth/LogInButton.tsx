@@ -1,20 +1,9 @@
-import { router } from "expo-router";
 import React from "react";
-import { useFonts } from "expo-font";
 import { StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
 import { LogInButtonProps } from "../../types/Props";
 
 
 const LogInButton: React.FC<LogInButtonProps> = ({ onPress }) => {
-
-  const [fontsLoaded, fontError] = useFonts({
-    'Gilroy-ExtraBold': require('../../../assets/fonts/Gilroy-ExtraBold.otf'),
-    'Gilroy-Light': require('../../../assets/fonts/Gilroy-Light.otf'),
-  });
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
