@@ -6,8 +6,9 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-import { ChatInputProps } from "../../types/Props";
+
 import { ChatSendButton } from "./CustomButtons";
+import { ChatInputProps } from "../../types/Props";
 
 export const WelcomeEmailInput: React.FC<ChatInputProps> = ({
   value,
@@ -54,7 +55,7 @@ export const PasswordInput: React.FC<ChatInputProps & { invalid: boolean }> = ({
       multiline={false}
       value={value}
       onChangeText={onChangeText}
-      secureTextEntry={true}
+      secureTextEntry
     />
   );
 };
@@ -70,7 +71,7 @@ export const ConfirmPasswordInput: React.FC<
       multiline={false}
       value={value}
       onChangeText={onChangeText}
-      secureTextEntry={true}
+      secureTextEntry
     />
   );
 };
@@ -84,7 +85,7 @@ export const ChatInput: React.FC<ChatInputProps & { onSend: () => void }> = ({
     <View style={styles.messsageContainer}>
       <TextInput
         placeholder="Say Something..."
-        multiline={true}
+        multiline
         value={value}
         onChangeText={onChangeText}
         maxLength={500}

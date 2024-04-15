@@ -3,67 +3,88 @@ name: Unit Tests
 on: [pull_request]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
 
+  lint:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [21.x]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm ci
-        working-directory: server/
+    - name: Install dependencies
+      run: npm ci
+      working-directory: client/
 
-      - name: Create subdirectory for service account JSON
-        run: |
-          mkdir private_key
-        working-directory: server/src
+    - name: Lint with ESLint
+      run: npm run lint
+      working-directory: client/
 
-      - name: Create service account JSON
-        id: create-service-account-json
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "private.json"
-          json: ${{ secrets.SERVICE_ACCOUNT_SECRET }}
-          dir: 'server/src/private_key/'
-        
-      - name: Compile TypeScript files
-        run: npx tsc
-        working-directory: server/
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [21.x]
 
-      - name: Start index.ts in background
-        run: npm start &
-        working-directory: server/
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Wait for server to start
-        run: sleep 5  # Adjust sleep time as needed to allow the server to start
-        timeout-minutes: 1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Run tests
-        run: npm test
-        working-directory: server/
+    - name: Install dependencies
+      run: npm ci
+      working-directory: server/
+
+    - name: Create subdirectory for service account JSON
+      run: |
+        mkdir private_key
+      working-directory: server/src
+
+    - name: Create service account JSON
+      id: create-service-account-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "private.json"
+        json: ${{ secrets.SERVICE_ACCOUNT_SECRET }}
+        dir: 'server/src/private_key/'
+
+    - name: Compile TypeScript files
+      run: npx tsc
+      working-directory: server/
+
+    - name: Start index.ts in background
+      run: npm start &
+      working-directory: server/
+
+    - name: Wait for server to start
+      run: sleep 5 # Adjust sleep time as needed to allow the server to start
+      timeout-minutes: 1
+
+    - name: Run tests
+      run: npm test
+      working-directory: server/
 
   file_existence:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Check for private.json and .env files
-        run: |
-          if [ -e "server/firebase-secret.json" ] || [ -e ".env"]; then
-          echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging.";
-           exit 1;
-          fi
-          
-
-
+    - name: Check for private.json and .env files
+      run: |
+        if [ -e "server/firebase-secret.json" ] || [ -e ".env" ]; then
+          echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging."
+          exit 1
+        fi

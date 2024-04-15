@@ -1,7 +1,8 @@
 import React from "react";
-import { useSettings } from "../../contexts/SettingsContext";
 import { SafeAreaView, Platform, StyleSheet, StatusBar } from "react-native";
-import { SafeAreaWrapperProps } from "../../utils/types";
+
+import { useSettings } from "../../contexts/SettingsContext";
+import { SafeAreaWrapperProps } from "../../types/Props";
 
 const SafeAreaWrapper: React.FC<SafeAreaWrapperProps> = ({ children }) => {
   const settings = useSettings();
@@ -9,7 +10,7 @@ const SafeAreaWrapper: React.FC<SafeAreaWrapperProps> = ({ children }) => {
   const mainSafeAreaProps = {
     ...styles.mainSafeArea,
     backgroundColor:
-      settings && settings.theme != "light" ? "#191d20" : "white",
+      settings && settings.theme !== "light" ? "#191d20" : "white",
   };
 
   return Platform.OS === "ios" ? (

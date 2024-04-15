@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, Dimensions, Image } from 'react-native'
-import React from 'react'
-import NearbyCount from './NearbyCount';
-import { CounterProps } from '../../types/Props';
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+
+import NearbyCount from "./NearbyCount";
+import { CounterProps } from "../../types/Props";
 
 export const NearbyHeader: React.FC<CounterProps> = ({ count }) => {
   return (

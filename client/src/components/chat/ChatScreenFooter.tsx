@@ -7,8 +7,9 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import { ChatSendButton } from "../common/CustomButtons";
 import { Smile, Image } from "react-native-feather";
+
+import { ChatSendButton } from "../common/CustomButtons";
 
 interface ChatInputProps {
   value?: string;
@@ -26,15 +27,15 @@ export const ChatScreenFooter: React.FC<ChatInputProps> = ({
     <View style={styles.container}>
       <View style={styles.iconContainer}>
         <TouchableOpacity>
-          <Image color={"black"} strokeWidth={1.8} style={styles.icons} />
+          <Image color="black" strokeWidth={1.8} style={styles.icons} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Smile color={"black"} strokeWidth={1.8} style={styles.icons} />
+          <Smile color="black" strokeWidth={1.8} style={styles.icons} />
         </TouchableOpacity>
       </View>
       <TextInput
         placeholder="Say Something..."
-        multiline={true}
+        multiline
         value={value}
         onChangeText={onChangeText}
         maxLength={500}

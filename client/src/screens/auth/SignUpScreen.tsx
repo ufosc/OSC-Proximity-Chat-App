@@ -1,4 +1,4 @@
-import { useFonts } from "expo-font";
+import React from "react";
 import {
   View,
   Text,
@@ -8,24 +8,23 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import {
-  EmailInput,
-  PasswordInput,
-  ConfirmPasswordInput,
-} from "../../components/common/CustomInputs";
+import { ArrowLeftCircle } from "react-native-feather";
 
+import {
+  SignUpButton,
+  ExternalAuthButton,
+} from "../../components/auth/AuthButtons";
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
   CustomError,
 } from "../../components/auth/AuthenticationResponse";
-import { appSignUp } from "../../services/AuthStore";
-import { ArrowLeftCircle } from "react-native-feather";
 import {
-  SignUpButton,
-  ExternalAuthButton,
-} from "../../components/auth/AuthButtons";
-import React from "react";
+  EmailInput,
+  PasswordInput,
+  ConfirmPasswordInput,
+} from "../../components/common/CustomInputs";
+import { appSignUp } from "../../services/AuthStore";
 
 const SignUpScreen = ({ navigation }: any) => {
   const [email, setEmail] = React.useState<string>("");
@@ -60,7 +59,6 @@ const SignUpScreen = ({ navigation }: any) => {
     }
   };
 
-
   const handleGoogleSignUp = async () => {
     console.log("Google Sign Up");
   };
@@ -83,10 +81,9 @@ const SignUpScreen = ({ navigation }: any) => {
         <View style={styles.main_container}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.back_button}
-          >
+            style={styles.back_button}>
             <ArrowLeftCircle
-              color={"black"}
+              color="black"
               strokeWidth={1.4}
               width={34}
               height={34}
@@ -154,14 +151,12 @@ const SignUpScreen = ({ navigation }: any) => {
           <View style={styles.footer_text_container}>
             <Text style={styles.footer_text}>Already have an account?</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Log In", { newEmail: "" })}
-            >
+              onPress={() => navigation.navigate("Log In", { newEmail: "" })}>
               <Text
                 style={[
                   styles.footer_text,
                   { color: "#5dbea3", textDecorationLine: "underline" },
-                ]}
-              >
+                ]}>
                 Log in
               </Text>
             </TouchableOpacity>

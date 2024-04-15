@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
+
 import { SignUpButtonProps } from "../../types/Props";
 
 const SignUpButton: React.FC<SignUpButtonProps> = ({ onPress }) => {
-
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <Text style={styles.button_text}>Sign Up</Text>
