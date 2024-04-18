@@ -8,24 +8,23 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import {
-  EmailInput,
-  PasswordInput,
-} from "../../components/common/CustomInputs";
+import { ArrowLeftCircle } from "react-native-feather";
+
 import {
   LogInButton,
   ExternalAuthButton,
 } from "../../components/auth/AuthButtons";
-import { appSignIn } from "../../services/AuthStore";
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
 } from "../../components/auth/AuthenticationResponse";
-import { ArrowLeftCircle } from "react-native-feather";
-import { useGlobalFonts } from "../../styles/fonts";
+import {
+  EmailInput,
+  PasswordInput,
+} from "../../components/common/CustomInputs";
+import { appSignIn } from "../../services/AuthStore";
 
 const LoginScreen = ({ route, navigation }: any) => {
-
   const { newEmail } = route.params;
 
   const [email, setEmail] = React.useState<string>("");
@@ -33,12 +32,6 @@ const LoginScreen = ({ route, navigation }: any) => {
   const [authResponse, setAuthResponse] =
     React.useState<AuthenticationResponse>();
   const [invalidLogin, invalidateLogin] = React.useState<boolean>(false); // Possbily change this?
-
-  const externalLoginIcons = {
-    google: require("../../../assets/icons/auth/google_logo.png"),
-    facebook: require("../../../assets/icons/auth/facebook_logo.png"),
-    apple: require("../../../assets/icons/auth/apple_logo.png"),
-  };
 
   // Sign in function with email and password
   const onHandleSubmit = async () => {
@@ -82,10 +75,9 @@ const LoginScreen = ({ route, navigation }: any) => {
         <View style={styles.main_container}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.back_button}
-          >
+            style={styles.back_button}>
             <ArrowLeftCircle
-              color={"black"}
+              color="black"
               strokeWidth={1.4}
               width={34}
               height={34}
@@ -112,8 +104,10 @@ const LoginScreen = ({ route, navigation }: any) => {
           </View>
           <TouchableOpacity>
             <Text
-              style={[styles.regular_text, { textDecorationLine: "underline" }]}
-            >
+              style={[
+                styles.regular_text,
+                { textDecorationLine: "underline" },
+              ]}>
               Forgot password?
             </Text>
           </TouchableOpacity>
@@ -152,8 +146,7 @@ const LoginScreen = ({ route, navigation }: any) => {
                 style={[
                   styles.footer_text,
                   { color: "#5dbea3", textDecorationLine: "underline" },
-                ]}
-              >
+                ]}>
                 Sign up
               </Text>
             </TouchableOpacity>

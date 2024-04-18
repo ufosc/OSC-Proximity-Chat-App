@@ -6,6 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { Store } from "pullstate";
+
 import { auth } from "../configs/firebaseConfig";
 
 interface AuthStoreInterface {
@@ -24,7 +25,7 @@ const unsub = onAuthStateChanged(auth, (user) => {
   console.log("onAuthStateChanged", user);
   AuthStore.update((store) => {
     (store.initialized = true),
-      (store.isLoggedin = user ? true : false),
+      (store.isLoggedin = !!user),
       (store.userAuthInfo = user);
   });
 });
@@ -34,7 +35,7 @@ export const appSignIn = async (email: string, password: string) => {
     const response = await signInWithEmailAndPassword(auth, email, password);
     AuthStore.update((store) => {
       store.userAuthInfo = response?.user;
-      store.isLoggedin = response?.user ? true : false;
+      store.isLoggedin = !!response?.user;
     });
     return { user: auth.currentUser };
   } catch (e) {
@@ -60,12 +61,12 @@ export const appSignUp = async (email: string, password: string) => {
     const response = await createUserWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
     );
 
     AuthStore.update((store) => {
       store.userAuthInfo = response.user;
-      store.isLoggedin = response.user ? true : false;
+      store.isLoggedin = !!response.user;
     });
     return { user: auth.currentUser };
   } catch (e) {

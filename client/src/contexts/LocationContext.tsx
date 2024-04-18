@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import * as Location from "expo-location";
 import { LOCATION_REFRESH_RATE } from "@env";
+import * as Location from "expo-location";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface LocationContextProps {
   longitude: number;
@@ -40,7 +40,7 @@ export const LocationProvider = ({
     // TODO: Refactor this useEffect into a different file (service?) outside of the context, as it is not part of the purpose of a context.
     (async () => {
       // Request location permissions, if not granted, return
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
         return;
@@ -73,7 +73,6 @@ export const LocationProvider = ({
     })();
 
     return () => console.log("[LOG]: Cleaning up location useEffect");
-
   }, []);
 
   return (
@@ -81,9 +80,8 @@ export const LocationProvider = ({
       value={{
         longitude: location.longitude,
         latitude: location.latitude,
-        isLocationEnabled: isLocationEnabled,
-      }}
-    >
+        isLocationEnabled,
+      }}>
       {children}
     </LocationContext.Provider>
   );
