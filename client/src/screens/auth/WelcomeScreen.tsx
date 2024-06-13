@@ -11,13 +11,13 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
-import { useFonts } from "expo-font";
-import { WelcomeEmailInput } from "../../components/common/CustomInputs";
+
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
   inValidEmailResponse,
 } from "../../components/auth/AuthenticationResponse";
+import { WelcomeEmailInput } from "../../components/common/CustomInputs";
 
 const WelcomeScreen = ({ navigation }: any) => {
   const keyboardVerticalOffest = Platform.OS === "ios" ? 0 : 0;
@@ -47,8 +47,7 @@ const WelcomeScreen = ({ navigation }: any) => {
     <View>
       <KeyboardAvoidingView
         behavior={keyboardBehavior}
-        keyboardVerticalOffset={keyboardVerticalOffest}
-      >
+        keyboardVerticalOffset={keyboardVerticalOffest}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.main_container}>
             <View style={styles.sub_container}>
@@ -73,8 +72,7 @@ const WelcomeScreen = ({ navigation }: any) => {
 
                     <TouchableOpacity
                       style={styles.login_button}
-                      onPress={handleLogin}
-                    >
+                      onPress={handleLogin}>
                       <Image
                         style={styles.arrow_image}
                         source={require("../../../assets/icons/arrow/angle-right.png")}
@@ -95,8 +93,7 @@ const WelcomeScreen = ({ navigation }: any) => {
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("Sign Up"); // Need to restyle
-                    }}
-                  >
+                    }}>
                     <Text style={styles.link}>Sign up.</Text>
                   </TouchableOpacity>
                 </Text>

@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, StyleSheet, Text, Image, Dimensions } from "react-native";
+
 import { useSettings } from "../../contexts/SettingsContext";
 import { MessageProps } from "../../types/Props";
 
@@ -12,7 +13,7 @@ const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
   // Text should have a different color to contrast with the background color
   const authorStyleProps = {
     ...styles.authorStyle,
-    color: settings && settings.theme != "light" ? "white" : "black",
+    color: settings && settings.theme !== "light" ? "white" : "black",
   };
   return (
     <View style={styles.container}>
@@ -27,18 +28,16 @@ const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
           <Text style={authorStyleProps}>{author}</Text>
           <Text
             style={{
-              color: settings && settings.theme != "light" ? "white" : "black",
-            }}
-          >
+              color: settings && settings.theme !== "light" ? "white" : "black",
+            }}>
             {timestamp}
           </Text>
         </View>
         <View style={styles.messageContent}>
           <Text
             style={{
-              color: settings && settings.theme != "light" ? "white" : "black",
-            }}
-          >
+              color: settings && settings.theme !== "light" ? "white" : "black",
+            }}>
             {messageContent}
           </Text>
         </View>

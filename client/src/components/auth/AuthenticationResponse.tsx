@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, Dimensions, TouchableOpacity } from "react-native";
 import { FirebaseError } from "firebase/app";
 import { User } from "firebase/auth";
+import React from "react";
+import { StyleSheet, Text, Dimensions, TouchableOpacity } from "react-native";
 
 //Type to handle Authentication Responses from firebase
 export type AuthenticationResponse =
@@ -27,7 +27,7 @@ export class CustomError {
 //Custom responses
 export const inValidEmailResponse = new CustomError(
   "Invalid Email",
-  "Please provide a valid email address"
+  "Please provide a valid email address",
 );
 
 //Function that decodes the error code
