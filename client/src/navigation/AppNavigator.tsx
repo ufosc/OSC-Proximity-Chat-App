@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import * as React
+import * as React from 'react';
 import  {
   SafeAreaView,
   ScrollView,
