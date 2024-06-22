@@ -9,7 +9,7 @@ const NearbyCount: React.FC<CounterProps> = ({ count }) => {
       <View style={styles.iconAndCount}>
         <Image
           style={styles.iconImage}
-          source={require("../../../assets/nearby_icon.png")}
+          source={require("../../../assets/icons/misc/nearby_icon.png")}
         />
         <Text style={styles.countText}>{count}</Text>
       </View>

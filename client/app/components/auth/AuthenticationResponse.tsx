@@ -1,5 +1,5 @@
-import { FirebaseError } from "firebase/app";
-import { User } from "firebase/auth";
+import { FirebaseError } from "@firebase/app";
+import { User } from "@firebase/auth";
 import React from "react";
 import { StyleSheet, Text, Dimensions, TouchableOpacity } from "react-native";
 
