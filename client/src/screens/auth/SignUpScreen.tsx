@@ -49,14 +49,10 @@ const SignUpScreen = ({ navigation }: any) => {
 
       return;
     }
-
-    setAuthResponse(await appSignUp(email, password));
-
-    if (authResponse?.user) {
-      console.log("User Logged IN!");
-    } else if (authResponse?.error) {
-      console.log(authResponse.error);
-    }
+    navigation.navigate("Code Screen", {
+      email: email,
+      password: password,
+    })
   };
 
   const handleGoogleSignUp = async () => {

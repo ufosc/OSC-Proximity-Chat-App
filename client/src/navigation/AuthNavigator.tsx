@@ -4,7 +4,7 @@ import * as React from "react";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignUpScreen from "../screens/auth/SignUpScreen";
 import WelcomeScreen from "../screens/auth/WelcomeScreen";
-
+import CodeScreen from "../screens/auth/CodeScreen";
 const Stack = createStackNavigator();
 
 const AuthNavigator = () => {
@@ -16,6 +16,10 @@ const AuthNavigator = () => {
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Log In" component={LoginScreen} />
       <Stack.Screen name="Sign Up" component={SignUpScreen} />
+      <Stack.Screen name="Code Screen" component={CodeScreen} />
+
+
+
     </Stack.Navigator>
   );
 };
