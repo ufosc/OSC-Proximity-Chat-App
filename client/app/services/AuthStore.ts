@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-} from "firebase/auth";
+} from "@firebase/auth";
 import { Store } from "pullstate";
 
 import { auth } from "../configs/firebaseConfig";
