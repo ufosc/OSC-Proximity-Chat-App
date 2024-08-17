@@ -9,9 +9,15 @@
       "@firebase/auth": [
         "./node_modules/@firebase/auth/dist/index.rn.d.ts"
       ],
+      "@app/*": [
+        "app/*"
+      ],
       "@env": [
         ".env"
+      ],
+      "typeRoots": [
+        "./app/types"
       ]
     }
-  },
+  }
 }
