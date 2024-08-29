@@ -1,5 +1,4 @@
 import * as Crypto from "expo-crypto";
-import React, { useEffect } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -17,6 +16,7 @@ import { useSettings } from "../../contexts/SettingsContext";
 import { useSocket } from "../../contexts/SocketContext";
 import { AuthStore } from "../../services/AuthStore";
 import { Message } from "../../types/Message";
+import { useState, useEffect } from "react";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -28,8 +28,9 @@ const ChatScreen = () => {
   // Note: To prevent complexity, all user information is grabbed from different contexts and services. If we wanted most information inside of UserContext, we would have to import contexts within contexts and have state change as certain things mount, which could cause errors that are difficult to pinpoint.
 
   // Message loading and sending logic
-  const [messages, setMessages] = React.useState<Message[]>([]);
-  const [messageContent, setMessageContent] = React.useState<string>("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [messageContent, setMessageContent] = useState<string>("");
+
 
   useEffect(() => {
     if (socket === null) return; // This line might need to be changed
