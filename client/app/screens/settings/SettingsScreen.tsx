@@ -8,7 +8,7 @@ import { SettingsItem } from "../../components/settings/SettingsItem";
 // select type: arrow to the right to switch pages
 const Sections = [
   {
-    header: "Notications",
+    header: "Notifcations",
     items: [
       {
         id: "notifiyNewMessage",
@@ -46,13 +46,14 @@ const SettingsScreen: React.FC = () => {
           <Text style={styles.headerText}>Settings</Text>
         </View>
         {Sections.map(({ header, items }) => (
-          <View style={styles.section} key={header}>
+          <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionHeaderText}>{header}</Text>
             </View>
             <View style={styles.sectionContent}>
               {items.map(({ id, title, type }) => (
                 <SettingsItem
+                  key={id}
                   id={id}
                   title={title}
                   type={type}
