@@ -8,7 +8,7 @@ import { SettingsItem } from "../../components/settings/SettingsItem";
 // select type: arrow to the right to switch pages
 const Sections = [
   {
-    header: "Notifcations",
+    header: "Notifications",
     items: [
       {
         id: "notifiyNewMessage",
