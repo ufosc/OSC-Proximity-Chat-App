@@ -1,19 +1,23 @@
-import express from 'express';
-import 'dotenv/config';
-import 'geofire-common';
-import { Message } from './types/Message';
-import { createMessage } from './actions/createMessage';
-import { createUser } from './actions/createConnectedUser';
-import { toggleUserConnectionStatus, updateUserLocation, updateUserDisplayName } from './actions/updateConnectedUser';
-import { deleteConnectedUserByUID } from './actions/deleteConnectedUser';
-import { findNearbyUsers, getConnectedUser } from './actions/getConnectedUsers';
-import {geohashForLocation} from 'geofire-common';
-import { ConnectedUser } from './types/User';
-import { getAuth } from 'firebase-admin/auth';
+import express from "express";
+import "dotenv/config";
+import "geofire-common";
+import { Message } from "./types/Message";
+import { createMessage } from "./actions/createMessage";
+import { createUser } from "./actions/createConnectedUser";
+import {
+  toggleUserConnectionStatus,
+  updateUserLocation,
+  updateUserDisplayName,
+} from "./actions/updateConnectedUser";
+import { deleteConnectedUserByUID } from "./actions/deleteConnectedUser";
+import { findNearbyUsers, getConnectedUser } from "./actions/getConnectedUsers";
+import { geohashForLocation } from "geofire-common";
+import { ConnectedUser } from "./types/User";
+import { getAuth } from "firebase-admin/auth";
 import Mailgun from "mailgun.js";
-import { messagesCollection } from './utilities/firebaseInit';
-import { calculateDistanceInMeters } from './actions/calculateDistance';
-import { scheduleCron } from './actions/deleter';
+import { messagesCollection } from "./utilities/firebaseInit";
+import { calculateDistanceInMeters } from "./actions/calculateDistance";
+import { scheduleCron } from "./actions/deleter";
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -71,30 +75,36 @@ io.on("connection", async (socket: any) => {
   await createUser(defaultConnectedUser);
   await toggleUserConnectionStatus(socket.id);
 
-  const observer = messagesCollection.where("lastUpdated", ">", Date.now()).onSnapshot((querySnapshot) => {
-    querySnapshot.docChanges().forEach((change) => {
+  const observer = messagesCollection
+    .order('lastUpdated', "desc")
+    .limit(0)
+    .onSnapshot((querySnapshot) => {
+      querySnapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          console.log("New message: ", change.doc.data());
 
-      if (change.type === "added"){
-        console.log("New message: ", change.doc.data());
-      
-        const messageLat = change.doc.data().location.lat;
-        const messageLon = change.doc.data().location.lon;
+          const messageLat = change.doc.data().location.lat;
+          const messageLon = change.doc.data().location.lon;
 
-        const userLat = defaultConnectedUser.location.lat;
-        const userLon = defaultConnectedUser.location.lon;
+          const userLat = defaultConnectedUser.location.lat;
+          const userLon = defaultConnectedUser.location.lon;
 
-        const distance = calculateDistanceInMeters(messageLat, messageLon, userLat, userLon);
+          const distance = calculateDistanceInMeters(
+            messageLat,
+            messageLon,
+            userLat,
+            userLon
+          );
 
-        if (distance < 300) {
-          console.log("Message is within 300m of user");
-          socket.emit("message", change.doc.data());
-        } else {
-          console.log("Message is not within 300m of user");
+          if (distance < 300) {
+            console.log("Message is within 300m of user");
+            socket.emit("message", change.doc.data());
+          } else {
+            console.log("Message is not within 300m of user");
+          }
         }
-      }
-
+      });
     });
-  });
 
   socket.on("disconnect", () => {
     console.log(`[WS] User <${socket.id}> exited.`);
@@ -134,8 +144,8 @@ io.on("connection", async (socket: any) => {
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message);
     }
-  })
-})
+  });
+});
 socketServer.listen(socket_port, () => {
   console.log(`[WS] Listening for new connections on port ${socket_port}.`);
 });
@@ -159,7 +169,6 @@ app.get("/users", async (req, res) => {
 
       const userIds = await findNearbyUsers(lat, lon, radius);
       res.json(userIds);
-
     } else if (req.query.userId) {
       query = "?userId";
       const userId = req.query.userId;
@@ -169,7 +178,7 @@ app.get("/users", async (req, res) => {
       if (user) {
         res.json(user);
       } else {
-        // getConnectedUserDisplayName() will return false is an error is thrown, and print it to console. 
+        // getConnectedUserDisplayName() will return false is an error is thrown, and print it to console.
         throw Error("getConnectedUser() failed.");
       }
     }
@@ -221,7 +230,6 @@ app.put("/users", async (req, res) => {
 
       const success = await toggleUserConnectionStatus(userId);
       if (!success) throw Error("     toggleUserConnectionStatus() failed.");
-
     } else if (req.query.userId && req.query.lat && req.query.lon) {
       query = "?userId&lat&lon";
       const userId = req.query.userId;
@@ -233,20 +241,19 @@ app.put("/users", async (req, res) => {
 
       const success = await updateUserLocation(userId, lat, lon);
       if (!success) throw Error("     toggleUserConnectionStatus() failed.");
-
     } else if (req.query.userId && req.query.displayName) {
       query = "?userId&displayName";
       const userId = req.query.userId;
       if (typeof userId != "string") throw Error("  [userId] is not a string.");
       const displayName = req.query.displayName;
-      if (typeof displayName != "string") throw Error("  [displayName] is not a string.");
-      
+      if (typeof displayName != "string")
+        throw Error("  [displayName] is not a string.");
+
       const success = await updateUserDisplayName(userId, displayName);
       if (!success) throw Error("updateDisplayName() failed.");
     }
     console.log(`[EXP] Request <PUT /users${query}> returned successfully.`);
     res.json(`Operation <PUT /users${query}> was handled successfully.`);
-
   } catch (error) {
     console.error(
       `[EXP] Error returning request <PUT /users${query}>:\n`,
@@ -292,9 +299,12 @@ app.post("/verify", async (req, res) => {
         from: "Mailgun Sandbox <postmaster@sandboxf8629624c26849cf8546cd0bc01ee862.mailgun.org>",
         to: email,
         subject: "Verify your email for echologator",
-        template: "app email verification"
+        template: "app email verification",
       };
-      const verifyEmailResponse = await mg.messages.create("sandboxf8629624c26849cf8546cd0bc01ee862.mailgun.org", data)
+      const verifyEmailResponse = await mg.messages.create(
+        "sandboxf8629624c26849cf8546cd0bc01ee862.mailgun.org",
+        data
+      );
       console.log(`[EXP] Request <POST /verify${query}>returned successfully.`);
       res.json(verifyEmailResponse);
     }
@@ -334,10 +344,8 @@ app.listen(express_port, () => {
   );
 });
 
-
 //Remove the comments if you want to use the deleter !!!!!!
 //scheduleCron(); // Begin searching and collecting Garbage (old messages)
-
 
 // Some old API routes are commented out for now due to breaking type changes.
 
