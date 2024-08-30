@@ -46,7 +46,7 @@ const SettingsScreen: React.FC = () => {
           <Text style={styles.headerText}>Settings</Text>
         </View>
         {Sections.map(({ header, items }) => (
-          <View style={styles.section}>
+          <View style={styles.section} key={header}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionHeaderText}>{header}</Text>
             </View>
