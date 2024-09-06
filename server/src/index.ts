@@ -102,7 +102,7 @@ io.on("connection", async (socket: any) => {
             console.log(`Message is within ${message_outreach_radius} meters of the user ${socket.id}.`);
             socket.emit("message", change.doc.data());
           } else {
-            console.log(`Message is not within ${message_outreach_radius} meters to user ${socket.id}.`);
+            console.log(`Message is not within ${message_outreach_radius} meters of the user ${socket.id}.`);
           }
         }
       });
