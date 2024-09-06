@@ -87,12 +87,34 @@ jobs:
         if [ -e "server/firebase-secret.json" ] || [ -e ".env" ]; then
           echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging."
           exit 1
-        fi
 
-    - name: Check Prettier Formatting
+  prettier-check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [21.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: server/
+
+    - name: Check Prettier Formatting in Server
       run: npm run format:check
       working-directory: server/
 
-    - name: Check Prettier Formatting
+    - name: Install dependencies
+      run: npm ci
+      working-directory: client/
+
+    - name: Check Prettier Formatting in Client
       run: npm run format:check
       working-directory: client/
