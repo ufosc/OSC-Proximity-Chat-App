@@ -8,6 +8,7 @@ Echo is a new chat messaging app aimed at allowing you to talk to strangers *(or
 
 This repository holds the all of the code that our Echo app utilizes (pretty cool right? 😎). This repository is public because we believe in the future of open source projects, the community is what makes developing so special ✨! It is split into the frontend/app `/client` and the backend/server `/server`. Take a look around, we're sure you'll find yourself wanting to help out! Ready? Head here 👉 [contributing](#contributing)
 
+Here is our design for the Echo Chat App on Figma: [Figma Design](https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1).
 
 ## Installation
 
