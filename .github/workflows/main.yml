@@ -88,3 +88,11 @@ jobs:
           echo "Error: Found .env or firebase-secret.json in the pull request. Please remove them before merging."
           exit 1
         fi
+
+    - name: Check Prettier Formatting
+      run: npm run format:check
+      working-directory: server/
+
+    - name: Check Prettier Formatting
+      run: npm run format:check
+      working-directory: client/
