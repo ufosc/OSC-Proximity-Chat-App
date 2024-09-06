@@ -23,6 +23,8 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const socket_port = process.env.socket_port;
 const express_port = process.env.express_port;
+const message_outreach_radius = Number(process.env.message_outreach_radius);
+const message_retrival_limit = Number(process.env.message_retrival_limit);
 const app = express();
 
 // Middleware
@@ -76,8 +78,8 @@ io.on("connection", async (socket: any) => {
   await toggleUserConnectionStatus(socket.id);
 
   const observer = messagesCollection
-    .order('lastUpdated', "desc")
-    .limit(0)
+    .orderBy('lastUpdated', "desc")
+    .limit(message_retrival_limit)
     .onSnapshot((querySnapshot) => {
       querySnapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
@@ -96,20 +98,19 @@ io.on("connection", async (socket: any) => {
             userLon
           );
 
-          if (distance < 300) {
-            console.log("Message is within 300m of user");
+          if (distance < message_outreach_radius) {
+            console.log(`Message is within ${message_outreach_radius} meters of the user ${socket.id}.`);
             socket.emit("message", change.doc.data());
           } else {
-            console.log("Message is not within 300m of user");
+            console.log(`Message is not within ${message_outreach_radius} meters to user ${socket.id}.`);
           }
         }
       });
-    });
+  });
 
   socket.on("disconnect", () => {
     console.log(`[WS] User <${socket.id}> exited.`);
     deleteConnectedUserByUID(socket.id);
-    observer();
   });
   socket.on("ping", (ack) => {
     // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
@@ -123,6 +124,9 @@ io.on("connection", async (socket: any) => {
       const messageCreated = await createMessage(message);
       if (!messageCreated) throw new Error("createMessage() failed.");
       if (ack) ack("message recieved");
+
+
+      
     } catch (error) {
       console.error("[WS] Error sending message:", error.message);
     }
