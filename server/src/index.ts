@@ -123,10 +123,7 @@ io.on("connection", async (socket: any) => {
     try {
       const messageCreated = await createMessage(message);
       if (!messageCreated) throw new Error("createMessage() failed.");
-      if (ack) ack("message recieved");
-
-
-      
+      if (ack) ack("message recieved");  
     } catch (error) {
       console.error("[WS] Error sending message:", error.message);
     }
