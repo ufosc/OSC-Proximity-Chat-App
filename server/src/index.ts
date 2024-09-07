@@ -24,7 +24,6 @@ const { Server } = require("socket.io");
 const socket_port = process.env.socket_port;
 const express_port = process.env.express_port;
 const message_outreach_radius = Number(process.env.message_outreach_radius);
-const message_retrival_limit = Number(process.env.message_retrival_limit);
 const app = express();
 
 // Middleware
@@ -79,7 +78,7 @@ io.on("connection", async (socket: any) => {
 
   const observer = messagesCollection
     .orderBy('lastUpdated', "desc")
-    .limit(message_retrival_limit)
+    .limit(1)
     .onSnapshot((querySnapshot) => {
       querySnapshot.docChanges().forEach((change) => {
         if (change.type === "added") {

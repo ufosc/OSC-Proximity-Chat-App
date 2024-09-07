@@ -8,7 +8,6 @@
 
 # Location
 message_outreach_radius = 100 # meters
-message_retrival_limit = 300
 
 # Misc
 express_port = 3001
