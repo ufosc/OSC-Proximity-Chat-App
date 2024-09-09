@@ -1,9 +1,9 @@
 import { Router } from "express";
 import Mailgun from "mailgun.js";
 
-const authUserEmailRoute = Router();
+const authEmailRoute = Router();
 
-authUserEmailRoute.post("/verify", async (req, res) => {
+authEmailRoute.post("/verify", async (req, res) => {
     let query = "";
     try {
       if (req.query.email) {
@@ -36,4 +36,4 @@ authUserEmailRoute.post("/verify", async (req, res) => {
     }
 });
 
-export default authUserEmailRoute;
+export default authEmailRoute;

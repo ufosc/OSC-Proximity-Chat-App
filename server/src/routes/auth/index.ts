@@ -1,10 +1,10 @@
 import { Router } from "express";
-import authUserEmailRoute from "./email";
+import authEmailRoute from "./email";
 
 const authRouter = Router();
 
 
-authRouter.use(authUserEmailRoute);
+authRouter.use(authEmailRoute);
 
 
 export default authRouter;
