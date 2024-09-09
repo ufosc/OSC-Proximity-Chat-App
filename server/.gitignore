@@ -134,6 +134,7 @@ build
 
 # Private Key JSON
 firebase-secrets.json
+firebase-secret.json
 
 # Other
 .env
