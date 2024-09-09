@@ -18,6 +18,7 @@ import Mailgun from "mailgun.js";
 import { messagesCollection } from "./utilities/firebaseInit";
 import { calculateDistanceInMeters } from "./actions/calculateDistance";
 import { scheduleCron } from "./actions/deleter";
+import userAndAuthRouter from "./routes";
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -156,166 +157,16 @@ app.get("/", (req, res) => {
   res.send("Echologator API");
 });
 
-app.get("/users", async (req, res) => {
-  let query = "";
-  try {
-    if (req.query.lat && req.query.lon && req.query.radius) {
-      // Looks up all users close to a geographic location extended by a radius (in meters).
-      query = "?lat&lon&radius";
+app.use(userAndAuthRouter);
 
-      const lat = Number(req.query.lat);
-      const lon = Number(req.query.lon);
-      const radius = Number(req.query.radius);
 
-      const userIds = await findNearbyUsers(lat, lon, radius);
-      res.json(userIds);
-    } else if (req.query.userId) {
-      query = "?userId";
-      const userId = req.query.userId;
-      if (typeof userId != "string") throw Error("  [userId] is not a string.");
 
-      const user = await getConnectedUser(userId);
-      if (user) {
-        res.json(user);
-      } else {
-        // getConnectedUserDisplayName() will return false is an error is thrown, and print it to console.
-        throw Error("getConnectedUser() failed.");
-      }
-    }
-  } catch (error) {
-    console.error(
-      `[EXP] Error returning request <GET /users${query}>:\n`,
-      error.message
-    );
-    res.json(`Operation <GET /users${query}> failed.`);
-  }
-});
 
-app.post("/users", async (req, res) => {
-  try {
-    const status = await createUser({
-      uid: req.body.uid,
-      socketId: req.body.socketId,
-      displayName: req.body.displayName,
-      userIcon: {
-        foregroundImage: req.body.userIcon.foregroundImage,
-        backgroundImage: req.body.userIcon.backgroundImage,
-      },
-      location: {
-        lat: Number(req.body.location.lat),
-        lon: Number(req.body.location.lon),
-        geohash: req.body.location.geohash,
-      },
-    });
-    if (status === false) throw new Error("Error creating user: ");
-    res.json("Operation <POST /user> was handled successfully.");
-    console.log("[EXP] Request <POST /users> returned successfully.");
-  } catch (error) {
-    console.error(
-      "[EXP] Error returning request <POST /users>:\n",
-      error.message
-    );
-    res.json(`Operation <POST /user> failed.`);
-  }
-});
 
-app.put("/users", async (req, res) => {
-  let query = "";
-  try {
-    if (req.query.userId && req.query.toggleConnection) {
-      // Note: toggleConnection should be assigned 'true', but it at least needs to contain any value. We don't perform a check on this parameter for this reason.
-      query = "?userId&toggleConnection";
-      const userId = req.query.userId;
-      if (typeof userId != "string") throw Error("  [userId] is not a string.");
 
-      const success = await toggleUserConnectionStatus(userId);
-      if (!success) throw Error("     toggleUserConnectionStatus() failed.");
-    } else if (req.query.userId && req.query.lat && req.query.lon) {
-      query = "?userId&lat&lon";
-      const userId = req.query.userId;
-      const lat = Number(req.query.lat);
-      const lon = Number(req.query.lon);
-      if (typeof userId != "string") throw Error("  [userId] is not a string.");
-      if (typeof lat != "number") throw Error("  [lat] is not a number.");
-      if (typeof lon != "number") throw Error("  [lon] is not a number.");
 
-      const success = await updateUserLocation(userId, lat, lon);
-      if (!success) throw Error("     toggleUserConnectionStatus() failed.");
-    } else if (req.query.userId && req.query.displayName) {
-      query = "?userId&displayName";
-      const userId = req.query.userId;
-      if (typeof userId != "string") throw Error("  [userId] is not a string.");
-      const displayName = req.query.displayName;
-      if (typeof displayName != "string")
-        throw Error("  [displayName] is not a string.");
 
-      const success = await updateUserDisplayName(userId, displayName);
-      if (!success) throw Error("updateDisplayName() failed.");
-    }
-    console.log(`[EXP] Request <PUT /users${query}> returned successfully.`);
-    res.json(`Operation <PUT /users${query}> was handled successfully.`);
-  } catch (error) {
-    console.error(
-      `[EXP] Error returning request <PUT /users${query}>:\n`,
-      error.message
-    );
-    res.json(`Operation <PUT /user${query}> failed.`);
-  }
-});
 
-app.delete("/users", async (req, res) => {
-  let query = "";
-  try {
-    query = "?userId";
-    const userId = req.query.userId;
-    if (typeof userId != "string") throw Error("  [userId] is not a string.");
-
-    const success = await deleteConnectedUserByUID(userId);
-    if (!success) throw Error("     deleteUserById() failed.");
-
-    console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`);
-    res.json(`Operation <DELETE /users${query}> was handled successfully.`);
-  } catch (error) {
-    console.error(
-      `[EXP] Error returning request <DELETE /users${query}>:\n`,
-      error.message
-    );
-    res.json(`Operation <DELETE /user${query}> failed.`);
-  }
-});
-
-app.post("/verify", async (req, res) => {
-  let query = "";
-  try {
-    if (req.query.email) {
-      query = "?email";
-      const email = req.query.email;
-      const mailgun = new Mailgun(FormData);
-      const mg = mailgun.client({
-        username: "api",
-        key: process.env.MAILGUN_API_KEY || "key-yourkeyhere",
-      });
-      const data = {
-        from: "Mailgun Sandbox <postmaster@sandboxf8629624c26849cf8546cd0bc01ee862.mailgun.org>",
-        to: email,
-        subject: "Verify your email for echologator",
-        template: "app email verification",
-      };
-      const verifyEmailResponse = await mg.messages.create(
-        "sandboxf8629624c26849cf8546cd0bc01ee862.mailgun.org",
-        data
-      );
-      console.log(`[EXP] Request <POST /verify${query}>returned successfully.`);
-      res.json(verifyEmailResponse);
-    }
-  } catch (error) {
-    console.error(
-      `[EXP] Error returning request <POST /verify${query}>:\n`,
-      error
-    );
-    res.json(`Operation <POST /verify${query}> failed.`);
-  }
-});
 
 // Error handling
 app.get("*", (req, res) => {
