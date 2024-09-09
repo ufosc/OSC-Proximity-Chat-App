@@ -1,15 +1,15 @@
 import { Router } from "express";
 import createUserRoute from "./create";
 import deleteUserRoute from "./delete";
-import getNearbyUserRoute from "./getNearby";
 import updateUserRoute from "./update";
+import nearbyUserRoute from "./getNearby";
 
 const userRouter = Router();
 
 
 userRouter.use(createUserRoute);
 userRouter.use(deleteUserRoute);
-userRouter.use(getNearbyUserRoute);
+userRouter.use(nearbyUserRoute);
 userRouter.use(updateUserRoute);
 
 

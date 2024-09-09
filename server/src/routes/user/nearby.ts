@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { findNearbyUsers, getConnectedUser } from "../../actions/getConnectedUsers";
 
-const getNearbyUserRoute = Router();
+const nearbyUserRoute = Router();
 
-getNearbyUserRoute.get("/users", async (req, res) => {
+nearbyUserRoute.get("/users", async (req, res) => {
     let query = "";
     try {
       if (req.query.lat && req.query.lon && req.query.radius) {
@@ -38,4 +38,4 @@ getNearbyUserRoute.get("/users", async (req, res) => {
     }
 });
 
-export default getNearbyUserRoute;
+export default nearbyUserRoute;

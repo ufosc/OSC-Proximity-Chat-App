@@ -1,10 +1,12 @@
 import { Router } from "express";
 import authRouter from "./auth";
 import userRouter from "./user";
+import errorRouter from "./error/error";
 
-const userAndAuthRouter = Router();
+const mainRouter = Router();
 
-userAndAuthRouter.use(authRouter);
-userAndAuthRouter.use(userRouter);
+mainRouter.use(authRouter);
+mainRouter.use(userRouter);
+mainRouter.use(errorRouter);
 
-export default userAndAuthRouter;
+export default mainRouter;

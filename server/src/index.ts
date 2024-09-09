@@ -18,7 +18,7 @@ import Mailgun from "mailgun.js";
 import { messagesCollection } from "./utilities/firebaseInit";
 import { calculateDistanceInMeters } from "./actions/calculateDistance";
 import { scheduleCron } from "./actions/deleter";
-import userAndAuthRouter from "./routes";
+import mainRouter from "./routes";
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -157,43 +157,17 @@ app.get("/", (req, res) => {
   res.send("Echologator API");
 });
 
-app.use(userAndAuthRouter);
 
+app.use(mainRouter);
 
-
-
-
-
-
-
-
-
-// Error handling
-app.get("*", (req, res) => {
-  res.json("404: Path could not be found! COULD NOT {GET}");
-  res.status(404);
-});
-
-app.post("*", (req, res) => {
-  res.json("404: Path could not be found! COULD NOT {POST}");
-  res.status(404);
-});
-
-app.put("*", (req, res) => {
-  res.json("404: Path could not be found! COULD NOT {PUT}");
-  res.status(404);
-});
-
-app.delete("*", (req, res) => {
-  res.json("404: Path could not be found! COULD NOT {DELETE}");
-  res.status(404);
-});
 
 app.listen(express_port, () => {
   return console.log(
     `[EXP] Listening for requests at http://localhost:${express_port}.`
   );
 });
+
+
 
 //Remove the comments if you want to use the deleter !!!!!!
 //scheduleCron(); // Begin searching and collecting Garbage (old messages)
