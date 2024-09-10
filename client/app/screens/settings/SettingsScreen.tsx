@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image, Pressable, Modal, Button } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
 
@@ -42,6 +42,7 @@ const SettingsScreen: React.FC = () => {
     deleteMessages: false,
   });
 
+  const[profileVisible, setProfileVisible] = useState(false);
   const iconStyle = [styles.icon, {backgroundColor: data.profileColor}]
 
 
@@ -49,12 +50,55 @@ const SettingsScreen: React.FC = () => {
     <SafeAreaView style={styles.safeAreaStyle}>
       <ScrollView style={styles.container}>
 
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={profileVisible}
+            onRequestClose={() => setProfileVisible(false)}
+        >
+          <SafeAreaView style={{flex:1}}>
+            <View style={styles.userModal}>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>Hi {data.displayName}!</Text>
+                <Text>    </Text>
+                <Pressable onPress={() => setProfileVisible(false)}>
+                  <Image
+                      style={iconStyle}
+                      source={data.profilePic}
+                  />
+                </Pressable>
+              </View>
+              <View style={styles.section}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionHeaderText}>Edit Profile</Text>
+                </View>
+                <View style={styles.sectionContent}>
+                  <Button
+                      title="Edit Display Name"
+                  />
+                  <Button
+                      title="Edit Profile Color"
+                  />
+                </View>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionHeaderText}>Change profile picture</Text>
+                </View>
+                <View style={styles.sectionContent}>
+
+                </View>
+              </View>
+            </View>
+          </SafeAreaView>
+        </Modal>
+
         <View style={styles.header}>
           <Text style={styles.headerText}>Settings</Text>
+          <Pressable onPress={() => setProfileVisible(true)}>
             <Image
                 style={iconStyle}
                 source={data.profilePic}
             />
+          </Pressable>
         </View>
 
         {Sections.map(({ header, items }) => (
@@ -124,6 +168,14 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 20,
+  },
+  userModal: {
+    flex: 1,
+    backgroundColor: "#d4d4d4",
+    borderRadius: 10,
+    paddingVertical: 24,
+    marginLeft: "auto",
+    maxHeight: "65%",
   },
 });
 
