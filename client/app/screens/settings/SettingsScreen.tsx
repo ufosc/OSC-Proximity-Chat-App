@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image, Pressable, Modal, Button, FlatList } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image, Pressable, Modal, Button, FlatList, TextInput } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
 
@@ -43,6 +43,13 @@ const SettingsScreen: React.FC = () => {
   });
 
   const[profileVisible, setProfileVisible] = useState(false);
+  const[inputModal, setInputModal] = useState({
+    visible: false,
+    type: -1 // 0 for display name, 1 for profile color
+  });
+  const[textInput, setTextInput] = useState('');
+  const[errorMessage, setErrorMessage] = useState('');
+
   const iconStyle = [styles.icon, {backgroundColor: data.profileColor}]
 
   const icons = [
@@ -60,6 +67,7 @@ const SettingsScreen: React.FC = () => {
     <SafeAreaView style={styles.safeAreaStyle}>
       <ScrollView style={styles.container}>
 
+        {/* User Settings Menu */}
         <Modal
             animationType="fade"
             transparent={true}
@@ -78,6 +86,56 @@ const SettingsScreen: React.FC = () => {
                   />
                 </Pressable>
               </View>
+
+              {/* Text Input */}
+              <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={inputModal.visible}
+                  onRequestClose={() => setInputModal({visible: false, type: -1})}
+              >
+                <SafeAreaView style={styles.centeredView}>
+                  <View style={styles.inputModal}>
+                    <Text style={styles.sectionHeaderText}>{["Edit Display Name", "Edit Profile Color"][inputModal.type]}</Text>
+                    <Text style={errorMessage==='' ? {display:"none"}: {color: "red"}}>{errorMessage}</Text>
+                    <TextInput
+                        defaultValue={[data.displayName, data.profileColor][inputModal.type]}
+                        maxLength={[12, 7][inputModal.type]}
+                        style={styles.textInput}
+                        onChangeText={text => {setTextInput(text); setErrorMessage('');}}
+                    />
+                    <View style={styles.buttonContainer}>
+                      <Button title="Cancel"
+                              onPress={() => {
+                                setInputModal({visible: false, type:-1});
+                                setErrorMessage('');
+                              }}
+                      />
+                      <Text>            </Text>
+                      <Button title="Save" onPress={() => {
+                        if (inputModal.type === 0) {
+                          if (textInput.length > 0) {
+                            setInputModal({visible: false, type: -1});
+                            setData({...data, ["displayName"]: textInput});
+                            setErrorMessage('');
+                          } else
+                            setErrorMessage("Please enter a display name.")
+                        } else if (inputModal.type === 1){
+                          const re = /^#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3}$/;
+                          if (re.exec(textInput)) {
+                            setInputModal({visible: false, type: -1});
+                            setData({...data, ["profileColor"]: textInput});
+                            setErrorMessage('');
+                          } else
+                            setErrorMessage("Please enter a valid hex code.")
+                        }}}
+                      />
+                    </View>
+                  </View>
+                </SafeAreaView>
+              </Modal>
+
+              {/* User Settings */}
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>
                   <Text style={styles.sectionHeaderText}>Edit Profile</Text>
@@ -85,9 +143,17 @@ const SettingsScreen: React.FC = () => {
                 <View style={styles.sectionContent}>
                   <Button
                       title="Edit Display Name"
+                      onPress={() => {
+                        setInputModal({visible: true, type: 0});
+                        setTextInput(data.displayName);
+                      }}
                   />
                   <Button
                       title="Edit Profile Color"
+                      onPress={() => {
+                        setInputModal({visible: true, type: 1});
+                        setTextInput(data.profileColor);
+                      }}
                   />
                 </View>
                 <View style={styles.sectionHeader}>
@@ -109,6 +175,7 @@ const SettingsScreen: React.FC = () => {
           </SafeAreaView>
         </Modal>
 
+        {/* Settings Screen */}
         <View style={styles.header}>
           <Text style={styles.headerText}>Settings</Text>
           <Pressable onPress={() => setProfileVisible(true)}>
@@ -193,12 +260,45 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   userModal: {
-    flex: 1,
     backgroundColor: "#d4d4d4",
     borderRadius: 10,
     paddingVertical: 24,
     marginLeft: "auto",
     maxHeight: "65%",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "rgba(54, 54, 54, 0.5)",
+  },
+  inputModal: {
+    alignItems: "center",
+    backgroundColor: "#cccccc",
+    marginTop: "50%",
+    width: "70%",
+    borderRadius: 20,
+    padding: "5%",
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonContainer: {
+    paddingHorizontal: "5%",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  textInput: {
+    marginVertical: "5%",
+    width: "75%",
+    textAlign: "center",
+    borderBottomWidth: 2,
+    fontSize: 20,
   },
 });
 
