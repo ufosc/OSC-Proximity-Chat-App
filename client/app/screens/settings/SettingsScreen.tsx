@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
 
@@ -33,18 +33,30 @@ const Sections = [
 const SettingsScreen: React.FC = () => {
   // settings values (will be changed later to reflect the actual settings)
   const [data, setData] = useState({
+    displayName: "Display Name",
+    profilePic: require("../../../assets/icons/user/face_01.png"),
+    profileColor: "#1199ff",
     notifyNewMessage: true,
     darkMode: false,
     language: "English",
     deleteMessages: false,
   });
 
+  const iconStyle = [styles.icon, {backgroundColor: data.profileColor}]
+
+
   return (
     <SafeAreaView style={styles.safeAreaStyle}>
       <ScrollView style={styles.container}>
+
         <View style={styles.header}>
           <Text style={styles.headerText}>Settings</Text>
+            <Image
+                style={iconStyle}
+                source={data.profilePic}
+            />
         </View>
+
         {Sections.map(({ header, items }) => (
           <View style={styles.section} key={header}>
             <View style={styles.sectionHeader}>
@@ -79,6 +91,8 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
   },
   header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingLeft: 24,
     paddingRight: 24,
   },
@@ -105,6 +119,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: "#e3e3e3",
+  },
+  icon: {
+    width: 50,
+    height: 50,
+    borderRadius: 20,
   },
 });
 
