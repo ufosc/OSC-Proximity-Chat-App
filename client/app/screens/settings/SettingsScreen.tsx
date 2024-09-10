@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image, Pressable, Modal, Button } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image, Pressable, Modal, Button, FlatList } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
 
@@ -45,6 +45,16 @@ const SettingsScreen: React.FC = () => {
   const[profileVisible, setProfileVisible] = useState(false);
   const iconStyle = [styles.icon, {backgroundColor: data.profileColor}]
 
+  const icons = [
+    require("../../../assets/icons/user/face_01.png"),
+    require("../../../assets/icons/user/face_02.png"),
+    require("../../../assets/icons/user/face_03.png"),
+    require("../../../assets/icons/user/face_04.png"),
+    require("../../../assets/icons/user/face_05.png"),
+    require("../../../assets/icons/user/face_06.png"),
+    require("../../../assets/icons/user/face_07.png"),
+    require("../../../assets/icons/user/fake_pfp.jpg"),
+  ];
 
   return (
     <SafeAreaView style={styles.safeAreaStyle}>
@@ -83,8 +93,16 @@ const SettingsScreen: React.FC = () => {
                 <View style={styles.sectionHeader}>
                   <Text style={styles.sectionHeaderText}>Change profile picture</Text>
                 </View>
-                <View style={styles.sectionContent}>
-
+                <View style={[styles.sectionContent, {alignItems: "center"}]}>
+                  <FlatList data={icons}
+                            numColumns={6}
+                            renderItem={icon => (
+                                <Pressable onPress={() => setData({ ...data, ["profilePic"]: icon.item })}>
+                                  <Image style={[iconStyle, icon.item === data.profilePic ? styles.selected:{margin: 5}]}
+                                         source={icon.item}/>
+                                </Pressable>
+                            )}>
+                  </FlatList>
                 </View>
               </View>
             </View>
@@ -168,6 +186,11 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 20,
+  },
+  selected: {
+    borderWidth: 3,
+    borderColor: "yellow",
+    margin: 5,
   },
   userModal: {
     flex: 1,
