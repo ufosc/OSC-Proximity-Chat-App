@@ -18,7 +18,7 @@ import Mailgun from "mailgun.js";
 import { messagesCollection } from "./utilities/firebaseInit";
 import { calculateDistanceInMeters } from "./actions/calculateDistance";
 import { scheduleCron } from "./actions/deleter";
-import mainRouter from "./routes";
+import mainRouter from "./routes/mainRouteHandler";
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
