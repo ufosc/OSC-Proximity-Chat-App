@@ -34,7 +34,7 @@ const SettingsScreen: React.FC = () => {
   // settings values (will be changed later to reflect the actual settings)
   const [data, setData] = useState({
     displayName: "Display Name",
-    profilePic: require("../../../assets/icons/user/face_01.png"),
+    profilePicIndex: 0, // index for icons array
     profileColor: "#1199ff",
     notifyNewMessage: true,
     darkMode: false,
@@ -82,7 +82,7 @@ const SettingsScreen: React.FC = () => {
                 <Pressable onPress={() => setProfileVisible(false)}>
                   <Image
                       style={iconStyle}
-                      source={data.profilePic}
+                      source={icons[data.profilePicIndex]}
                   />
                 </Pressable>
               </View>
@@ -97,7 +97,7 @@ const SettingsScreen: React.FC = () => {
                 <SafeAreaView style={styles.centeredView}>
                   <View style={styles.inputModal}>
                     <Text style={styles.sectionHeaderText}>{["Edit Display Name", "Edit Profile Color"][inputModal.type]}</Text>
-                    <Text style={errorMessage==='' ? {display:"none"}: {color: "red"}}>{errorMessage}</Text>
+                    <Text style={errorMessage==='' ? {display:"none"} : {color: "red"}}>{errorMessage}</Text>
                     <TextInput
                         defaultValue={[data.displayName, data.profileColor][inputModal.type]}
                         maxLength={[12, 7][inputModal.type]}
@@ -119,7 +119,7 @@ const SettingsScreen: React.FC = () => {
                             setData({...data, ["displayName"]: textInput});
                             setErrorMessage('');
                           } else
-                            setErrorMessage("Please enter a display name.")
+                            setErrorMessage("Please enter a display name.");
                         } else if (inputModal.type === 1){
                           const re = /^#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3}$/;
                           if (re.exec(textInput)) {
@@ -127,7 +127,7 @@ const SettingsScreen: React.FC = () => {
                             setData({...data, ["profileColor"]: textInput});
                             setErrorMessage('');
                           } else
-                            setErrorMessage("Please enter a valid hex code.")
+                            setErrorMessage("Please enter a valid hex code.");
                         }}}
                       />
                     </View>
@@ -163,8 +163,8 @@ const SettingsScreen: React.FC = () => {
                   <FlatList data={icons}
                             numColumns={6}
                             renderItem={icon => (
-                                <Pressable onPress={() => setData({ ...data, ["profilePic"]: icon.item })}>
-                                  <Image style={[iconStyle, icon.item === data.profilePic ? styles.selected:{margin: 5}]}
+                                <Pressable onPress={() => setData({ ...data, ["profilePicIndex"]: icon.index })}>
+                                  <Image style={[iconStyle, icon.index === data.profilePicIndex ? styles.selected:{margin: 5}]}
                                          source={icon.item}/>
                                 </Pressable>
                             )}>
@@ -181,7 +181,7 @@ const SettingsScreen: React.FC = () => {
           <Pressable onPress={() => setProfileVisible(true)}>
             <Image
                 style={iconStyle}
-                source={data.profilePic}
+                source={icons[data.profilePicIndex]}
             />
           </Pressable>
         </View>
