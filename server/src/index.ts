@@ -110,7 +110,14 @@ io.on("connection", async (socket: any) => {
 
   socket.on("disconnect", () => {
     console.log(`[WS] User <${socket.id}> exited.`);
-    deleteConnectedUserByUID(socket.id);
+    try {
+      deleteConnectedUserByUID(socket.id);
+    } catch (error) {
+      console.error(
+        `[WS] Error disconnecting user <${socket.id}>.\n\t`,
+        error.message
+      );
+    }
   });
   socket.on("ping", (ack) => {
     // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.

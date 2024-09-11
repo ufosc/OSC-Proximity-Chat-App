@@ -2,12 +2,5 @@
 import { connectedUsersCollection } from '../utilities/firebaseInit'
 
 export const deleteConnectedUserByUID = async (socketID: string) => {
-  try {
     await connectedUsersCollection.doc(socketID).delete()
-    return true
-        
-  } catch (error) {
-    console.error(error.message)
-    return false
-  }
 }
