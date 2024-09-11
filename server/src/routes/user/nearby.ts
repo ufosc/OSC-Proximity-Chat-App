@@ -59,7 +59,7 @@ nearbyUserRoute.get("/users", async (req, res) => {
   } else {
     console.error(
       `[EXP] Error returning request <GET ${req.url}>:\n\t`,
-      "No target specified"
+      "No valid target specification."
     );
     res.status(400).json(`Operation <GET ${req.url}> failed.`);
   }

@@ -22,16 +22,17 @@ createUserRoute.post("/users", async (req, res) => {
     });
   } catch (error) {
     console.error(
-      "[EXP] Error returning request <POST /users>:\n",
+      "[EXP] Error processing request <POST /users>:\n\t",
       error.message
     );
     res.status(500).json(`Operation <POST /user> failed.`);
+    return;
   }
-  if (!status) {
+  if (status) {
     console.log("[EXP] Request <POST /users> returned successfully.");
     res.json("Operation <POST /user> was handled successfully.");
   } else {
-    console.error("[EXP] Error returning request <POST /users>:\n");
+    console.error("[EXP] Error returning request <POST /users>");
     res.status(500).json(`Operation <POST /user> failed.`);
   }
 });
