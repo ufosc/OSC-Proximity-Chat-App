@@ -1,4 +1,4 @@
-import { API_KEY, AUTH_DOMAIN } from '@env'; // Don't worry about this env error!
+import { API_KEY, AUTH_DOMAIN } from "@env"; // Don't worry about this env error!
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp, getApp, getApps } from "@firebase/app";
 import {
