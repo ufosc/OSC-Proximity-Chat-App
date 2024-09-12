@@ -25,5 +25,5 @@ export interface ConnectedUser {
         lat: number
         lon: number
         geohash: string
-    }
+    },
 }
