@@ -57,7 +57,7 @@ const SettingsScreen: React.FC = () => {
           text: "Sign Out",
           onPress: async () => {
             setLoading(true);
-            const response = await appSignOut(); // Your sign-out logic
+            const response = await appSignOut();
             setLoading(false);
 
             if (response?.user === null) {
