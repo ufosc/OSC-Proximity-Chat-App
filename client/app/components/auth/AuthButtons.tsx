@@ -10,55 +10,55 @@ import {
   ImageSourcePropType,
 } from "react-native";
 
-import { appSignOut } from "../../services/AuthStore";
+// Migrated to SettingsScree.tsx
 
-interface SignOutButtonProps {}
+// import { appSignOut } from "../../services/AuthStore";
+// interface SignOutButtonProps {}
+// export const SignOutButton: React.FC<SignOutButtonProps> = () => {
+//   const [loading, setLoading] = useState(false);
 
-export const SignOutButton: React.FC<SignOutButtonProps> = () => {
-  const [loading, setLoading] = useState(false);
+//   const handleSignOut = async () => {
+//     Alert.alert(
+//       "Confirm Sign Out",
+//       "Are you sure you want to sign out?",
+//       [
+//         {
+//           text: "Cancel",
+//           style: "cancel",
+//         },
+//         {
+//           text: "Sign Out",
+//           onPress: async () => {
+//             setLoading(true);
+//             const response = await appSignOut();
+//             setLoading(false);
 
-  const handleSignOut = async () => {
-    Alert.alert(
-      "Confirm Sign Out",
-      "Are you sure you want to sign out?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Sign Out",
-          onPress: async () => {
-            setLoading(true);
-            const response = await appSignOut();
-            setLoading(false);
+//             if (response?.user === null) {
+//               console.log("Sign out successful");
+//             } else if (response?.error) {
+//               console.log(response.error);
+//               Alert.alert(
+//                 "Sign Out Failed",
+//                 "An error occurred during sign out. Please try again.",
+//               );
+//             }
+//           },
+//         },
+//       ],
+//       { cancelable: false },
+//     );
+//   };
 
-            if (response?.user === null) {
-              console.log("Sign out successful");
-            } else if (response?.error) {
-              console.log(response.error);
-              Alert.alert(
-                "Sign Out Failed",
-                "An error occurred during sign out. Please try again.",
-              );
-            }
-          },
-        },
-      ],
-      { cancelable: false },
-    );
-  };
-
-  return (
-    <TouchableOpacity
-      style={styles.sign_out_button}
-      onPress={handleSignOut}
-      disabled={loading}>
-      <Text style={styles.button_text}>Sign Out</Text>
-    </TouchableOpacity>
+//   return (
+//     <TouchableOpacity
+//       style={styles.sign_out_button}
+//       onPress={handleSignOut}
+//       disabled={loading}>
+//       <Text style={styles.button_text}>Sign Out</Text>
+//     </TouchableOpacity>
   
-  );
-};
+//   );
+// };
 
 export const LogInButton: React.FC<{ onPress?: () => void }> = ({
   onPress,

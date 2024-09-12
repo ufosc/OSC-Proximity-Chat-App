@@ -99,7 +99,6 @@ const ChatScreen = () => {
               Chat Screen
             </Text>
           </View>
-          <SignOutButton />
           <View style={styles.chatContainer}>
             <MessageChannel messages={messages} />
           </View>

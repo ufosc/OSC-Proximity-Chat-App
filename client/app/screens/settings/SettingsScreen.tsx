@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView } from "react-native";
-
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { SettingsItem } from "../../components/settings/SettingsItem";
+import { appSignOut } from "../../services/AuthStore";
 
 // List of settings items
 // toggle type: a switch
@@ -28,16 +28,53 @@ const Sections = [
     header: "Privacy",
     items: [{ id: "deleteMessages", title: "Delete messages", type: "toggle" }],
   },
+  {
+    header: "Manage Account",
+    items: [{ id: "signOut", title: "Sign Out", type: "select" }],
+  }
 ];
 
 const SettingsScreen: React.FC = () => {
-  // settings values (will be changed later to reflect the actual settings)
   const [data, setData] = useState({
     notifyNewMessage: true,
     darkMode: false,
     language: "English",
     deleteMessages: false,
   });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSignOut = async () => {
+    Alert.alert(
+      "Confirm Sign Out",
+      "Are you sure you want to sign out?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Sign Out",
+          onPress: async () => {
+            setLoading(true);
+            const response = await appSignOut(); // Your sign-out logic
+            setLoading(false);
+
+            if (response?.user === null) {
+              console.log("Sign out successful");
+            } else if (response?.error) {
+              console.log(response.error);
+              Alert.alert(
+                "Sign Out Failed",
+                "An error occurred during sign out. Please try again.",
+              );
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaStyle}>
@@ -51,16 +88,31 @@ const SettingsScreen: React.FC = () => {
               <Text style={styles.sectionHeaderText}>{header}</Text>
             </View>
             <View style={styles.sectionContent}>
-              {items.map(({ id, title, type }) => (
-                <SettingsItem
-                  key={id}
-                  id={id}
-                  title={title}
-                  type={type}
-                  setter={setData}
-                  data={data}
-                />
-              ))}
+              {items.map(({ id, title, type }) => {
+                if (id === "signOut") {
+                  return (
+                    <TouchableOpacity
+                      key={id}
+                      style={styles.signOutRow}
+                      onPress={handleSignOut}
+                      disabled={loading}
+                    >
+                      <Text style={styles.signOutText}>Sign Out</Text>
+                    </TouchableOpacity>
+                  );
+                }
+
+                return (
+                  <SettingsItem
+                    key={id}
+                    id={id}
+                    title={title}
+                    type={type}
+                    setter={setData}
+                    data={data}
+                  />
+                );
+              })}
             </View>
           </View>
         ))}
@@ -70,7 +122,6 @@ const SettingsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  // Styles
   safeAreaStyle: {
     flex: 1,
     backgroundColor: "#f6f6f6",
@@ -105,6 +156,20 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: "#e3e3e3",
+  },
+  signOutRow: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: "#e3e3e3",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  signOutText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "red",
   },
 });
 
