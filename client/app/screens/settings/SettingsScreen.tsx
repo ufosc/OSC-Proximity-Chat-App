@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image, Pressable, Modal, Button, FlatList, TextInput } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, Image, Pressable, Modal, Button, FlatList } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
+import {ColorInput, DisplayNameInput} from "@app/components/settings/TextInputs";
 
 // List of settings items
 // toggle type: a switch
@@ -43,12 +44,11 @@ const SettingsScreen: React.FC = () => {
   });
 
   const[profileVisible, setProfileVisible] = useState(false);
-  const[inputModal, setInputModal] = useState({
-    visible: false,
-    type: -1 // 0 for display name, 1 for profile color
+  const[inputVisible, setInputVisible] = useState({
+    displayName: false,
+    profileColor: false,
   });
-  const[textInput, setTextInput] = useState('');
-  const[errorMessage, setErrorMessage] = useState('');
+
 
   const iconStyle = [styles.icon, {backgroundColor: data.profileColor}]
 
@@ -87,52 +87,18 @@ const SettingsScreen: React.FC = () => {
                 </Pressable>
               </View>
 
-              {/* Text Input */}
-              <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={inputModal.visible}
-                  onRequestClose={() => setInputModal({visible: false, type: -1})}
-              >
-                <SafeAreaView style={styles.centeredView}>
-                  <View style={styles.inputModal}>
-                    <Text style={styles.sectionHeaderText}>{["Edit Display Name", "Edit Profile Color"][inputModal.type]}</Text>
-                    <Text style={errorMessage==='' ? {display:"none"} : {color: "red"}}>{errorMessage}</Text>
-                    <TextInput
-                        defaultValue={[data.displayName, data.profileColor][inputModal.type]}
-                        maxLength={[12, 7][inputModal.type]}
-                        style={styles.textInput}
-                        onChangeText={text => {setTextInput(text); setErrorMessage('');}}
-                    />
-                    <View style={styles.buttonContainer}>
-                      <Button title="Cancel"
-                              onPress={() => {
-                                setInputModal({visible: false, type:-1});
-                                setErrorMessage('');
-                              }}
-                      />
-                      <Button title="Save" onPress={() => {
-                        if (inputModal.type === 0) {
-                          if (textInput.length > 0) {
-                            setInputModal({visible: false, type: -1});
-                            setData({...data, ["displayName"]: textInput});
-                            setErrorMessage('');
-                          } else
-                            setErrorMessage("Please enter a display name.");
-                        } else if (inputModal.type === 1){
-                          const re = /^#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3}$/;
-                          if (re.exec(textInput)) {
-                            setInputModal({visible: false, type: -1});
-                            setData({...data, ["profileColor"]: textInput});
-                            setErrorMessage('');
-                          } else
-                            setErrorMessage("Please enter a valid hex code.");
-                        }}}
-                      />
-                    </View>
-                  </View>
-                </SafeAreaView>
-              </Modal>
+              <DisplayNameInput
+               defaultValue={data.displayName}
+               isVisible={inputVisible.displayName}
+               visibleSetter={(value: boolean) => setInputVisible({...inputVisible, ["displayName"]: value})}
+               outputSetter={(output: string) => setData({...data, ["displayName"]: output})}
+              />
+              <ColorInput
+                  defaultValue={data.profileColor}
+                  isVisible={inputVisible.profileColor}
+                  visibleSetter={(value: boolean) => setInputVisible({...inputVisible, ["profileColor"]: value})}
+                  outputSetter={(output: string) => setData({...data, ["profileColor"]: output})}
+              />
 
               {/* User Settings */}
               <View style={styles.section}>
@@ -142,17 +108,11 @@ const SettingsScreen: React.FC = () => {
                 <View style={styles.sectionContent}>
                   <Button
                       title="Edit Display Name"
-                      onPress={() => {
-                        setInputModal({visible: true, type: 0});
-                        setTextInput(data.displayName);
-                      }}
+                      onPress={() => setInputVisible({...inputVisible, ["displayName"]: true})}
                   />
                   <Button
                       title="Edit Profile Color"
-                      onPress={() => {
-                        setInputModal({visible: true, type: 1});
-                        setTextInput(data.profileColor);
-                      }}
+                      onPress={() => setInputVisible({...inputVisible, ["profileColor"]: true})}
                   />
                 </View>
                 <View style={styles.sectionHeader}>
