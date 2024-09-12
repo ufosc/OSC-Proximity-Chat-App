@@ -1,5 +1,15 @@
 import React, {useState} from "react";
-import {Button, Modal, SafeAreaView, Text, TextInput, View, StyleSheet} from "react-native";
+import {
+    Button,
+    Modal,
+    SafeAreaView,
+    Text,
+    TextInput,
+    View,
+    StyleSheet,
+    Pressable,
+    TouchableWithoutFeedback
+} from "react-native";
 
 type GenericTextInputProps = {
     defaultValue: string;
@@ -31,9 +41,17 @@ const GenericTextInput = ({
             animationType="fade"
             transparent={true}
             visible={isVisible}
-            onRequestClose={() => visibleSetter(false)}
+            onRequestClose={() => {
+                visibleSetter(false);
+                setError('');
+            }}
         >
+            <Pressable onPress={() => {
+                visibleSetter(false);
+                setError('');
+            }}>
             <SafeAreaView style={styles.centeredView}>
+                <TouchableWithoutFeedback>
                 <View style={styles.inputModal}>
                     <Text style={styles.inputHeader}>{headerText}</Text>
                     <Text style={error==='' ? {display:"none"} : {color: "red"}}>{error}</Text>
@@ -62,7 +80,9 @@ const GenericTextInput = ({
                         />
                     </View>
                 </View>
+                </TouchableWithoutFeedback>
             </SafeAreaView>
+            </Pressable>
         </Modal>
     )};
 
@@ -114,7 +134,7 @@ const styles = StyleSheet.create({
         letterSpacing: 1.2,
     },
     centeredView: {
-        flex: 1,
+        height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
         backgroundColor: "rgba(54, 54, 54, 0.5)",
