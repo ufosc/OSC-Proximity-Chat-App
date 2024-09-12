@@ -111,7 +111,6 @@ const SettingsScreen: React.FC = () => {
                                 setErrorMessage('');
                               }}
                       />
-                      <Text>            </Text>
                       <Button title="Save" onPress={() => {
                         if (inputModal.type === 0) {
                           if (textInput.length > 0) {
