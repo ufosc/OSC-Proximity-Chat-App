@@ -7,7 +7,8 @@ import {
 } from "@firebase/auth";
 import { Store } from "pullstate";
 
-import { auth } from "../configs/firebaseConfig";
+import { auth , db } from "../configs/firebaseConfig";
+import { doc , setDoc } from "@firebase/firestore"; // Import Firestore functions
 
 interface AuthStoreInterface {
   isLoggedin: boolean;
@@ -20,6 +21,20 @@ export const AuthStore = new Store<AuthStoreInterface>({
   initialized: false,
   userAuthInfo: null,
 });
+
+const createUserConfig = async (userId: string) => {
+  try {
+    const docRef = doc(db, "UserConfig", userId);
+
+    await setDoc(docRef, {
+      darkMode: false,
+      notificationsEnabled: false,
+      language: "English",
+    });
+  } catch (e){
+    console.error("Error creating UserConfig: ", e);
+  }
+}
 
 const unsub = onAuthStateChanged(auth, (user) => {
   console.log("onAuthStateChanged", user);
@@ -68,6 +83,11 @@ export const appSignUp = async (email: string, password: string) => {
       store.userAuthInfo = response.user;
       store.isLoggedin = !!response.user;
     });
+
+    if (response.user) {
+      await createUserConfig(response.user.uid);
+    }
+
     return { user: auth.currentUser };
   } catch (e) {
     return { error: e };

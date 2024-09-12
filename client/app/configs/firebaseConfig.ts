@@ -7,6 +7,7 @@ import {
   getAuth,
   Auth,
 } from "@firebase/auth";
+import { getFirestore } from "@firebase/firestore";
 
 const firebaseConfig = {
   apiKey: API_KEY || "Mock-Key",
@@ -31,4 +32,5 @@ if (!getApps().length) {
   auth = getAuth();
 }
 
+export const db = getFirestore(); //Export Const DB for UserConfig
 export { app, auth };
