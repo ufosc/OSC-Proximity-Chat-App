@@ -291,7 +291,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: "5%",
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
+width: "100%",
+},
   textInput: {
     marginVertical: "5%",
     width: "75%",
