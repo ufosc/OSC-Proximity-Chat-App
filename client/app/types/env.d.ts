@@ -1,5 +1,9 @@
-declare module '@env' {
-
-export const EXPO_IP: string;
-export const API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID: string;
+declare module "@env" {
+  export const EXPO_IP: string;
+  export const API_KEY: string,
+    AUTH_DOMAIN: string,
+    PROJECT_ID: string,
+    STORAGE_BUCKET: string,
+    MESSAGING_SENDER_ID: string,
+    APP_ID: string;
 }

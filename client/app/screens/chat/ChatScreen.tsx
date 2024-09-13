@@ -33,7 +33,6 @@ const ChatScreen = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageContent, setMessageContent] = useState<string>("");
 
-
   useEffect(() => {
     if (socket === null) return; // This line might need to be changed
 
