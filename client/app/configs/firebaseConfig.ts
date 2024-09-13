@@ -10,7 +10,7 @@ import {
 
 const firebaseConfig = {
   apiKey: API_KEY || "Mock-Key",
-  authDomain: AUTH_DOMAIN
+  authDomain: AUTH_DOMAIN,
 };
 
 let app;
