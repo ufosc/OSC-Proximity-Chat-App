@@ -63,11 +63,6 @@ io.on("connection", async (socket: any) => {
   const defaultConnectedUser: ConnectedUser = {
     uid: "UID",
     socketId: socket.id,
-    displayName: "DISPLAY NAME",
-    userIcon: {
-      foregroundImage: "FOREGROUND IMG",
-      backgroundImage: "BACKGROUND IMG",
-    },
     location: {
       lat: 9999,
       lon: 9999,

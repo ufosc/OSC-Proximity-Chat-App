@@ -3,7 +3,7 @@ import { deleteConnectedUserByUID } from "../../actions/deleteConnectedUser";
 
 const deleteUserRoute = Router();
 
-deleteUserRoute.post("/users", async (req, res) => {
+deleteUserRoute.delete("/users", async (req, res) => {
   const userId = req.query.userId;
   if (typeof userId != "string") {
     console.error(

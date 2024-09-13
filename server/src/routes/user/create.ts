@@ -9,11 +9,6 @@ createUserRoute.post("/users", async (req, res) => {
     status = await createUser({
       uid: req.body.uid,
       socketId: req.body.socketId,
-      displayName: req.body.displayName,
-      userIcon: {
-        foregroundImage: req.body.userIcon.foregroundImage,
-        backgroundImage: req.body.userIcon.backgroundImage,
-      },
       location: {
         lat: Number(req.body.location.lat),
         lon: Number(req.body.location.lon),
