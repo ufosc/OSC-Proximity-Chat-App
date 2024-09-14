@@ -17,6 +17,7 @@ import { useSocket } from "../../contexts/SocketContext";
 import { AuthStore } from "../../services/AuthStore";
 import { Message } from "../../types/Message";
 import { useState, useEffect } from "react";
+import { useUser } from "@app/contexts/UserContext";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -24,6 +25,7 @@ const ChatScreen = () => {
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
   const socket = useSocket();
   const location = useLocation();
+  const user = useUser();
   const userAuth = AuthStore.useState();
   // Note: To prevent complexity, all user information is grabbed from different contexts and services. If we wanted most information inside of UserContext, we would have to import contexts within contexts and have state change as certain things mount, which could cause errors that are difficult to pinpoint.
 
@@ -53,7 +55,7 @@ const ChatScreen = () => {
       const newMessage: Message = {
         author: {
           uid: String(userAuth.userAuthInfo?.uid),
-          displayName: "Anonymous",
+          displayName: String(user?.displayName),
         },
         msgId: Crypto.randomUUID(),
         msgContent: messageContent.trim(),

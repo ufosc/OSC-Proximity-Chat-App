@@ -63,11 +63,6 @@ io.on("connection", async (socket: any) => {
   const defaultConnectedUser: ConnectedUser = {
     uid: "UID",
     socketId: socket.id,
-    displayName: "DISPLAY NAME",
-    userIcon: {
-      foregroundImage: "FOREGROUND IMG",
-      backgroundImage: "BACKGROUND IMG",
-    },
     location: {
       lat: 9999,
       lon: 9999,
@@ -110,7 +105,14 @@ io.on("connection", async (socket: any) => {
 
   socket.on("disconnect", () => {
     console.log(`[WS] User <${socket.id}> exited.`);
-    deleteConnectedUserByUID(socket.id);
+    try {
+      deleteConnectedUserByUID(socket.id);
+    } catch (error) {
+      console.error(
+        `[WS] Error disconnecting user <${socket.id}>.\n\t`,
+        error.message
+      );
+    }
   });
   socket.on("ping", (ack) => {
     // The (ack) parameter stands for "acknowledgement." This function sends a message back to the originating socket.
@@ -130,21 +132,24 @@ io.on("connection", async (socket: any) => {
   });
   socket.on("updateLocation", async (location, ack) => {
     console.log(`[WS] Recieved new location from user <${socket.id}>.`);
+    let lat: number, lon: number;
     try {
-      const lat = Number(location.lat);
-      const lon = Number(location.lon);
-      defaultConnectedUser.location.lat = lat;
-      defaultConnectedUser.location.lon = lon;
-      const success = await updateUserLocation(socket.id, lat, lon);
-      if (success) {
-        console.log("[WS] Location updated in database successfully.");
-        if (ack) ack("location updated");
-      } else {
-        throw new Error("updateUserLocation() failed.");
-      }
+      lat = Number(location.lat);
+      lon = Number(location.lon);
+    } catch {
+      console.error("[WS] Error calling updateLocation: Invalid [lat/lon].");
+      return;
+    }
+    defaultConnectedUser.location.lat = lat;
+    defaultConnectedUser.location.lon = lon;
+    try {
+      await updateUserLocation(socket.id, lat, lon);
     } catch (error) {
       console.error("[WS] Error calling updateLocation:", error.message);
+      return;
     }
+    console.log("[WS] Location updated in database successfully.");
+    if (ack) ack("location updated");
   });
 });
 socketServer.listen(socket_port, () => {

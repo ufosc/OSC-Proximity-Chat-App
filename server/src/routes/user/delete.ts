@@ -3,25 +3,27 @@ import { deleteConnectedUserByUID } from "../../actions/deleteConnectedUser";
 
 const deleteUserRoute = Router();
 
-deleteUserRoute.post("/users", async (req, res) => {
-    let query = "";
-    try {
-      query = "?userId";
-      const userId = req.query.userId;
-      if (typeof userId != "string") throw Error("  [userId] is not a string.");
-  
-      const success = await deleteConnectedUserByUID(userId);
-      if (!success) throw Error("     deleteUserById() failed.");
-  
-      console.log(`[EXP] Request <DELETE /users${query}> returned successfully.`);
-      res.json(`Operation <DELETE /users${query}> was handled successfully.`);
-    } catch (error) {
-      console.error(
-        `[EXP] Error returning request <DELETE /users${query}>:\n`,
-        error.message
-      );
-      res.json(`Operation <DELETE /user${query}> failed.`);
-    }
+deleteUserRoute.delete("/users", async (req, res) => {
+  const userId = req.query.userId;
+  if (typeof userId != "string") {
+    console.error(
+      `[EXP] Error returning request <DELETE ${req.url}>:\n\t`,
+      "[userId] is not a string."
+    );
+    res.status(400).json(`Operation <DELETE ${req.url}> failed.`);
+    return;
+  }
+  try {
+    await deleteConnectedUserByUID(userId);
+  } catch (error) {
+    console.error(
+      `[EXP] Error returning request <DELETE ${req.url}>:\n\t`,
+      error.message
+    );
+    res.status(500).json(`Operation <DELETE ${req.url}> failed.`);
+  }
+  console.log(`[EXP] Request <DELETE ${req.url}> returned successfully.`);
+  res.json(`Operation <DELETE ${req.url}> was handled successfully.`);
 });
 
 export default deleteUserRoute;
