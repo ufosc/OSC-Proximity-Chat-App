@@ -10,7 +10,9 @@ import {
   Modal,
   Button,
   FlatList,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Alert
 } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
