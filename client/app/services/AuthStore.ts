@@ -24,12 +24,22 @@ export const AuthStore = new Store<AuthStoreInterface>({
 
 const createUserConfig = async (userId: string) => {
   try {
-    const docRef = doc(db, "UserConfig", userId);
+    const docRef = doc(db, "UserConfigs", userId);
 
     await setDoc(docRef, {
+      // TODO: create a matching UserConfig type in the app/types folder.
+      // In documentation: make explicit that the key for UserConfig documents is the same as a uid from the user auth collection.
+      isConnected: false,
+      lastConnectionTime: "",
+      displayName: "",
+      userIcon: {
+        imageType: 0,
+        color: "#02efdb"
+      },
       darkMode: false,
       notificationsEnabled: false,
       language: "English",
+      
     });
   } catch (e){
     console.error("Error creating UserConfig: ", e);
