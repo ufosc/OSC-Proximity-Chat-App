@@ -26,7 +26,7 @@ const Sections = [
   },
   {
     header: "Privacy",
-    items: [{ id: "deleteMessages", title: "Delete my messages when I dissapear", type: "toggle" }],
+    items: [{ id: "deleteMessages", title: "Delete my messages when I disappear", type: "toggle" }],
   },
 ];
 
