@@ -6,23 +6,11 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@firebase/auth": [
-        "./node_modules/@firebase/auth/dist/index.rn.d.ts"
-      ],
-      "@app/*": [
-        "app/*"
-      ]
+      "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"],
+      "@app/*": ["app/*"]
     },
-    "typeRoots": [
-      "./app/types"
-    ]
+    "typeRoots": ["./app/types"]
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "env.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "env.d.ts"],
+  "exclude": ["node_modules"]
 }
