@@ -10,11 +10,14 @@ import {
   Modal,
   Button,
   FlatList,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Alert
 } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
 import {ColorInput, DisplayNameInput} from "@app/components/settings/TextInputs";
+import { appSignOut } from "../../services/AuthStore";
 
 // List of settings items
 // toggle type: a switch
@@ -41,10 +44,13 @@ const Sections = [
     header: "Privacy",
     items: [{ id: "deleteMessages", title: "Delete my messages when I disappear", type: "toggle" }],
   },
+  {
+    header: "Manage Account",
+    items: [{ id: "signOut", title: "Sign Out", type: "select" }],
+  }
 ];
 
 const SettingsScreen: React.FC = () => {
-  // settings values (will be changed later to reflect the actual settings)
   const [data, setData] = useState({
     displayName: "Display Name",
     profilePicIndex: 0, // index for icons array
@@ -74,6 +80,40 @@ const SettingsScreen: React.FC = () => {
     require("../../../assets/icons/user/face_07.png"),
     require("../../../assets/icons/user/fake_pfp.jpg"),
   ];
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSignOut = async () => {
+    Alert.alert(
+      "Confirm Sign Out",
+      "Are you sure you want to sign out?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Sign Out",
+          onPress: async () => {
+            setLoading(true);
+            const response = await appSignOut();
+            setLoading(false);
+
+            if (response?.user === null) {
+              console.log("Sign out successful");
+            } else if (response?.error) {
+              console.log(response.error);
+              Alert.alert(
+                "Sign Out Failed",
+                "An error occurred during sign out. Please try again.",
+              );
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaStyle}>
@@ -168,16 +208,31 @@ const SettingsScreen: React.FC = () => {
               <Text style={styles.sectionHeaderText}>{header}</Text>
             </View>
             <View style={styles.sectionContent}>
-              {items.map(({ id, title, type }) => (
-                <SettingsItem
-                  key={id}
-                  id={id}
-                  title={title}
-                  type={type}
-                  setter={setData}
-                  data={data}
-                />
-              ))}
+              {items.map(({ id, title, type }) => {
+                if (id === "signOut") {
+                  return (
+                    <TouchableOpacity
+                      key={id}
+                      style={styles.signOutRow}
+                      onPress={handleSignOut}
+                      disabled={loading}
+                    >
+                      <Text style={styles.signOutText}>Sign Out</Text>
+                    </TouchableOpacity>
+                  );
+                }
+
+                return (
+                  <SettingsItem
+                    key={id}
+                    id={id}
+                    title={title}
+                    type={type}
+                    setter={setData}
+                    data={data}
+                  />
+                );
+              })}
             </View>
           </View>
         ))}
@@ -187,7 +242,6 @@ const SettingsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  // Styles
   safeAreaStyle: {
     flex: 1,
     backgroundColor: "#f6f6f6",
@@ -241,6 +295,20 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     marginLeft: "auto",
     height: "50%", // For some reason I can't get the view to auto fit height to children so just set to 50% for now
+  },
+  signOutRow: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: "#e3e3e3",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  signOutText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "red",
   },
 });
 
