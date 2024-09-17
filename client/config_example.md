@@ -14,3 +14,4 @@ LOCATION_REFRESH_RATE=3000
 
 API_KEY = place_your_apiKey_here
 AUTH_DOMAIN = place_your_authDomain_here
+PROJECT_ID = place_your_projectId_here

@@ -7,7 +7,8 @@ import {
 } from "@firebase/auth";
 import { Store } from "pullstate";
 
-import { auth } from "../configs/firebaseConfig";
+import { auth , db } from "../configs/firebaseConfig";
+import { doc , setDoc } from "@firebase/firestore"; // Import Firestore functions
 
 interface AuthStoreInterface {
   isLoggedin: boolean;
@@ -20,6 +21,30 @@ export const AuthStore = new Store<AuthStoreInterface>({
   initialized: false,
   userAuthInfo: null,
 });
+
+const createUserConfig = async (userId: string) => {
+  try {
+    const docRef = doc(db, "UserConfigs", userId);
+
+    await setDoc(docRef, {
+      // TODO: create a matching UserConfig type in the app/types folder.
+      // In documentation: make explicit that the key for UserConfig documents is the same as a uid from the user auth collection.
+      isConnected: false,
+      lastConnectionTime: "",
+      displayName: "",
+      userIcon: {
+        imageType: 0,
+        color: "#02efdb"
+      },
+      darkMode: false,
+      notificationsEnabled: false,
+      language: "English",
+      
+    });
+  } catch (e){
+    console.error("Error creating UserConfig: ", e);
+  }
+}
 
 const unsub = onAuthStateChanged(auth, (user) => {
   console.log("onAuthStateChanged", user);
@@ -68,6 +93,11 @@ export const appSignUp = async (email: string, password: string) => {
       store.userAuthInfo = response.user;
       store.isLoggedin = !!response.user;
     });
+
+    if (response.user) {
+      await createUserConfig(response.user.uid);
+    }
+
     return { user: auth.currentUser };
   } catch (e) {
     return { error: e };

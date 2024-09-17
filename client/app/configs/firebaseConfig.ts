@@ -1,4 +1,4 @@
-import { API_KEY, AUTH_DOMAIN } from "@env"; // Don't worry about this env error!
+import { API_KEY, AUTH_DOMAIN, PROJECT_ID } from "@env"; // Don't worry about this env error!
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp, getApp, getApps } from "@firebase/app";
 import {
@@ -7,10 +7,12 @@ import {
   getAuth,
   Auth,
 } from "@firebase/auth";
+import { getFirestore } from "@firebase/firestore";
 
 const firebaseConfig = {
   apiKey: API_KEY || "Mock-Key",
   authDomain: AUTH_DOMAIN,
+  projectId: PROJECT_ID,
 };
 
 let app;
@@ -31,4 +33,5 @@ if (!getApps().length) {
   auth = getAuth();
 }
 
+export const db = getFirestore(); //Export Const DB for UserConfig
 export { app, auth };
