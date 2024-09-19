@@ -93,11 +93,11 @@ const ChatScreen = () => {
           <View style={styles.headerContainer}>
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 15,
                 fontWeight: "bold",
-                color: "white",
+                color: "green",
               }}>
-              Chat Screen
+              Testing new Header
             </Text>
           </View>
           <View style={styles.chatContainer}>
