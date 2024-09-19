@@ -93,7 +93,7 @@ const ChatScreen = () => {
           <View style={styles.headerContainer}>
             <Text
               style={{
-                fontSize: 15,
+                fontSize: 10,
                 fontWeight: "bold",
                 color: "green",
               }}>
