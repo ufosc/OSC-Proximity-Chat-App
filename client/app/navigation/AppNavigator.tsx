@@ -11,10 +11,6 @@ import { Home } from "react-native-feather";
 import {User} from "react-native-feather";
 
 const Tab = createBottomTabNavigator();
-
-
-
-
 const AppNavigator = () => {
   return (
     <LocationProvider>
@@ -22,15 +18,12 @@ const AppNavigator = () => {
         <UserProvider>
           <Tab.Navigator
             screenOptions={{
-              
-          
               headerShown: false,
               tabBarLabelStyle: {
                 fontSize: 15,
               }
             }}>
             <Tab.Screen name="Home" component={ChatScreen} options={{
-              
               tabBarIcon:({ focused, color, size }) => {
                 return(<Home width = {size} stroke = {color}/>
                 )
@@ -44,21 +37,11 @@ const AppNavigator = () => {
             }
             }
             />
-            
-            
-            
           </Tab.Navigator>
         </UserProvider>
       </SocketProvider>
     </LocationProvider>
   );
 };
-
-
-
-
-
-
-
 
 export default AppNavigator;
