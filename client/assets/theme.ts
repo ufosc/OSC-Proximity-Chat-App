@@ -1,9 +1,9 @@
 export const colors = {
-    gray     : "#F7F7F7",
-    green    : "#34D1BF",
-    white    : "#FFFFFF",
-    red      : "#FF2147",
-    black    : "#000000",
-    daryGray : "#333333",
-    blue     : "#3532D4"
- }
+  gray: "#E3E3E3",
+  darkGray: "#8E8E8E",
+  green: "#34D1BF",
+  white: "#FFFFFF",
+  red: "#FF2147",
+  black: "#000000",
+  blue: "#3532D4",
+};
