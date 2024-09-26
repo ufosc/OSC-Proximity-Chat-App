@@ -29,6 +29,7 @@
     "expo-font": "~12.0.10",
     "expo-location": "^17.0.1",
     "expo-router": "^3.5.23",
+    "expo-system-ui": "^3.0.7",
     "pullstate": "^1.25.0",
     "react": "18.2.0",
     "react-native": "^0.74.5",
