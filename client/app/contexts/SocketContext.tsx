@@ -62,6 +62,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [locationContext?.latitude, locationContext?.longitude, socket]);
 
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={socket}>
+      {children}
+    </SocketContext.Provider>
   );
 };
