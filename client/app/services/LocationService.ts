@@ -11,3 +11,13 @@ export const getLocation = async (): Promise<Location.LocationObject | null> => 
     return null;
   }
 };
+
+// Permission Service to Handle Location Permissions
+export const checkLocationPermission = async (): Promise<boolean> => {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== "granted") {
+    console.log("Permission to access location was denied");
+    return false;
+  }
+  return true;
+};

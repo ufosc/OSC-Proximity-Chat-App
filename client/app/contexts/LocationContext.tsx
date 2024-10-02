@@ -1,7 +1,6 @@
 import { LOCATION_REFRESH_RATE } from "@env";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getLocation } from "@app/services/LocationService";
-import { checkLocationPermission } from "@app/services/PermissionService";
+import { getLocation, checkLocationPermission } from "@app/services/LocationService";
 import { LocationContextProps, LocationType } from "@app/types/Location";
 
 
