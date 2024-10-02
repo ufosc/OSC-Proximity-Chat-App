@@ -2,18 +2,9 @@ import { LOCATION_REFRESH_RATE } from "@env";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getLocation } from "@app/services/LocationService";
 import { checkLocationPermission } from "@app/services/PermissionService";
+import { LocationContextProps, LocationType } from "@app/types/Location";
 
-// LocationContext Interfaces
-interface LocationContextProps {
-  longitude: number;
-  latitude: number;
-  isLocationEnabled: boolean;
-}
 
-interface LocationType {
-  longitude: number;
-  latitude: number;
-}
 
 // LocationContext Creation
 const LocationContext = createContext<LocationContextProps | null>(null);
