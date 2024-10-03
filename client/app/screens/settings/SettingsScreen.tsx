@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SafeAreaView, Text, StyleSheet, View, ScrollView } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
+import { SignOutButton } from "../../components/auth/AuthButtons";
 
 // List of settings items
 // toggle type: a switch
@@ -64,8 +65,10 @@ const SettingsScreen: React.FC = () => {
             </View>
           </View>
         ))}
+        <SignOutButton/>
       </ScrollView>
     </SafeAreaView>
+    
   );
 };
 
