@@ -8,14 +8,6 @@ export type LargeTextButtonProps = {
   buttonText: string;
 }
 
-export type LogInButtonProps = {
-  onPress?: () => void;
-};
-
-export type SignUpButtonProps = {
-  onPress?: () => void;
-};
-
 export type ChatSendButtonProps = {
   onPress?: () => void;
 };
