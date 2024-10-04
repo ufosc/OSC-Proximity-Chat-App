@@ -19,20 +19,24 @@ const NearbyCount: React.FC<CounterProps> = ({ count }) => {
 
 const styles = StyleSheet.create({
   iconImage: {
+    tintColor: "white",
     height: Dimensions.get("window").height * 0.025,
     width: Dimensions.get("window").height * 0.03,
   },
   iconContainer: {
     width: "50%",
+    marginRight: 35,
+    marginTop: 18,
   },
   iconAndCount: {
     alignSelf: "flex-end",
     alignItems: "center",
   },
   countText: {
-    fontSize: 20,
+    fontFamily: "Quicksand",
+    fontSize: 13,
     fontWeight: "bold",
-    color: "black",
+    color: "white",
     textAlign: "center",
     width: "50%",
   },
