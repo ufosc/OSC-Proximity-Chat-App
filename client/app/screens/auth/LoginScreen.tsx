@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import { ArrowLeftCircle } from "react-native-feather";
 
+import LargeTextButton from "@app/components/auth/LargeTextButton";
+
 import {
-  LogInButton,
   ExternalAuthButton,
 } from "../../components/auth/AuthButtons";
 import {
@@ -100,7 +101,7 @@ const LoginScreen = ({ route, navigation }: any) => {
             />
           </View>
           <View style={styles.button_container}>
-            <LogInButton onPress={onHandleSubmit} />
+            <LargeTextButton onPress={onHandleSubmit} buttonText="Login" />
           </View>
           <TouchableOpacity>
             <Text

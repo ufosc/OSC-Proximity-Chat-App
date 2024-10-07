@@ -3,13 +3,10 @@ import React from "react";
 import { Message } from "./Message";
 
 /* button props */
-export type LogInButtonProps = {
+export type LargeTextButtonProps = {
   onPress?: () => void;
-};
-
-export type SignUpButtonProps = {
-  onPress?: () => void;
-};
+  buttonText: string;
+}
 
 export type ChatSendButtonProps = {
   onPress?: () => void;

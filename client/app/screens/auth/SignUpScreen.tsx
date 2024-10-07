@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import { ArrowLeftCircle } from "react-native-feather";
 
+import LargeTextButton from "../../components/auth/LargeTextButton"
+
 import {
-  SignUpButton,
   ExternalAuthButton,
 } from "../../components/auth/AuthButtons";
 import {
@@ -117,7 +118,7 @@ const SignUpScreen = ({ navigation }: any) => {
             />
           </View>
           <View style={styles.button_container}>
-            <SignUpButton onPress={onHandleSubmit} />
+            <LargeTextButton onPress={onHandleSubmit} buttonText="Sign Up" />
           </View>
 
           <View style={styles.divider_container}>
