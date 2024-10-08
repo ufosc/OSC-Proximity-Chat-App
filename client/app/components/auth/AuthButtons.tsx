@@ -60,27 +60,6 @@ import {
 //   );
 // };
 
-export const LogInButton: React.FC<{ onPress?: () => void }> = ({
-  onPress,
-}) => {
-  return (
-    <TouchableOpacity style={styles.login_button} onPress={onPress}>
-      <Text style={styles.button_text}>Login</Text>
-    </TouchableOpacity>
-  );
-};
-
-export const SignUpButton: React.FC<{ onPress?: () => void }> = ({
-  onPress,
-}) => {
-
-  return (
-    <TouchableOpacity style={styles.login_button} onPress={onPress}>
-      <Text style={styles.button_text}>Sign Up</Text>
-    </TouchableOpacity>
-  );
-};
-
 export const ExternalAuthButton: React.FC<{
   onPress?: () => void;
   companyName: string;
@@ -111,30 +90,6 @@ export const ExternalAuthButton: React.FC<{
 };
 
 const styles = StyleSheet.create({
-  login_button: {
-    backgroundColor: "#5dbea3",
-    width: Dimensions.get("window").width * 0.5,
-    height: Dimensions.get("window").height * 0.05,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: Dimensions.get("window").height / 2,
-    shadowColor: "#8E8E8E",
-    shadowRadius: 2,
-    shadowOpacity: 0.7,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    elevation: 2,
-  },
-
-  button_text: {
-    color: "white",
-    fontFamily: "Quicksand-Medium",
-    fontSize: Dimensions.get("window").height * 0.027,
-  },
-
   sign_out_button: {
     display: "flex",
     justifyContent: "center",
