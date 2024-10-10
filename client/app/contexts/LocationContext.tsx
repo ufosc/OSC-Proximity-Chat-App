@@ -1,30 +1,19 @@
 import { LOCATION_REFRESH_RATE } from "@env";
-import * as Location from "expo-location";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { getLocation, checkLocationPermission } from "@app/services/LocationService";
+import { LocationContextProps, LocationType } from "@app/types/Location";
 
-interface LocationContextProps {
-  longitude: number;
-  latitude: number;
-  isLocationEnabled: boolean;
-}
 
-interface LocationType {
-  longitude: number;
-  latitude: number;
-}
 
+// LocationContext Creation
 const LocationContext = createContext<LocationContextProps | null>(null);
 
-const getLocation = async () => {
-  return await Location.getCurrentPositionAsync({
-    accuracy: Location.Accuracy.Balanced,
-  }); // Change accuracy while testing. Could become .env variable.
-};
-
+// Custom Hook for Consuming Location Context
 export const useLocation = () => {
   return useContext(LocationContext);
 };
 
+// LocationProvider Component to Provide Location Context
 export const LocationProvider = ({
   children,
 }: {
@@ -37,43 +26,39 @@ export const LocationProvider = ({
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
 
   useEffect(() => {
-    // TODO: Refactor this useEffect into a different file (service?) outside of the context, as it is not part of the purpose of a context.
-    (async () => {
-      // Request location permissions, if not granted, return
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
+    let interval: NodeJS.Timeout;
+
+    const startLocationTracking = async () => {
+      const hasPermission = await checkLocationPermission(); // Use permission service
+      if (!hasPermission) return;
 
       setIsLocationEnabled(true);
 
-      const interval = setInterval(async () => {
-        // FIXME: This loop does not stop after refreshing app. Must completely close out and restart app when LOCATION_REFRESH_RATE is changed.
-        try {
-          const locationData = await getLocation();
-          if (
-            locationData.coords.latitude !== location.latitude ||
-            locationData.coords.longitude !== location.longitude
-          ) {
-            setLocation({
-              latitude: locationData.coords.latitude,
-              longitude: locationData.coords.longitude,
-            });
+      // Set up the interval once after permission is granted
+      interval = setInterval(async () => {
+        const locationData = await getLocation(); 
+        if (locationData && locationData.coords) {
+          const { latitude, longitude } = locationData.coords;
+          if (latitude !== location.latitude || longitude !== location.longitude) {
+            setLocation({ latitude, longitude });
           } else {
             console.log("Location has not changed");
           }
-        } catch (error) {
-          console.error("Error fetching location:", error);
         }
-      }, Number(LOCATION_REFRESH_RATE)); // Fetch location every 3 seconds
+      }, Number(LOCATION_REFRESH_RATE));
+    };
 
-      // Cleanup function to clear interval when component unmounts
-      return () => clearInterval(interval);
-    })();
+    startLocationTracking();
 
-    return () => console.log("[LOG]: Cleaning up location useEffect");
-  }, []);
+    // Cleanup function to clear interval when component unmounts
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+        console.log("[LOG]: Cleaning up location useEffect");
+      }
+    };
+  }, []); 
+
 
   return (
     <LocationContext.Provider

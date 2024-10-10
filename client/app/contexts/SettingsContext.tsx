@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useContext, createContext, useEffect } from "react";
+import { loadTheme, saveTheme } from "@app/utils/storageUtils"; // Import utilities
 
 type Settings = {
   theme: string;
@@ -12,65 +12,28 @@ export const useSettings = () => {
   return useContext(SettingsContext);
 };
 
-const loadSettings = async () => {
-  try {
-    const themeSetting = await AsyncStorage.getItem("theme");
-    if (themeSetting !== null) {
-      return {
-        theme: themeSetting,
-      };
-    } else {
-      await AsyncStorage.setItem("theme", "light");
-      return {
-        theme: "light",
-      };
-    }
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 export const SettingsProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState<string>("light");
 
   // Initial settings load
   useEffect(() => {
-    const loadInitialSettings = async () => {
-      const settings = await loadSettings();
-      if (settings) {
-        setTheme(settings.theme);
-      }
+    const initializeTheme = async () => {
+      const savedTheme = await loadTheme();
+      setTheme(savedTheme);
     };
 
-    loadInitialSettings();
+    initializeTheme();
   }, []);
 
-  // Setting toggler
-  const reloadSettings = async () => {
-    const settings = await loadSettings();
-    if (settings) {
-      setTheme(settings.theme);
-    }
-  };
-
+  // Toggle theme and update AsyncStorage
   const toggleTheme = async () => {
-    console.log("Toggling theme");
-    try {
-      const settings = await loadSettings();
-      if (settings && settings.theme === "light") {
-        await AsyncStorage.setItem("theme", "dark");
-      } else {
-        await AsyncStorage.setItem("theme", "light");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-
-    await reloadSettings();
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    await saveTheme(newTheme); // Save the new theme
   };
 
   return (
