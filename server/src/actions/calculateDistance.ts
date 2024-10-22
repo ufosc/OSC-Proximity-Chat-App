@@ -1,18 +1,50 @@
-const degreesToRadians = (degrees: number) => {
-    return degrees * Math.PI / 180;
+import { Location } from "../types/Location";
+
+const degToRad = Math.PI / 180.0;
+const radians = (degrees: number) => degrees * degToRad;
+
+// Radius of Earth in meters
+const radiusOfEarth = 6371000;
+
+// Radius squared of Earth in square meters
+const radiusOfEarthSqr = radiusOfEarth * radiusOfEarth;
+
+export const isWithinRadiusMeters = (p1: Location, p2: Location, r: number): boolean => {
+    // The equirectangular approximation becomes significantly inaccurate at distances about about 1.5 km 
+    if (r > 1500.0) {
+        return haversineDistanceCheck(p1, p2, r);
+    } else {
+        return equirectangularDistanceCheck(p1, p2, r);
+    }
 }
 
-export const calculateDistanceInMeters = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const earthRadiusKm = 6371;
+const getEquirectangularDistanceSqr = (p1: Location, p2: Location) => {
+    const dx = radians(p2.lon - p1.lon) * Math.cos(radians(p2.lat + p1.lat) / 2.0);
+    const dy = radians(p2.lat - p1.lat);
 
-    const dLat = degreesToRadians(lat2-lat1);
-    const dLon = degreesToRadians(lon2-lon1);
+    return radiusOfEarthSqr * (dx * dx + dy * dy);
+}
 
-    lat1 = degreesToRadians(lat1);
-    lat2 = degreesToRadians(lat2);
+// An approximate distance check which maps spherical points onto a flat surface to quickly estimate distance
+const equirectangularDistanceCheck = (p1: Location, p2: Location, r: number): boolean => {
+    const rSqr = r * r;
+    const distSqr = getEquirectangularDistanceSqr(p1, p2);
 
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    return earthRadiusKm * c * 1000;
+    return distSqr <= rSqr;
+}
+
+// A more accurate distance check for points on the surface of a sphere
+const haversineDistanceCheck = (p1: Location, p2: Location, r: number): boolean => {
+    const lat1 = radians(p1.lat);
+    const lon1 = radians(p1.lon);
+    const lat2 = radians(p2.lat);
+    const lon2 = radians(p2.lon);
+
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+
+    const a = Math.pow(Math.sin(dLat / 2.0), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLon / 2.0), 2);
+    const c = 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return c * radiusOfEarth <= r;
 }
