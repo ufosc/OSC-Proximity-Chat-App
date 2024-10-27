@@ -34,7 +34,7 @@ const DigitVerificationScreen = ({ navigation }: any) => {
       return;
     }
 
-    const validCode = "123456"; // <<<<<< Placeholder for actual verification logic HERE
+    const validCode = "111111"; // <<<<<< Placeholder for actual verification code HERE
     if (code !== validCode) {
       setErrorMessage("The code you entered is incorrect, please try again.");
       return;
@@ -85,11 +85,11 @@ const DigitVerificationScreen = ({ navigation }: any) => {
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
 
-        {/* REMOVE THIS AFTERWARDS */}
+        {/* REMOVE THIS AFTERWARDS vv*/}
         <Text style={styles.subheader_text}>
-            Try "123456"!
+            Try "111111"!
         </Text>
-        {/* REMOVE THIS AFTERWARDS */}
+        {/* REMOVE THIS AFTERWARDS ^^*/}
       </View>
     </TouchableWithoutFeedback>
   );
