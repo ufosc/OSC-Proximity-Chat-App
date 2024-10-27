@@ -10,11 +10,9 @@ import {
 } from "react-native";
 import { ArrowLeftCircle } from "react-native-feather";
 
-import LargeTextButton from "../../components/auth/LargeTextButton"
+import LargeTextButton from "../../components/auth/LargeTextButton";
 
-import {
-  ExternalAuthButton,
-} from "../../components/auth/AuthButtons";
+import { ExternalAuthButton } from "../../components/auth/AuthButtons";
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
@@ -118,7 +116,7 @@ const SignUpScreen = ({ navigation }: any) => {
             />
           </View>
           <View style={styles.button_container}>
-            <LargeTextButton onPress={onHandleSubmit} buttonText="Digit Verification" />
+            <LargeTextButton onPress={onHandleSubmit} buttonText="Sign Up" />
           </View>
 
           <View style={styles.divider_container}>
