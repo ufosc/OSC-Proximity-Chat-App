@@ -118,7 +118,7 @@ const SignUpScreen = ({ navigation }: any) => {
             />
           </View>
           <View style={styles.button_container}>
-            <LargeTextButton onPress={onHandleSubmit} buttonText="Sign Up" />
+            <LargeTextButton onPress={onHandleSubmit} buttonText="Digit Verification" />
           </View>
 
           <View style={styles.divider_container}>
