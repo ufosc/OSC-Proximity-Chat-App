@@ -19,7 +19,12 @@ export const isWithinRadiusMeters = (p1: Location, p2: Location, r: number): boo
 }
 
 const getEquirectangularDistanceSqr = (p1: Location, p2: Location) => {
-    const dx = radians(p2.lon - p1.lon) * Math.cos(radians(p2.lat + p1.lat) / 2.0);
+    // Calculate the difference in longitude, adjusting for the 180 deg wraparound
+    var dLon = p2.lon - p1.lon;
+    if (dLon > 180.0) dLon -= 360.0;
+    if (dLon < -180.0) dLon += 360.0;
+
+    const dx = radians(dLon) * Math.cos(radians(p2.lat + p1.lat) / 2.0);
     const dy = radians(p2.lat - p1.lat);
 
     return radiusOfEarthSqr * (dx * dx + dy * dy);
