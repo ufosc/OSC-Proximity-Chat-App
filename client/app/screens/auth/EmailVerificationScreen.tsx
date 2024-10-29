@@ -9,7 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import SubmitButton from "../../components/auth/SubmitButton";
+import LargeTextButton from "../../components/auth/LargeTextButton";
 
 const EmailVerificationScreen = ({ navigation }: any) => {
   const maxCodeLength = 6;
@@ -77,7 +77,7 @@ const EmailVerificationScreen = ({ navigation }: any) => {
         </View>
 
         <View style={styles.button_container}>
-          <SubmitButton onPress={handleSubmit} />
+          <LargeTextButton onPress={handleSubmit} buttonText="Submit" />
         </View>
 
         {errorMessage ? (
