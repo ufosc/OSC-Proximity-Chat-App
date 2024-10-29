@@ -3,9 +3,15 @@ import { View, StyleSheet, Text, Image, Dimensions } from "react-native";
 
 import { useSettings } from "../../contexts/SettingsContext";
 import { MessageProps } from "../../types/Props";
+import { SettingStore } from "../../services/SettingsStore"
+import { icons } from "../../styles/icons"
 
 const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
-  const settings = useSettings();
+  // Import textSettings from useSettings
+  const textSettings = useSettings();
+  // Import current settings from SettingStore container
+  const profileSettings = SettingStore.useState();
+
   const timestamp = new Date(time).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -13,22 +19,22 @@ const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
   // Text should have a different color to contrast with the background color
   const authorStyleProps = {
     ...styles.authorStyle,
-    color: settings && settings.theme !== "light" ? "white" : "black",
+    color: textSettings && textSettings.theme !== "light" ? "white" : "black",
   };
   return (
     <View style={styles.container}>
       <View style={styles.profileImageContainer}>
         <Image
-          style={styles.profileImage}
-          source={require("../../../assets/icons/user/fake_pfp.jpg")}
+          style={[styles.profileImage, { backgroundColor: profileSettings.profileColor }]}
+          source={icons[profileSettings.profilePicIndex]}
         />
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.messageHeader}>
-          <Text style={authorStyleProps}>{author}</Text>
+          <Text style={authorStyleProps}>{profileSettings.displayName}</Text>
           <Text
             style={{
-              color: settings && settings.theme !== "light" ? "white" : "black",
+              color: textSettings && textSettings.theme !== "light" ? "white" : "black",
             }}>
             {timestamp}
           </Text>
@@ -36,7 +42,7 @@ const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
         <View style={styles.messageContent}>
           <Text
             style={{
-              color: settings && settings.theme !== "light" ? "white" : "black",
+              color: textSettings && textSettings.theme !== "light" ? "white" : "black",
             }}>
             {messageContent}
           </Text>
