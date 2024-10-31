@@ -16,7 +16,7 @@ import { ConnectedUser } from "./types/User";
 import { getAuth } from "firebase-admin/auth";
 import Mailgun from "mailgun.js";
 import { messagesCollection } from "./utilities/firebaseInit";
-import { calculateDistanceInMeters } from "./actions/calculateDistance";
+import { isWithinRadiusMeters } from "./actions/calculateDistance";
 import { scheduleCron } from "./actions/deleter";
 import mainRouter from "./routes/mainRouteHandler";
 
@@ -80,20 +80,10 @@ io.on("connection", async (socket: any) => {
         if (change.type === "added") {
           console.log("New message: ", change.doc.data());
 
-          const messageLat = change.doc.data().location.lat;
-          const messageLon = change.doc.data().location.lon;
+          const messageLocation = change.doc.data().location;
+          const userLocation = defaultConnectedUser.location;
 
-          const userLat = defaultConnectedUser.location.lat;
-          const userLon = defaultConnectedUser.location.lon;
-
-          const distance = calculateDistanceInMeters(
-            messageLat,
-            messageLon,
-            userLat,
-            userLon
-          );
-
-          if (distance < message_outreach_radius) {
+          if (isWithinRadiusMeters(userLocation, messageLocation, message_outreach_radius)) {
             console.log(`Message is within ${message_outreach_radius} meters of the user ${socket.id}.`);
             socket.emit("message", change.doc.data());
           } else {
