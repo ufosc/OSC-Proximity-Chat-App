@@ -1,3 +1,5 @@
+import { Location } from "./Location"
+
 export interface UserConfig {
   uid: string
   isConnected: boolean
@@ -21,9 +23,5 @@ export interface UserConfig {
 export interface ConnectedUser {
     uid: string
     socketId: string
-    location: {
-        lat: number
-        lon: number
-        geohash: string
-    },
+    location: Location
 }
