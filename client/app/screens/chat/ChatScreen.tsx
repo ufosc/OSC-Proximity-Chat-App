@@ -8,7 +8,6 @@ import {
   Dimensions,
 } from "react-native";
 
-import { SignOutButton } from "../../components/auth/AuthButtons";
 import { ChatScreenFooter } from "../../components/chat/ChatScreenFooter";
 import MessageChannel from "../../components/chat/MessageChannel";
 import { useLocation } from "../../contexts/LocationContext";
