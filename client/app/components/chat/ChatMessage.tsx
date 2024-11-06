@@ -12,6 +12,13 @@ const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
   // Import current settings from SettingStore container
   const profileSettings = SettingStore.useState();
 
+  const currDay = new Date(Date.now()).toLocaleDateString([], {
+    weekday: "long",
+  })
+  let weekday = new Date(time).toLocaleDateString([], {
+    weekday: "long",
+  })
+  if (weekday === currDay) weekday = "Today"
   const timestamp = new Date(time).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -35,8 +42,9 @@ const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
           <Text
             style={{
               color: textSettings && textSettings.theme !== "light" ? "white" : "black",
+              fontSize: 12,
             }}>
-            {timestamp}
+            {[weekday, " at ", timestamp]}
           </Text>
         </View>
         <View style={styles.messageContent}>
@@ -82,7 +90,8 @@ const styles = StyleSheet.create({
   messageHeader: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 5,
+    alignItems: "center",
   },
 
   messageContent: {

@@ -10,11 +10,9 @@ import {
 } from "react-native";
 import { ArrowLeftCircle } from "react-native-feather";
 
-import LargeTextButton from "../../components/auth/LargeTextButton"
+import LargeTextButton from "../../components/auth/LargeTextButton";
 
-import {
-  ExternalAuthButton,
-} from "../../components/auth/AuthButtons";
+import { ExternalAuthButton } from "../../components/auth/AuthButtons";
 import {
   AuthenticationErrorMessage,
   AuthenticationResponse,
