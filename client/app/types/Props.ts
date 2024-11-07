@@ -29,11 +29,6 @@ export type MessageChannelProps = {
   messages: Message[];
 };
 
-/* misc props*/
-export type CounterProps = {
-  count: number;
-};
-
 export type SafeAreaWrapperProps = {
   children: React.ReactNode;
 };
