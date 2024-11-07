@@ -18,6 +18,7 @@ import { Message } from "../../types/Message";
 import { useState, useEffect } from "react";
 import { useUser } from "@app/contexts/UserContext";
 import NearbyHeader from "@app/components/chat/NearbyHeader";
+import React from "react";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -90,9 +91,7 @@ const ChatScreen = () => {
           Platform.OS === "ios" ? screenHeight * 0.055 : 0
         }>
         <View style={styles.mainContainer}>
-        <NearbyHeader
-            count = {5} //test count value
-          />
+          <NearbyHeader />
           <View style={styles.chatContainer}>
             <MessageChannel messages={messages} />
           </View>
