@@ -34,7 +34,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow OSC Proximity Chat to access your location."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }
