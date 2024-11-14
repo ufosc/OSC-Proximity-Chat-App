@@ -17,6 +17,7 @@ import { AuthStore } from "../../services/AuthStore";
 import { Message } from "../../types/Message";
 import { useState, useEffect } from "react";
 import { SettingStore } from "../../services/SettingsStore"
+import React from "react";
 
 const ChatScreen = () => {
   const settings = useSettings()
