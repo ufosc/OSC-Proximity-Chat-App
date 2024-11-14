@@ -5,6 +5,7 @@ import { ActiveUser } from "../types";
 import firebase from "firebase-admin";
 import * as methods from "./methods";
 import { initRegions, removeActiveUser } from "./regions";
+import { ensureUserAuthorized, getUserProfile } from "./firebase_methods";
 
 export type IOSocket = io.Socket<io.DefaultEventsMap, io.DefaultEventsMap, io.DefaultEventsMap, any>
 
@@ -29,26 +30,29 @@ export const startSocketServer = () => {
         // === Ensure Authorized === 
 
         const token = socket.handshake.auth.token;
+        const [uid, authError] = await ensureUserAuthorized(token);
 
-        if (!token) {
-            console.error("[WS] User not authenticated!");
-            socket.emit("User not authenticated!");
+        if (authError) {
+            console.error(`[WS] ${authError}`);
+            socket.emit(authError);
             socket.disconnect();
             return
         }
 
-        var uid: string;
-        try {
-            const decodedToken = await firebase.auth().verifyIdToken(token);
-            uid = decodedToken.uid;
-            console.log(`[WS] User <${uid}> authenticated.`);
-        } catch {
-            console.error("[WS] User id token is invalid!");
-            socket.emit("User id token is invalid!");
+        console.log(`[WS] User <${uid}> authenticated.`);
+        
+        //
+
+        // === Pull User Profile from Firebase ===
+
+        const userProfile = await getUserProfile(uid);
+        if (userProfile === undefined) {
+            console.error("[WS] User profile is invalid or has not been created!");
+            socket.emit("User profile is invalid or has not been created!");
             socket.disconnect();
             return;
         }
-        
+
         //
 
         console.log(`[WS] User <${socket.id}> connected.`);
@@ -63,6 +67,10 @@ export const startSocketServer = () => {
                     lat: 0.0,
                     lon: 0.0,
                     geohash: "",
+                },
+                profile: {
+                    displayName: userProfile.displayName,
+                    profilePicture: userProfile.profilePicture,
                 }
             },
         }
@@ -76,8 +84,9 @@ export const startSocketServer = () => {
 
         socket.on("ping", (ack: any) => methods.ping(ctx, ack));
         socket.on("updateLocation", (location: any, ack: any) => methods.updateLocation(ctx, location, ack))
-        socket.on("message", (message: any, ack: any) => methods.message(ctx, message, ack));
-        socket.on("nearby", (callback: (nearbyUserUids: string[]) => void) => methods.nearby(ctx, callback));
+        socket.on("sendMessage", (message: any, ack: any) => methods.sendMessage(ctx, message, ack));
+        socket.on("getNearbyUsers", (callback: (nearbyUserUids: string[]) => void) => methods.getNearbyUsers(ctx, callback));
+        socket.on("notifyUpdateProfile", (ack: any) => methods.notifyUpdateProfile(ctx, ack));
 
         // 
     });
