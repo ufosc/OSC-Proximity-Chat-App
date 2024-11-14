@@ -17,6 +17,7 @@ import { AuthStore } from "../../services/AuthStore";
 import { Message } from "../../types/Message";
 import { useState, useEffect } from "react";
 import { SettingStore } from "../../services/SettingsStore"
+import NearbyHeader from "@app/components/chat/NearbyHeader";
 import React from "react";
 
 const ChatScreen = () => {
@@ -79,6 +80,7 @@ const ChatScreen = () => {
       setMessageContent("");
     }
   };
+
   return (
     <View
       style={{
@@ -92,16 +94,7 @@ const ChatScreen = () => {
           Platform.OS === "ios" ? screenHeight * 0.055 : 0
         }>
         <View style={styles.mainContainer}>
-          <View style={styles.headerContainer}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                color: "white",
-              }}>
-              Chat Screen
-            </Text>
-          </View>
+          <NearbyHeader />
           <View style={styles.chatContainer}>
             <MessageChannel messages={messages} />
           </View>
