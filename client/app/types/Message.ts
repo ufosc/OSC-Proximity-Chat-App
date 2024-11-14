@@ -2,6 +2,8 @@ export interface Message {
   author: {
     uid: string;
     displayName: string;
+    profilePicIndex: number;
+    profileColor: string;
   };
   msgId: string;
   msgContent: string;

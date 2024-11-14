@@ -16,15 +16,15 @@ import { useSocket } from "../../contexts/SocketContext";
 import { AuthStore } from "../../services/AuthStore";
 import { Message } from "../../types/Message";
 import { useState, useEffect } from "react";
-import { useUser } from "@app/contexts/UserContext";
+import { SettingStore } from "../../services/SettingsStore"
 
 const ChatScreen = () => {
-  const settings = useSettings();
+  const settings = useSettings()
+  const profileSettings = SettingStore.useState();
   const screenHeight = Dimensions.get("window").height;
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
   const socket = useSocket();
   const location = useLocation();
-  const user = useUser();
   const userAuth = AuthStore.useState();
   // Note: To prevent complexity, all user information is grabbed from different contexts and services. If we wanted most information inside of UserContext, we would have to import contexts within contexts and have state change as certain things mount, which could cause errors that are difficult to pinpoint.
 
@@ -54,7 +54,9 @@ const ChatScreen = () => {
       const newMessage: Message = {
         author: {
           uid: String(userAuth.userAuthInfo?.uid),
-          displayName: String(user?.displayName),
+          displayName: profileSettings.displayName,
+          profilePicIndex: profileSettings.profilePicIndex,
+          profileColor: profileSettings.profileColor,
         },
         msgId: Crypto.randomUUID(),
         msgContent: messageContent.trim(),
@@ -76,12 +78,12 @@ const ChatScreen = () => {
       setMessageContent("");
     }
   };
-
   return (
     <View
       style={{
         backgroundColor:
           settings && settings.theme !== "light" ? "#191d20" : "white", // Needs to be changed to be a prop later (new issue?)
+          // Note: Can probably change to use profileSettings.isDarkMode if wanted.
       }}>
       <KeyboardAvoidingView
         behavior={keyboardBehavior}

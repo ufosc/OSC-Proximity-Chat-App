@@ -6,11 +6,11 @@ import { MessageProps } from "../../types/Props";
 import { SettingStore } from "../../services/SettingsStore"
 import { icons } from "../../styles/icons"
 
-const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
+const Message: React.FC<MessageProps> = ({ messageContent, time, author, profilePicIndex , profileColor }) => {
   // Import textSettings from useSettings
   const textSettings = useSettings();
   // Import current settings from SettingStore container
-  const profileSettings = SettingStore.useState();
+  //const profileSettings = SettingStore.useState();
 
   const currDay = new Date(Date.now()).toLocaleDateString([], {
     weekday: "long",
@@ -32,13 +32,13 @@ const Message: React.FC<MessageProps> = ({ messageContent, time, author }) => {
     <View style={styles.container}>
       <View style={styles.profileImageContainer}>
         <Image
-          style={[styles.profileImage, { backgroundColor: profileSettings.profileColor }]}
-          source={icons[profileSettings.profilePicIndex]}
+          style={[styles.profileImage, { backgroundColor: profileColor }]}
+          source={icons[profilePicIndex]}
         />
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.messageHeader}>
-          <Text style={authorStyleProps}>{profileSettings.displayName}</Text>
+          <Text style={authorStyleProps}>{author}</Text>
           <Text
             style={{
               color: textSettings && textSettings.theme !== "light" ? "white" : "black",
