@@ -22,6 +22,8 @@ export type ChatInputProps = {
 export type MessageProps = {
   messageContent: string;
   time: number;
+  profilePicIndex: number;
+  profileColor: string;
   author: string;
 };
 

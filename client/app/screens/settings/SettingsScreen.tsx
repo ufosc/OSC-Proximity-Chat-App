@@ -18,6 +18,8 @@ import {
 import { SettingsItem } from "../../components/settings/SettingsItem";
 import {ColorInput, DisplayNameInput} from "@app/components/settings/TextInputs";
 import { appSignOut } from "../../services/AuthStore";
+import { SettingStore, changeName, changeProfileIndex, changeProfileColor } from "../../services/SettingsStore"
+import { icons } from "../../styles/icons"
 
 // List of settings items
 // toggle type: a switch
@@ -51,12 +53,12 @@ const Sections = [
 ];
 
 const SettingsScreen: React.FC = () => {
+  // Import current settings from SettingStore container
+  const settings = SettingStore.useState();
+
   const [data, setData] = useState({
-    displayName: "Display Name",
-    profilePicIndex: 0, // index for icons array
-    profileColor: "#1199ff",
     notifyNewMessage: true,
-    darkMode: false,
+    darkMode: settings.isDarkMode,
     language: "English",
     deleteMessages: false,
   });
@@ -67,19 +69,7 @@ const SettingsScreen: React.FC = () => {
     profileColor: false,
   });
 
-
-  const iconStyle = [styles.icon, {backgroundColor: data.profileColor}]
-
-  const icons = [
-    require("../../../assets/icons/user/face_01.png"),
-    require("../../../assets/icons/user/face_02.png"),
-    require("../../../assets/icons/user/face_03.png"),
-    require("../../../assets/icons/user/face_04.png"),
-    require("../../../assets/icons/user/face_05.png"),
-    require("../../../assets/icons/user/face_06.png"),
-    require("../../../assets/icons/user/face_07.png"),
-    require("../../../assets/icons/user/fake_pfp.jpg"),
-  ];
+  const iconStyle = [styles.icon, {backgroundColor: settings.profileColor}]
 
   const [loading, setLoading] = useState(false);
 
@@ -132,27 +122,31 @@ const SettingsScreen: React.FC = () => {
             <TouchableWithoutFeedback>
               <View style={styles.userModal}>
                 <View style={styles.header}>
-                  <Text style={styles.headerText}>Hi {data.displayName}!</Text>
+                  <Text style={styles.headerText}>Hi {settings.displayName}!</Text>
                   <Text>    </Text>
                   <Pressable onPress={() => setProfileVisible(false)}>
                     <Image
                         style={iconStyle}
-                        source={icons[data.profilePicIndex]}
+                        source={icons[settings.profilePicIndex]}
                     />
                   </Pressable>
                 </View>
 
                 <DisplayNameInput
-                 defaultValue={data.displayName}
+                 defaultValue={settings.displayName}
                  isVisible={inputVisible.displayName}
                  visibleSetter={(value: boolean) => setInputVisible({...inputVisible, ["displayName"]: value})}
-                 outputSetter={(output: string) => setData({...data, ["displayName"]: output})}
+                 outputSetter={(output: string) => {
+                   changeName(output); // Updates the name held in settingStore
+                 }}
                 />
                 <ColorInput
-                    defaultValue={data.profileColor}
+                    defaultValue={settings.profileColor}
                     isVisible={inputVisible.profileColor}
                     visibleSetter={(value: boolean) => setInputVisible({...inputVisible, ["profileColor"]: value})}
-                    outputSetter={(output: string) => setData({...data, ["profileColor"]: output})}
+                    outputSetter={(output: string) => {
+                      changeProfileColor(output);
+                    }}
                 />
 
                 {/* User Settings */}
@@ -177,8 +171,10 @@ const SettingsScreen: React.FC = () => {
                     <FlatList data={icons}
                               numColumns={6}
                               renderItem={icon => (
-                                  <Pressable onPress={() => setData({ ...data, ["profilePicIndex"]: icon.index })}>
-                                    <Image style={[iconStyle, icon.index === data.profilePicIndex ? styles.selected:{margin: 5}]}
+                                  <Pressable onPress={() => {
+                                    changeProfileIndex(icon.index);
+                                  }}>
+                                    <Image style={[iconStyle, icon.index === settings.profilePicIndex ? styles.selected:{margin: 5}]}
                                            source={icon.item}/>
                                   </Pressable>
                               )}>
@@ -197,7 +193,7 @@ const SettingsScreen: React.FC = () => {
           <Pressable onPress={() => setProfileVisible(true)}>
             <Image
                 style={iconStyle}
-                source={icons[data.profilePicIndex]}
+                source={icons[settings.profilePicIndex]}
             />
           </Pressable>
         </View>

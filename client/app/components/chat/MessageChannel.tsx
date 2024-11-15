@@ -18,6 +18,8 @@ const MessageChannel: React.FC<MessageChannelProps> = ({ messages }) => {
         <Message
           messageContent={item.msgContent}
           author={item.author.displayName} // TODO: call server to get author name from UID. Or should this stored with MessageType?
+          profilePicIndex={item.author.profilePicIndex}
+          profileColor={item.author.profileColor}
           time={item.timestamp}
         />
       )}
