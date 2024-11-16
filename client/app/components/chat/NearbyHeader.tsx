@@ -12,7 +12,6 @@ import { ChevronLeft } from "react-native-feather";
 export const NearbyHeader: React.FC = () => {
   return (
     <View style={styles.nearbyContainer}>
-      <ChevronLeft color="white" strokeWidth={1.4} width={40} height={40} />
       <Text style={styles.nearbyText}>Nearby</Text>
       <View style={styles.iconContainer}>
         <Image
@@ -38,8 +37,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 2,
     paddingVertical: 15,
-    paddingRight: 25,
-    paddingLeft: 10,
+    paddingRight: "5%",
+    paddingLeft: "10%",
     gap: 10,
   },
   nearbyText: {
