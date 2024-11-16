@@ -2,7 +2,6 @@ import http from "http"
 import io from "socket.io";
 
 import { ActiveUser } from "../types";
-import firebase from "firebase-admin";
 import * as methods from "./methods";
 import { initRegions, removeActiveUser } from "./regions";
 import { ensureUserAuthorized, getUserProfile } from "./firebase_methods";
@@ -17,7 +16,7 @@ export interface ConnectionContext {
 export const startSocketServer = () => {
     initRegions();
 
-    const port = Number(process.env.socket_port) ?? 8082;
+    const port = Number(process.env.socket_port ?? "8082");
 
     const httpServer = http.createServer();
     const socketServer = new io.Server(httpServer, {
@@ -40,7 +39,7 @@ export const startSocketServer = () => {
         }
 
         console.log(`[WS] User <${uid}> authenticated.`);
-        
+
         //
 
         // === Pull User Profile from Firebase ===
@@ -82,11 +81,11 @@ export const startSocketServer = () => {
 
         // === METHODS ===
 
-        socket.on("ping", (ack: any) => methods.ping(ctx, ack));
+        socket.on("ping", (_: any, ack: any) => methods.ping(ctx, ack));
         socket.on("updateLocation", (location: any, ack: any) => methods.updateLocation(ctx, location, ack))
         socket.on("sendMessage", (message: any, ack: any) => methods.sendMessage(ctx, message, ack));
-        socket.on("getNearbyUsers", (callback: (nearbyUserUids: string[]) => void) => methods.getNearbyUsers(ctx, callback));
-        socket.on("notifyUpdateProfile", (ack: any) => methods.notifyUpdateProfile(ctx, ack));
+        socket.on("getNearbyUsers", (_: any, callback: (nearbyUserUids: string[]) => void) => methods.getNearbyUsers(ctx, callback));
+        socket.on("notifyUpdateProfile", (_: any, ack: any) => methods.notifyUpdateProfile(ctx, ack));
 
         // 
     });

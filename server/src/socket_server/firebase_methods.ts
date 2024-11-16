@@ -16,6 +16,10 @@ export const ensureUserAuthorized = async (token: any): Promise<[uid: string | u
 }
 
 export const getUserProfile = async (uid: string): Promise<firebase.firestore.DocumentData | undefined> => {
+    return {
+        displayName: "Test Display Name",
+        profilePicture: 12,
+    }
     const userProfileSnapshot = await firebase.firestore().collection('users').doc(uid).get();
     return userProfileSnapshot.data();
 }

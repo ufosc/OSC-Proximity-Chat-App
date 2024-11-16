@@ -14,13 +14,11 @@
   "description": "",
   "dependencies": {
     "collections": "^5.1.13",
-    "express": "^4.21.1",
     "firebase-admin": "^12.7.0",
     "geofire-common": "^6.0.0",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
     "@types/jest": "^29.5.11",
     "@babel/preset-env": "^7.23.8",
     "@babel/preset-typescript": "^7.23.3",

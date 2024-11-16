@@ -13,10 +13,10 @@ export const viewDistanceMeters = 100;
 var regions = new SortedSet(
     null,
     function keysEqual(a: { key: any; }, b: { key: any; }) {
-        return a.key === b.key;
+        return b.key === a.key;
     },
     function compareKeys(a: { key: string; }, b: { key: any; }) {
-        return a.key.localeCompare(b.key);
+        return b.key.localeCompare(a.key);
     }
 );
 
@@ -27,13 +27,18 @@ export const initRegions = () => {
 export const setActiveUserRegion = (activeUser: ActiveUser, oldLocation: Location | undefined, newLocation: Location): void => {
     if (oldLocation !== undefined) {
         // Remove user from previous geohash
-        delete regions[oldLocation.geohash][activeUser.uid];
+        delete regions.get({ key: oldLocation.geohash, value: undefined }).value[activeUser.uid];
     }
-    regions[newLocation.geohash][activeUser.uid] = activeUser;
+    if (!regions.has({ key: newLocation.geohash, value: undefined })) {
+        regions.push({ key: newLocation.geohash, value: {} })
+    }
+    regions.get({ key: newLocation.geohash, value: undefined }).value[activeUser.uid] = activeUser;
 };
 
 export const removeActiveUser = (activeUser: ActiveUser): void => {
-    delete regions[activeUser.location.geohash][activeUser.uid];
+    if (activeUser.location.geohash == "") return; // User never sent an updateLocation message so they are not in the regions map
+    //if (!regions.has({ key: activeUser.location.geohash, value: undefined })) return;
+    delete regions.get({ key: activeUser.location.geohash, value: undefined }).value[activeUser.uid];
 }
 
 export const getActiveUsersInView = function* (location: Location): Generator<ActiveUser, any, any> {
@@ -46,14 +51,20 @@ export const getActiveUsersInView = function* (location: Location): Generator<Ac
     // For each geohash range, yield all active users contained in the regions
     for (var geohashRange of geohashRanges) {
         const leftBoundGeohash = geohashRange[0];
-        const rightBoundGeohash = geohashRange[0];
+        const rightBoundGeohash = geohashRange[1];
 
         // Find bottom bound for geohashes that are actual in the map
-        var geohash = regions.findLeastGreaterThanOrEqual({key: leftBoundGeohash, value: undefined});
-        var index = regions.indexOf(geohash);
+        var node = regions.findLeastGreaterThanOrEqual({ key: leftBoundGeohash, value: undefined });
+        if (node === undefined) continue;
 
+        var index = node.index;
+        var geohash = node.value.key;
+
+        if (geohash > rightBoundGeohash) continue;
+
+        regions.splayIndex(index);
         while (geohash <= rightBoundGeohash) {
-            const activeUsers = regions[index].value;
+            const activeUsers = Object.values<any>(regions.root.value.value);
             for (const activeUser of activeUsers) {
                 // Run distance check to ensure users are actually in view, since geofire output is liberal
                 if (isWithinRadiusMeters(location, activeUser.location, viewDistanceMeters)) {
@@ -62,7 +73,8 @@ export const getActiveUsersInView = function* (location: Location): Generator<Ac
             }
 
             if (index + 1 >= regions.length) break;
-            geohash = regions[++index];
+            regions.splayIndex(++index);
+            geohash = regions.root.value.key;
         }
     }
 }
