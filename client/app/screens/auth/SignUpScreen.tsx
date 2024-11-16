@@ -60,6 +60,7 @@ const SignUpScreen = ({ navigation }: any) => {
 
   const handleGoogleSignUp = async () => {
     console.log("Google Sign Up");
+    navigation.navigate("Display Name");
   };
 
   const handleFacebookSignIn = async () => {
