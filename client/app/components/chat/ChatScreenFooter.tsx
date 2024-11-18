@@ -26,12 +26,12 @@ export const ChatScreenFooter: React.FC<ChatInputProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Image color="black" strokeWidth={1.8} style={styles.icons} />
         </TouchableOpacity>
         <TouchableOpacity>
           <Smile color="black" strokeWidth={1.8} style={styles.icons} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <TextInput
         placeholder="Say Something..."
