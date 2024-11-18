@@ -14,10 +14,12 @@ export const NearbyHeader: React.FC = () => {
     <View style={styles.nearbyContainer}>
       <Text style={styles.nearbyText}>Nearby</Text>
       <View style={styles.iconContainer}>
-        <Image
-          style={styles.peopleIcon}
-          source={require("../../../assets/icons/misc/nearby_icon.png")}
-        />
+        <TouchableOpacity onPress={() => {}}>
+          <Image
+            style={styles.peopleIcon}
+            source={require("../../../assets/icons/misc/nearby_icon.png")}
+          />
+        </TouchableOpacity>
         <Text style={styles.countText}>{5}</Text>
       </View>
     </View>

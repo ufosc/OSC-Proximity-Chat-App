@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "@app/contexts/UserContext";
 import NearbyHeader from "@app/components/chat/NearbyHeader";
 import React from "react";
+import { NearbyUserDrawer } from "@app/components/chat/NearbyUserDrawer";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -90,6 +91,7 @@ const ChatScreen = () => {
         keyboardVerticalOffset={
           Platform.OS === "ios" ? screenHeight * 0.055 : 0
         }>
+        <NearbyUserDrawer />
         <View style={styles.mainContainer}>
           <NearbyHeader />
           <View style={styles.chatContainer}>
