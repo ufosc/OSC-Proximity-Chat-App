@@ -1,36 +1,99 @@
-import * as React from "react";
-import { Dimensions, Text, StyleSheet, View } from "react-native";
-import { Drawer } from "react-native-drawer-layout";
-import { Button } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
+import NearbyHeader from "./NearbyHeader";
+import { Pressable } from "react-native";
 
-export const NearbyUserDrawer = () => {
-  const [open, setOpen] = React.useState(true);
+const SCREEN_WIDTH = Dimensions.get("window").width;
+
+const NearbyUserDrawer = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const translateX = useSharedValue(SCREEN_WIDTH);
+
+  const toggleDrawer = () => {
+    translateX.value = isOpen
+      ? withTiming(SCREEN_WIDTH, {
+          duration: 300, // Duration in milliseconds
+          easing: Easing.out(Easing.ease), // Smooth easing out
+        })
+      : withTiming(0, {
+          duration: 300,
+          easing: Easing.out(Easing.ease), // Smooth easing out
+        });
+    setIsOpen(!isOpen);
+  };
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
+  const nearbyUsers = ["Alice", "Bob", "Charlie", "Diana", "Eve"]; // Example names
 
   return (
-    <Drawer
-      open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-      drawerType={"front"}
-      renderDrawerContent={() => {
-        return (
-          <View style={styles.drawerContent}>
-            <Text>Drawer content</Text>
-          </View>
-        );
-      }}>
-      <Button
-        onPress={() => setOpen((prevOpen) => !prevOpen)}
-        title={`${open ? "Close" : "Open"} drawer`}
-      />
-    </Drawer>
+    <View style={styles.container}>
+      <NearbyHeader onClick={toggleDrawer} />
+      {/* Overlay and Drawer */}
+      {isOpen && <Pressable style={styles.overlay} onPress={toggleDrawer} />}
+      <Animated.View style={[styles.drawer, animatedStyle]}>
+        <Text style={styles.headerText}>Nearby Users</Text>
+        <FlatList
+          data={nearbyUsers}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => <Text style={styles.name}>{item}</Text>}
+        />
+      </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  drawerContent: {
-    height: Dimensions.get("window").height,
-    width: Dimensions.get("window").width,
-    backgroundColor: "white",
+  container: {
+    display: "flex",
+    height: Dimensions.get("screen").height,
+    flexDirection: "column",
+    alignItems: "center",
+    position: "absolute",
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.15)",
+    zIndex: 1,
+  },
+  drawer: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    width: SCREEN_WIDTH * 0.6,
+    height: "100%",
+    backgroundColor: "#fff",
+    borderLeftWidth: 1,
+    borderLeftColor: "#ddd",
+    padding: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: -2, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    zIndex: 2,
+    gap: 20,
+  },
+  headerText: {
+    fontFamily: "Quicksand",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  name: {
+    fontSize: 18,
+    marginVertical: 10,
   },
 });
+
+export default NearbyUserDrawer;

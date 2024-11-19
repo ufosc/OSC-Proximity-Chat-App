@@ -9,19 +9,24 @@ import {
 } from "react-native";
 import { ChevronLeft } from "react-native-feather";
 
-export const NearbyHeader: React.FC = () => {
+interface NearbyHeaderProps {
+  onClick: () => void;
+}
+
+export const NearbyHeader: React.FC<NearbyHeaderProps> = ({ onClick }) => {
   return (
     <View style={styles.nearbyContainer}>
       <Text style={styles.nearbyText}>Nearby</Text>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={onClick}>
+        <View style={styles.iconContainer}>
           <Image
             style={styles.peopleIcon}
             source={require("../../../assets/icons/misc/nearby_icon.png")}
           />
-        </TouchableOpacity>
-        <Text style={styles.countText}>{5}</Text>
-      </View>
+
+          <Text style={styles.countText}>{5}</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -42,6 +47,7 @@ const styles = StyleSheet.create({
     paddingRight: "5%",
     paddingLeft: "10%",
     gap: 10,
+    zIndex: 1,
   },
   nearbyText: {
     fontFamily: "Quicksand",
