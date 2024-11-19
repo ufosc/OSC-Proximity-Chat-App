@@ -16,9 +16,7 @@ const App = () => {
 
   if (!initialized) return <Text>Loading...</Text>;
 
-  return (
-    isLoggedin ? <AppNavigator /> : <AuthNavigator />
-  );
+  return isLoggedin ? <AppNavigator /> : <AuthNavigator />;
 };
 
 export default App;

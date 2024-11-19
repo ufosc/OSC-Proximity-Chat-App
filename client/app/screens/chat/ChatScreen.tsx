@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "@app/contexts/UserContext";
 import NearbyHeader from "@app/components/chat/NearbyHeader";
 import React from "react";
+import NearbyUserDrawer from "@app/components/chat/NearbyUserDrawer";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -91,7 +92,7 @@ const ChatScreen = () => {
           Platform.OS === "ios" ? screenHeight * 0.055 : 0
         }>
         <View style={styles.mainContainer}>
-          <NearbyHeader />
+          <NearbyUserDrawer />
           <View style={styles.chatContainer}>
             <MessageChannel messages={messages} />
           </View>
@@ -135,7 +136,6 @@ const styles = StyleSheet.create({
 
   footerContainer: {
     width: "95%",
-
     maxHeight: Dimensions.get("window").height * 0.15,
     display: "flex",
     flexDirection: "row",
