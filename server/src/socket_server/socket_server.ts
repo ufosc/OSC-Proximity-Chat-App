@@ -1,7 +1,7 @@
 import http from "http"
 import io from "socket.io";
 
-import { ActiveUser } from "../types";
+import { ActiveUser, UserProfile } from "../types";
 import * as methods from "./methods";
 import { initRegions, removeActiveUser } from "./regions";
 import { ensureUserAuthorized, getUserProfile } from "./firebase_methods";
@@ -81,11 +81,11 @@ export const startSocketServer = () => {
 
         // === METHODS ===
 
-        socket.on("ping", (_: any, ack: any) => methods.ping(ctx, ack));
+        socket.on("ping", (ack: any) => methods.ping(ctx, ack));
         socket.on("updateLocation", (location: any, ack: any) => methods.updateLocation(ctx, location, ack))
         socket.on("sendMessage", (message: any, ack: any) => methods.sendMessage(ctx, message, ack));
-        socket.on("getNearbyUsers", (_: any, callback: (nearbyUserUids: string[]) => void) => methods.getNearbyUsers(ctx, callback));
-        socket.on("notifyUpdateProfile", (_: any, ack: any) => methods.notifyUpdateProfile(ctx, ack));
+        socket.on("getNearbyUsers", (callback: (nearbyUserUids: { [uid: string]: UserProfile }) => void) => methods.getNearbyUsers(ctx, callback));
+        socket.on("notifyUpdateProfile", (ack: any) => methods.notifyUpdateProfile(ctx, ack));
 
         // 
     });

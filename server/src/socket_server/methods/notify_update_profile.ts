@@ -17,7 +17,7 @@ export const notifyUpdateProfile = async (ctx: ConnectionContext, ack: any): Pro
 
     // forward notification to all nearby users
     const usersInView = getActiveUsersInView(ctx.user.location);
-    for(const userInView of usersInView) {
+    for (const userInView of usersInView) {
         if (userInView.uid === ctx.user.uid) continue; // Skip sender
         userInView.socket.emit('notifyUpdateProfile', messageToNearbyOthers);
     }
