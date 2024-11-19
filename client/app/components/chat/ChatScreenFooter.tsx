@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: Dimensions.get("window").width * 0.058,
     marginHorizontal: Dimensions.get("window").width * 0.005,
-    marginBottom: Platform.OS === "ios" ? 0 : 5,
+    marginBottom: 3,
     minHeight: Dimensions.get("window").width * 0.113,
     maxHeight: Dimensions.get("window").width * 0.3,
   },
