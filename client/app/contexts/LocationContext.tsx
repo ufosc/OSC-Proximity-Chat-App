@@ -20,8 +20,8 @@ export const LocationProvider = ({
   children: React.ReactNode;
 }) => {
   const [location, setLocation] = useState<LocationType>({
-    latitude: 99999, // Impossible starting value
-    longitude: 99999,
+    lat: 99999, // Impossible starting value
+    lon: 99999,
   });
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
 
@@ -36,11 +36,11 @@ export const LocationProvider = ({
 
       // Set up the interval once after permission is granted
       interval = setInterval(async () => {
-        const locationData = await getLocation(); 
+        const locationData = await getLocation();
         if (locationData && locationData.coords) {
           const { latitude, longitude } = locationData.coords;
-          if (latitude !== location.latitude || longitude !== location.longitude) {
-            setLocation({ latitude, longitude });
+          if (latitude !== location.lat || longitude !== location.lon) {
+            setLocation({ lat: latitude, lon: longitude });
           } else {
             console.log("Location has not changed");
           }
@@ -57,14 +57,14 @@ export const LocationProvider = ({
         console.log("[LOG]: Cleaning up location useEffect");
       }
     };
-  }, []); 
+  }, []);
 
 
   return (
     <LocationContext.Provider
       value={{
-        longitude: location.longitude,
-        latitude: location.latitude,
+        lon: location.lon,
+        lat: location.lat,
         isLocationEnabled,
       }}>
       {children}

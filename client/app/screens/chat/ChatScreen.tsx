@@ -16,10 +16,11 @@ import { useSocket } from "../../contexts/SocketContext";
 import { AuthStore } from "../../services/AuthStore";
 import { Message } from "../../types/Message";
 import { useState, useEffect } from "react";
-import { useUser } from "@app/contexts/UserContext";
 import NearbyHeader from "@app/components/chat/NearbyHeader";
 import React from "react";
 import NearbyUserDrawer from "@app/components/chat/NearbyUserDrawer";
+import { sendMessage } from "@app/services/SocketService";
+import { userNearbyUsers } from "@app/contexts/NearbyUserContext";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -27,7 +28,7 @@ const ChatScreen = () => {
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
   const socket = useSocket();
   const location = useLocation();
-  const user = useUser();
+  const nearbyUsers = userNearbyUsers();
   const userAuth = AuthStore.useState();
   // Note: To prevent complexity, all user information is grabbed from different contexts and services. If we wanted most information inside of UserContext, we would have to import contexts within contexts and have state change as certain things mount, which could cause errors that are difficult to pinpoint.
 
@@ -53,31 +54,24 @@ const ChatScreen = () => {
 
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
-    if (messageContent.trim() !== "") {
-      const newMessage: Message = {
-        author: {
-          uid: String(userAuth.userAuthInfo?.uid),
-          displayName: String(user?.displayName),
-        },
-        msgId: Crypto.randomUUID(),
-        msgContent: messageContent.trim(),
-        timestamp: Date.now(),
-        lastUpdated: Date.now(),
-        location: {
-          lat: Number(location?.latitude),
-          lon: Number(location?.longitude),
-        },
-        isReply: false,
-        replyTo: "",
-        reactions: {},
-      };
+    if (messageContent.trim() === "") return;
+    if (socket === null) return;
 
-      if (socket !== null) {
-        socket.emit("message", newMessage);
-      }
+    const newMessage: Message = {
+      author: String(userAuth.userAuthInfo?.uid),
+      //msgId: Crypto.randomUUID(),
+      content: { text: messageContent.trim(), },
+      location: {
+        lat: Number(location?.lat),
+        lon: Number(location?.lon),
+      },
+      replyTo: undefined,
+      reactions: {},
+    };
 
-      setMessageContent("");
-    }
+    sendMessage(socket, newMessage);
+
+    setMessageContent("");
   };
 
   return (

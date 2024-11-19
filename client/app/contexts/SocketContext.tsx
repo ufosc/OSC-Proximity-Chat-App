@@ -54,12 +54,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     if (
       socket &&
       locationContext &&
-      locationContext?.latitude !== 9999 &&
-      locationContext?.longitude !== 9999
+      locationContext?.lat !== 9999 &&
+      locationContext?.lon !== 9999
     ) {
-      sendLocationUpdate(socket, locationContext.latitude, locationContext.longitude);
+      sendLocationUpdate(socket, locationContext.lat, locationContext.lon);
     }
-  }, [locationContext?.latitude, locationContext?.longitude, socket]);
+  }, [locationContext?.lat, locationContext?.lon, socket]);
 
   return (
     <SocketContext.Provider value={socket}>
