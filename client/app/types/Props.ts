@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Message } from "./Message";
+import { UserProfile } from "./User";
 
 /* button props */
 export type LargeTextButtonProps = {
@@ -26,6 +27,7 @@ export type MessageProps = {
 };
 
 export type MessageChannelProps = {
+  nearbyUsers: { [uid: string]: UserProfile };
   messages: Message[];
 };
 

@@ -1,0 +1,67 @@
+Websocket API Protocol
+
+=== Objects ===
+
+"""
+ObjectName {
+    requiredProp: type
+    optionalProp: type?
+}
+"""
+
+Location {
+    lat: float,
+    lon: float,
+    geohash: string? (generated if not provided)
+}
+
+Message {
+    author: string,
+    content: {
+        text?: string,
+        attachment?: string,
+    },
+    location: Location,
+    replyTo?: string,
+    reactions: {
+        [key: string]: int,
+    }
+}
+
+UserProfile {
+    displayName: string,
+    profilePicture: int,
+}
+
+===
+
+=== Client -> Server Methods ===
+
+"""
+methodName(
+    arguments / inputs...
+) ack -> ackResponse
+"""
+
+// Must be called at least once before calling any other methods
+updateLocation(
+    location: Location
+    ack: func?
+) ack -> "success"
+
+sendMessage(
+    message: Message
+    ack: func?
+) ack -> "success"
+
+getNearbyUsers(
+    callback: func(nearbyUserUids: { [uid: string]: UserProfile }) -> _,
+) callback -> map of nearby user uids to user profiles
+
+// Call after the client has already updated their profile document in firestore
+notifyUpdateProfile(
+    ack: func?
+) ack -> "success"
+
+
+===

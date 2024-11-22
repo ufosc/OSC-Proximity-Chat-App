@@ -7,8 +7,9 @@ import {
 } from "@firebase/auth";
 import { Store } from "pullstate";
 
-import { auth , db } from "../configs/firebaseConfig";
-import { doc , setDoc } from "@firebase/firestore"; // Import Firestore functions
+import { auth, db } from "../configs/firebaseConfig";
+import { doc, setDoc } from "@firebase/firestore"; // Import Firestore functions
+import { UserProfile } from "@app/types/User";
 
 interface AuthStoreInterface {
   isLoggedin: boolean;
@@ -22,27 +23,13 @@ export const AuthStore = new Store<AuthStoreInterface>({
   userAuthInfo: null,
 });
 
-const createUserConfig = async (userId: string) => {
+// TODO: Must call notifyUpdateProfile if connected to socket server
+export const updateUserProfile = async (userId: string, profile: UserProfile) => {
   try {
-    const docRef = doc(db, "UserConfigs", userId);
-
-    await setDoc(docRef, {
-      // TODO: create a matching UserConfig type in the app/types folder.
-      // In documentation: make explicit that the key for UserConfig documents is the same as a uid from the user auth collection.
-      isConnected: false,
-      lastConnectionTime: "",
-      displayName: "",
-      userIcon: {
-        imageType: 0,
-        color: "#02efdb"
-      },
-      darkMode: false,
-      notificationsEnabled: false,
-      language: "English",
-      
-    });
-  } catch (e){
-    console.error("Error creating UserConfig: ", e);
+    const docRef = doc(db, "users", userId);
+    await setDoc(docRef, profile);
+  } catch (e) {
+    console.error("Error updating user profile: ", e);
   }
 }
 
@@ -93,10 +80,6 @@ export const appSignUp = async (email: string, password: string) => {
       store.userAuthInfo = response.user;
       store.isLoggedin = !!response.user;
     });
-
-    if (response.user) {
-      await createUserConfig(response.user.uid);
-    }
 
     return { user: auth.currentUser };
   } catch (e) {

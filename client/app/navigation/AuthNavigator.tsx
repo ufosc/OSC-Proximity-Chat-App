@@ -6,6 +6,7 @@ import SignUpScreen from "../screens/auth/SignUpScreen";
 import WelcomeScreen from "../screens/auth/WelcomeScreen";
 import EmailVerificationScreen from "../screens/auth/EmailVerificationScreen";
 import { NavigationContainer } from "@react-navigation/native";
+import DisplayNameScreen from "@app/screens/auth/DisplayNameScreen";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const AuthNavigator = () => {
           name="Email Verification"
           component={EmailVerificationScreen}
         />
+        {/* <Stack.Screen name="Display Name" component={DisplayNameScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

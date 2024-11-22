@@ -12,11 +12,14 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 
 import { SettingsItem } from "../../components/settings/SettingsItem";
-import {ColorInput, DisplayNameInput} from "@app/components/settings/TextInputs";
+import {
+  ColorInput,
+  DisplayNameInput,
+} from "@app/components/settings/TextInputs";
 import { appSignOut } from "../../services/AuthStore";
 
 // List of settings items
@@ -24,30 +27,9 @@ import { appSignOut } from "../../services/AuthStore";
 // select type: arrow to the right to switch pages
 const Sections = [
   {
-    header: "Notifications",
-    items: [
-      {
-        id: "notifiyNewMessage",
-        title: "Notifications for new messages",
-        type: "toggle",
-      },
-    ],
-  },
-  {
-    header: "Preferences",
-    items: [
-      { id: "darkMode", title: "Dark Mode", type: "toggle" },
-      { id: "language", title: "Language", type: "select" },
-    ],
-  },
-  {
-    header: "Privacy",
-    items: [{ id: "deleteMessages", title: "Delete my messages when I disappear", type: "toggle" }],
-  },
-  {
     header: "Manage Account",
     items: [{ id: "signOut", title: "Sign Out", type: "select" }],
-  }
+  },
 ];
 
 const SettingsScreen: React.FC = () => {
@@ -61,14 +43,13 @@ const SettingsScreen: React.FC = () => {
     deleteMessages: false,
   });
 
-  const[profileVisible, setProfileVisible] = useState(false);
-  const[inputVisible, setInputVisible] = useState({
+  const [profileVisible, setProfileVisible] = useState(false);
+  const [inputVisible, setInputVisible] = useState({
     displayName: false,
     profileColor: false,
   });
 
-
-  const iconStyle = [styles.icon, {backgroundColor: data.profileColor}]
+  const iconStyle = [styles.icon, { backgroundColor: data.profileColor }];
 
   const icons = [
     require("../../../assets/icons/user/face_01.png"),
@@ -111,83 +92,122 @@ const SettingsScreen: React.FC = () => {
           },
         },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
 
   return (
     <SafeAreaView style={styles.safeAreaStyle}>
       <ScrollView style={styles.container}>
-
         {/* User Settings Menu */}
         <Modal
-            animationType="fade"
-            transparent={true}
-            visible={profileVisible}
-            onRequestClose={() => setProfileVisible(false)}
-        >
-
+          animationType="fade"
+          transparent={true}
+          visible={profileVisible}
+          onRequestClose={() => setProfileVisible(false)}>
           <Pressable onPress={() => setProfileVisible(false)}>
-          <SafeAreaView style={{height:"100%"}}>
-            <TouchableWithoutFeedback>
-              <View style={styles.userModal}>
-                <View style={styles.header}>
-                  <Text style={styles.headerText}>Hi {data.displayName}!</Text>
-                  <Text>    </Text>
-                  <Pressable onPress={() => setProfileVisible(false)}>
-                    <Image
+            <SafeAreaView style={{ height: "100%" }}>
+              <TouchableWithoutFeedback>
+                <View style={styles.userModal}>
+                  <View style={styles.header}>
+                    <Text style={styles.headerText}>
+                      Hi {data.displayName}!
+                    </Text>
+                    <Text> </Text>
+                    <Pressable onPress={() => setProfileVisible(false)}>
+                      <Image
                         style={iconStyle}
                         source={icons[data.profilePicIndex]}
-                    />
-                  </Pressable>
-                </View>
+                      />
+                    </Pressable>
+                  </View>
 
-                <DisplayNameInput
-                 defaultValue={data.displayName}
-                 isVisible={inputVisible.displayName}
-                 visibleSetter={(value: boolean) => setInputVisible({...inputVisible, ["displayName"]: value})}
-                 outputSetter={(output: string) => setData({...data, ["displayName"]: output})}
-                />
-                <ColorInput
+                  <DisplayNameInput
+                    defaultValue={data.displayName}
+                    isVisible={inputVisible.displayName}
+                    visibleSetter={(value: boolean) =>
+                      setInputVisible({
+                        ...inputVisible,
+                        ["displayName"]: value,
+                      })
+                    }
+                    outputSetter={(output: string) =>
+                      setData({ ...data, ["displayName"]: output })
+                    }
+                  />
+                  <ColorInput
                     defaultValue={data.profileColor}
                     isVisible={inputVisible.profileColor}
-                    visibleSetter={(value: boolean) => setInputVisible({...inputVisible, ["profileColor"]: value})}
-                    outputSetter={(output: string) => setData({...data, ["profileColor"]: output})}
-                />
+                    visibleSetter={(value: boolean) =>
+                      setInputVisible({
+                        ...inputVisible,
+                        ["profileColor"]: value,
+                      })
+                    }
+                    outputSetter={(output: string) =>
+                      setData({ ...data, ["profileColor"]: output })
+                    }
+                  />
 
-                {/* User Settings */}
-                <View style={[styles.section, {height:"100%"}]}>
-                  <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionHeaderText}>Edit Profile</Text>
-                  </View>
-                  <View style={styles.sectionContent}>
-                    <Button
+                  {/* User Settings */}
+                  <View style={[styles.section, { height: "100%" }]}>
+                    <View style={styles.sectionHeader}>
+                      <Text style={styles.sectionHeaderText}>Edit Profile</Text>
+                    </View>
+                    <View style={styles.sectionContent}>
+                      <Button
                         title="Edit Display Name"
-                        onPress={() => setInputVisible({...inputVisible, ["displayName"]: true})}
-                    />
-                    <Button
+                        onPress={() =>
+                          setInputVisible({
+                            ...inputVisible,
+                            ["displayName"]: true,
+                          })
+                        }
+                      />
+                      <Button
                         title="Edit Profile Color"
-                        onPress={() => setInputVisible({...inputVisible, ["profileColor"]: true})}
-                    />
-                  </View>
-                  <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionHeaderText}>Change profile picture</Text>
-                  </View>
-                  <View style={[styles.sectionContent, {alignItems: "center"}]}>
-                    <FlatList data={icons}
-                              numColumns={6}
-                              renderItem={icon => (
-                                  <Pressable onPress={() => setData({ ...data, ["profilePicIndex"]: icon.index })}>
-                                    <Image style={[iconStyle, icon.index === data.profilePicIndex ? styles.selected:{margin: 5}]}
-                                           source={icon.item}/>
-                                  </Pressable>
-                              )}>
-                    </FlatList>
+                        onPress={() =>
+                          setInputVisible({
+                            ...inputVisible,
+                            ["profileColor"]: true,
+                          })
+                        }
+                      />
+                    </View>
+                    <View style={styles.sectionHeader}>
+                      <Text style={styles.sectionHeaderText}>
+                        Change profile picture
+                      </Text>
+                    </View>
+                    <View
+                      style={[styles.sectionContent, { alignItems: "center" }]}>
+                      <FlatList
+                        data={icons}
+                        numColumns={6}
+                        renderItem={(icon) => (
+                          <Pressable
+                            onPress={() =>
+                              setData({
+                                ...data,
+                                ["profilePicIndex"]: icon.index,
+                              })
+                            }>
+                            <Image
+                              style={[
+                                iconStyle,
+                                icon.index === data.profilePicIndex
+                                  ? styles.selected
+                                  : { margin: 5 },
+                              ]}
+                              source={icon.item}
+                            />
+                          </Pressable>
+                        )}></FlatList>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </SafeAreaView>
+              </TouchableWithoutFeedback>
+            </SafeAreaView>
           </Pressable>
         </Modal>
 
@@ -195,10 +215,7 @@ const SettingsScreen: React.FC = () => {
         <View style={styles.header}>
           <Text style={styles.headerText}>Settings</Text>
           <Pressable onPress={() => setProfileVisible(true)}>
-            <Image
-                style={iconStyle}
-                source={icons[data.profilePicIndex]}
-            />
+            <Image style={iconStyle} source={icons[data.profilePicIndex]} />
           </Pressable>
         </View>
 
@@ -215,8 +232,7 @@ const SettingsScreen: React.FC = () => {
                       key={id}
                       style={styles.signOutRow}
                       onPress={handleSignOut}
-                      disabled={loading}
-                    >
+                      disabled={loading}>
                       <Text style={styles.signOutText}>Sign Out</Text>
                     </TouchableOpacity>
                   );
@@ -244,7 +260,7 @@ const SettingsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeAreaStyle: {
     flex: 1,
-    backgroundColor: "#f6f6f6",
+    backgroundColor: "white",
   },
   container: {
     paddingVertical: 24,

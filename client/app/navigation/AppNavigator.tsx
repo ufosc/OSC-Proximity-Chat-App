@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { LocationProvider } from "../contexts/LocationContext";
 import { SocketProvider } from "../contexts/SocketContext";
-import { UserProvider } from "../contexts/UserContext";
+import { NearbyUsersProvider } from "../contexts/NearbyUserContext";
 import ChatScreen from "../screens/chat/ChatScreen";
 import SettingsScreen from "../screens/settings/SettingsScreen";
 import { Home } from "react-native-feather";
@@ -16,7 +16,7 @@ const AppNavigator = () => {
   return (
     <LocationProvider>
       <SocketProvider>
-        <UserProvider>
+        <NearbyUsersProvider>
           <NavigationContainer>
             <Tab.Navigator
               screenOptions={{
@@ -45,7 +45,7 @@ const AppNavigator = () => {
               />
             </Tab.Navigator>
           </NavigationContainer>
-        </UserProvider>
+        </NearbyUsersProvider>
       </SocketProvider>
     </LocationProvider>
   );

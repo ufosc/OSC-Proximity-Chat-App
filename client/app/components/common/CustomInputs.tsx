@@ -25,8 +25,6 @@ export const WelcomeEmailInput: React.FC<ChatInputProps> = ({
   );
 };
 
-// Maybe will put LogInEmailInput & LogInPasswordInput two together into a single component
-
 export const EmailInput: React.FC<ChatInputProps & { invalid: boolean }> = ({
   value,
   onChangeText,
@@ -36,6 +34,20 @@ export const EmailInput: React.FC<ChatInputProps & { invalid: boolean }> = ({
     <TextInput
       style={[styles.loginInput, invalid && styles.invalidLoginInput]}
       placeholder="Email"
+      multiline={false}
+      value={value}
+      onChangeText={onChangeText}
+    />
+  );
+};
+
+export const DisplayNameInput: React.FC<
+  ChatInputProps & { invalid: boolean }
+> = ({ value, onChangeText, invalid }) => {
+  return (
+    <TextInput
+      style={[styles.loginInput, invalid && styles.invalidLoginInput]}
+      placeholder="Display Name"
       multiline={false}
       value={value}
       onChangeText={onChangeText}

@@ -1,10 +1,10 @@
 export interface LocationContextProps {
-    longitude: number;
-    latitude: number;
-    isLocationEnabled: boolean;
-  }
-  
+  lon: number;
+  lat: number;
+  isLocationEnabled: boolean;
+}
+
 export interface LocationType {
-    longitude: number;
-    latitude: number;
-  }
+  lon: number;
+  lat: number;
+}

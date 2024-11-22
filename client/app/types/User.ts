@@ -1,7 +1,4 @@
-export interface UserType {
+export interface UserProfile {
   displayName: string;
-  userIcon?: {
-    imagePath: string;
-    colorHex: string;
-  };
+  profilePicture: number;
 }

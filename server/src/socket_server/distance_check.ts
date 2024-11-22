@@ -1,4 +1,4 @@
-import { Location } from "../types/Location";
+import { Location } from "../types";
 
 const degToRad = Math.PI / 180.0;
 const radians = (degrees: number) => degrees * degToRad;
