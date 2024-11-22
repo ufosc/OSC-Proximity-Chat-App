@@ -13,6 +13,16 @@ export const useLocation = () => {
   return useContext(LocationContext);
 };
 
+var setLocationCallback: React.Dispatch<React.SetStateAction<LocationType>> | undefined = undefined;
+export const forceRefreshLocation = async () => {
+  if (setLocationCallback === undefined) return;
+  const locationData = await getLocation();
+  if (locationData && locationData.coords) {
+    const { latitude, longitude } = locationData.coords;
+    setLocationCallback({ lat: latitude, lon: longitude });
+  }
+}
+
 // LocationProvider Component to Provide Location Context
 export const LocationProvider = ({
   children,
@@ -24,6 +34,7 @@ export const LocationProvider = ({
     lon: 99999,
   });
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
+  setLocationCallback = undefined;
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -33,6 +44,7 @@ export const LocationProvider = ({
       if (!hasPermission) return;
 
       setIsLocationEnabled(true);
+      setLocationCallback = setLocation;
 
       // Set up the interval once after permission is granted
       interval = setInterval(async () => {
@@ -42,7 +54,7 @@ export const LocationProvider = ({
           if (latitude !== location.lat || longitude !== location.lon) {
             setLocation({ lat: latitude, lon: longitude });
           } else {
-            console.log("Location has not changed");
+            //console.log("Location has not changed");
           }
         }
       }, Number(LOCATION_REFRESH_RATE));
@@ -57,7 +69,7 @@ export const LocationProvider = ({
         console.log("[LOG]: Cleaning up location useEffect");
       }
     };
-  }, []);
+  }, [location.lat, location.lon]);
 
 
   return (

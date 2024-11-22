@@ -1,4 +1,4 @@
-import { getUserProfile } from "../firebase_methods";
+import { getUserProfile } from "../../firebase_methods";
 import { getActiveUsersInView } from "../regions";
 import { ConnectionContext } from "../socket_server";
 

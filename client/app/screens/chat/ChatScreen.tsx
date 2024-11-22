@@ -20,7 +20,7 @@ import NearbyHeader from "@app/components/chat/NearbyHeader";
 import React from "react";
 import NearbyUserDrawer from "@app/components/chat/NearbyUserDrawer";
 import { sendMessage } from "@app/services/SocketService";
-import { useNearbyUsers } from "@app/contexts/NearbyUserContext";
+import { refreshNearbyUsers, useNearbyUsers } from "@app/contexts/NearbyUserContext";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -39,9 +39,14 @@ const ChatScreen = () => {
   useEffect(() => {
     if (socket === null) return; // This line might need to be changed
 
-    const handleMessage = (data: any, ack?: any) => {
-      console.log("Message received from server:", data);
-      setMessages((prevMessages) => [...prevMessages, data]);
+    const handleMessage = async (message: Message, ack?: any) => {
+      console.log("Message received from server:", message);
+      console.log(nearbyUsers);
+      if (message.author !in nearbyUsers) {
+        console.log(`${message.author} not in nearby users map. Requesting a new map of nearby users...`);
+        await refreshNearbyUsers(socket);
+      }
+      setMessages((prevMessages) => [...prevMessages, message]);
       if (ack) console.log("Server acknowledged message:", ack);
     };
 
@@ -50,7 +55,7 @@ const ChatScreen = () => {
     return () => {
       socket.off("message", handleMessage);
     };
-  }, [messages, socket]);
+  }, [messages, nearbyUsers, socket]);
 
   // For when the user sends a message (fired by the send button)
   const onHandleSubmit = () => {
@@ -89,7 +94,7 @@ const ChatScreen = () => {
         <View style={styles.mainContainer}>
           <NearbyUserDrawer />
           <View style={styles.chatContainer}>
-            <MessageChannel messages={messages} />
+            <MessageChannel nearbyUsers={nearbyUsers} messages={messages} />
           </View>
           <View style={styles.footerContainer}>
             <ChatScreenFooter

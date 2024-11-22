@@ -1,13 +1,14 @@
 import { io, Socket } from "socket.io-client";
 import { AuthStore } from "../services/AuthStore";
-import { EXPO_IP } from "@env";
+import { SOCKET_IP, SOCKET_PORT } from "@env";
 import { LocationType } from "@app/types/Location";
 import { UserProfile } from "@app/types/User";
 import { Completer } from "@app/utils/completer";
 import { Message } from "@app/types/Message";
+import { refreshNearbyUsers } from "@app/contexts/NearbyUserContext";
 
 export const initializeSocket = async (token: string): Promise<Socket> => {
-  const socketIo = io(`http://10.0.2.2:8082`, {
+  const socketIo = io(`http://${SOCKET_IP}:${SOCKET_PORT}`, {
     auth: {
       token,
     },
@@ -37,6 +38,7 @@ export const updateLocation = (
     location,
     (ack: string) => {
       console.log("updateLocation ack:", ack);
+      refreshNearbyUsers(socket);
     }
   );
 };

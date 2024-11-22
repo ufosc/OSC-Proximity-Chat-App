@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import { useLocation } from "./LocationContext";
+import { forceRefreshLocation, useLocation } from "./LocationContext";
 import { initializeSocket, getToken, updateLocation } from "@app/services/SocketService";
 
 
@@ -33,13 +33,14 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       socket?.disconnect();
       console.log("[LOG]: Cleaning up initializeSocket useEffect");
     };
-  }, [mounted]);
+  }, [mounted, socket]);
 
   useEffect(() => {
     if (!socket) return;
 
     socket.on("connect", () => {
       console.log("Connected to server");
+      forceRefreshLocation();
     });
 
     return () => {
@@ -54,12 +55,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     if (
       socket &&
       locationContext &&
-      locationContext?.lat !== 9999 &&
-      locationContext?.lon !== 9999
+      locationContext?.lat !== 99999 &&
+      locationContext?.lon !== 99999
     ) {
       updateLocation(socket, { lat: locationContext.lat, lon: locationContext.lon });
     }
-  }, [locationContext?.lat, locationContext?.lon, socket]);
+  }, [locationContext, socket]);
 
   return (
     <SocketContext.Provider value={socket}>

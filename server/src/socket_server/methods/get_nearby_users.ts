@@ -4,8 +4,8 @@ import { ConnectionContext } from "../socket_server";
 
 const filterOutSenderAndConvertToProfiles = function* (ctx: ConnectionContext, activeUsers: Generator<ActiveUser, any, any>): Generator<any, any, any> {
     for (const activeUser of activeUsers) {
-        if (activeUser.uid === ctx.user.uid) continue;
-        yield { uid: activeUser.profile }
+        //if (activeUser.uid === ctx.user.uid) continue;
+        yield { [activeUser.uid]: activeUser.profile }
     }
 }
 
@@ -17,5 +17,5 @@ export const getNearbyUsers = (ctx: ConnectionContext, callback: (nearbyUserUids
     const others = filterOutSenderAndConvertToProfiles(ctx, usersInView);
 
     // Response to the sender (also convert generator to array)
-    callback(Object.assign([...others]));
+    callback(Object.assign({}, ...others));
 }
