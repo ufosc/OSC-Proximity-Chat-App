@@ -7,6 +7,7 @@ export const sendMessage = (ctx: ConnectionContext, message: Message, ack: any):
     if (message.location === undefined) {
         message.location = ctx.user.location;
     }
+    message.timestamp = Date.now();
 
     const recipients = getActiveUsersInView(message.location);
     for (const recipient of recipients) {

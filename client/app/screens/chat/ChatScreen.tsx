@@ -20,7 +20,7 @@ import NearbyHeader from "@app/components/chat/NearbyHeader";
 import React from "react";
 import NearbyUserDrawer from "@app/components/chat/NearbyUserDrawer";
 import { sendMessage } from "@app/services/SocketService";
-import { userNearbyUsers } from "@app/contexts/NearbyUserContext";
+import { useNearbyUsers } from "@app/contexts/NearbyUserContext";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -28,7 +28,7 @@ const ChatScreen = () => {
   const keyboardBehavior = Platform.OS === "ios" ? "padding" : undefined;
   const socket = useSocket();
   const location = useLocation();
-  const nearbyUsers = userNearbyUsers();
+  const nearbyUsers = useNearbyUsers();
   const userAuth = AuthStore.useState();
   // Note: To prevent complexity, all user information is grabbed from different contexts and services. If we wanted most information inside of UserContext, we would have to import contexts within contexts and have state change as certain things mount, which could cause errors that are difficult to pinpoint.
 
@@ -60,6 +60,7 @@ const ChatScreen = () => {
     const newMessage: Message = {
       author: String(userAuth.userAuthInfo?.uid),
       //msgId: Crypto.randomUUID(),
+      timestamp: -1, // timestamp will be overridden by socket server
       content: { text: messageContent.trim(), },
       location: {
         lat: Number(location?.lat),

@@ -3,7 +3,7 @@ import { UserProfile } from "../types/User";
 
 const NearbyUsersContext = createContext<{ [uid: string]: UserProfile }>({});
 
-export const userNearbyUsers = () => {
+export const useNearbyUsers = () => {
   return useContext(NearbyUsersContext);
 };
 

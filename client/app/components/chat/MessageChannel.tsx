@@ -3,9 +3,11 @@ import { FlatList } from "react-native";
 
 import Message from "./ChatMessage";
 import { MessageChannelProps } from "../../types/Props";
+import { NearbyUsersProvider, useNearbyUsers } from "@app/contexts/NearbyUserContext";
 
 const MessageChannel: React.FC<MessageChannelProps> = ({ messages }) => {
   const reverseMessages = [...messages].reverse();
+  const nearbyUsers = useNearbyUsers();
 
   return (
     <FlatList
@@ -13,16 +15,15 @@ const MessageChannel: React.FC<MessageChannelProps> = ({ messages }) => {
         width: "100%",
       }}
       data={reverseMessages}
-      keyExtractor={(item) => item.msgId}
       renderItem={({ item }) => (
         <Message
-          messageContent={item.msgContent}
-          author={item.author.displayName} // TODO: call server to get author name from UID. Or should this stored with MessageType?
+          messageContent={item.content.text!}
+          author={nearbyUsers[item.author].displayName}
           time={item.timestamp}
         />
       )}
       inverted // This will render items from the bottom
-      onLayout={() => {}} // This will make sure the list is scrolled to the bottom on first render
+      onLayout={() => { }} // This will make sure the list is scrolled to the bottom on first render
     />
   );
 };

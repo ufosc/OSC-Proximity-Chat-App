@@ -2,6 +2,7 @@ import { Location } from "../types"
 
 export interface Message {
     author: string,
+    timestamp: number,
     content: {
         text?: string,
         attachment?: string,

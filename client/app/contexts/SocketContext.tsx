@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { useLocation } from "./LocationContext";
-import { initializeSocket, getToken, sendLocationUpdate } from "@app/services/SocketService";
+import { initializeSocket, getToken, updateLocation } from "@app/services/SocketService";
 
 
 const SocketContext = createContext<Socket | null>(null);
@@ -57,7 +57,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       locationContext?.lat !== 9999 &&
       locationContext?.lon !== 9999
     ) {
-      sendLocationUpdate(socket, locationContext.lat, locationContext.lon);
+      updateLocation(socket, { lat: locationContext.lat, lon: locationContext.lon });
     }
   }, [locationContext?.lat, locationContext?.lon, socket]);
 

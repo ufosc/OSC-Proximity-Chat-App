@@ -7,7 +7,7 @@ import { Completer } from "@app/utils/completer";
 import { Message } from "@app/types/Message";
 
 export const initializeSocket = async (token: string): Promise<Socket> => {
-  const socketIo = io(`http://${EXPO_IP}:8080`, {
+  const socketIo = io(`http://10.0.2.2:8082`, {
     auth: {
       token,
     },
