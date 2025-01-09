@@ -10,6 +10,8 @@ import { Store } from "pullstate";
 import { auth, db } from "../configs/firebaseConfig";
 import { doc, getDoc, setDoc } from "@firebase/firestore"; // Import Firestore functions
 import { UserProfile } from "@app/types/User";
+import { notifyUpdateProfile } from "./SocketService";
+import { Socket } from "socket.io-client";
 
 interface AuthStoreInterface {
   isLoggedin: boolean;
@@ -25,17 +27,22 @@ export const AuthStore = new Store<AuthStoreInterface>({
   userProfile: null,
 });
 
-// // TODO: Must call notifyUpdateProfile if connected to socket server
-// export const updateUserProfile = async (userId: string, profile: UserProfile) => {
-//   try {
-//     const docRef = doc(db, "users", userId);
-//     await setDoc(docRef, profile);
-//   } catch (e) {
-//     console.error("Error updating user profile: ", e);
-//   }
-// }
+// Updates the signed in user profile in Firestore and notifies the socket server of the change
+export const updateActiveUserProfile = async (socket: Socket, newUserProfile: UserProfile) => {
+  AuthStore.update(async (store) => {
+    try {
+      const docRef = doc(db, "users", store.userAuthInfo!.uid);
+      await setDoc(docRef, newUserProfile);
+      notifyUpdateProfile(socket);
 
-const unsub = onAuthStateChanged(auth, async (user) => {
+      store.userProfile = newUserProfile;
+    } catch (e) {
+      console.error("Error updating user profile: ", e);
+    }
+  });
+}
+
+onAuthStateChanged(auth, async (user) => {
   console.log("onAuthStateChanged", user);
 
   let userProfile: UserProfile | null = null;
