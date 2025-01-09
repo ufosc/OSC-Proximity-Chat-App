@@ -1,3 +1,4 @@
+import { UserProfile } from "@app/types/User";
 import React from "react";
 import {
   View,
@@ -11,9 +12,10 @@ import { ChevronLeft } from "react-native-feather";
 
 interface NearbyHeaderProps {
   onClick: () => void;
+  nearbyUsers: { [uid: string]: UserProfile };
 }
 
-export const NearbyHeader: React.FC<NearbyHeaderProps> = ({ onClick }) => {
+export const NearbyHeader: React.FC<NearbyHeaderProps> = ({ onClick, nearbyUsers }) => {
   return (
     <View style={styles.nearbyContainer}>
       <Text style={styles.nearbyText}>Nearby</Text>
@@ -24,7 +26,7 @@ export const NearbyHeader: React.FC<NearbyHeaderProps> = ({ onClick }) => {
             source={require("../../../assets/icons/misc/nearby_icon.png")}
           />
 
-          <Text style={styles.countText}>{5}</Text>
+          <Text style={styles.countText}>{Object.keys(nearbyUsers).length}</Text>
         </View>
       </TouchableOpacity>
     </View>

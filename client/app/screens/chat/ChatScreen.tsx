@@ -16,7 +16,6 @@ import { useSocket } from "../../contexts/SocketContext";
 import { AuthStore } from "../../services/AuthStore";
 import { Message } from "../../types/Message";
 import { useState, useEffect } from "react";
-import NearbyHeader from "@app/components/chat/NearbyHeader";
 import React from "react";
 import NearbyUserDrawer from "@app/components/chat/NearbyUserDrawer";
 import { sendMessage } from "@app/services/SocketService";
@@ -92,7 +91,7 @@ const ChatScreen = () => {
           Platform.OS === "ios" ? screenHeight * 0.055 : 0
         }>
         <View style={styles.mainContainer}>
-          <NearbyUserDrawer />
+          <NearbyUserDrawer nearbyUsers={nearbyUsers} />
           <View style={styles.chatContainer}>
             <MessageChannel nearbyUsers={nearbyUsers} messages={messages} />
           </View>

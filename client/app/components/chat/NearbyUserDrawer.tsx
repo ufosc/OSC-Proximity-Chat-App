@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
+import { View, Text, StyleSheet, FlatList, Dimensions, Image } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,10 +8,15 @@ import Animated, {
 } from "react-native-reanimated";
 import NearbyHeader from "./NearbyHeader";
 import { Pressable } from "react-native";
+import { UserProfile } from "@app/types/User";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const NearbyUserDrawer = () => {
+interface NearbyUserDrawerProps {
+  nearbyUsers: { [uid: string]: UserProfile };
+}
+
+const NearbyUserDrawer: React.FC<NearbyUserDrawerProps> = ({ nearbyUsers }) => {
   const [isOpen, setIsOpen] = useState(false);
   const translateX = useSharedValue(SCREEN_WIDTH);
 
@@ -32,19 +37,36 @@ const NearbyUserDrawer = () => {
     transform: [{ translateX: translateX.value }],
   }));
 
-  const nearbyUsers = ["Alice", "Bob", "Charlie", "Diana", "Eve"]; // Example names
-
   return (
     <View style={styles.container}>
-      <NearbyHeader onClick={toggleDrawer} />
+      <NearbyHeader onClick={toggleDrawer} nearbyUsers={nearbyUsers} />
       {/* Overlay and Drawer */}
       {isOpen && <Pressable style={styles.overlay} onPress={toggleDrawer} />}
       <Animated.View style={[styles.drawer, animatedStyle]}>
         <Text style={styles.headerText}>Nearby Users</Text>
         <FlatList
-          data={nearbyUsers}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => <Text style={styles.name}>{item}</Text>}
+          data={Object.entries(nearbyUsers)}
+          keyExtractor={(item, index) => item[0]}
+          renderItem={({ item }) => {
+            return (
+              <View style= {{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+              }}>
+                <Image
+                  style={{
+                    height: Dimensions.get("window").height * 0.055,
+                    width: Dimensions.get("window").height * 0.055,
+                    borderRadius: 100,
+                    marginRight: 12,
+                  }}
+                  source={require("../../../assets/icons/user/fake_pfp.jpg")}
+                />
+                <Text style={styles.name}>{item[1].displayName}</Text>
+              </View>
+            );
+          }}
         />
       </Animated.View>
     </View>
