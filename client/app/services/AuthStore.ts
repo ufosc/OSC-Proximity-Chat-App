@@ -28,19 +28,25 @@ export const AuthStore = new Store<AuthStoreInterface>({
 });
 
 // Updates the signed in user profile in Firestore and notifies the socket server of the change
-export const updateActiveUserProfile = async (socket: Socket, newUserProfile: UserProfile) => {
-  AuthStore.update(async (store) => {
-    try {
-      const docRef = doc(db, "users", store.userAuthInfo!.uid);
-      await setDoc(docRef, newUserProfile);
-      notifyUpdateProfile(socket);
+export const updateActiveUserProfile = async (
+  socket: Socket,
+  newUserProfile: UserProfile,
+) => {
+  try {
+    const userAuthInfo = AuthStore.getRawState().userAuthInfo;
+    if (!userAuthInfo) throw new Error("User is not authenticated");
 
+    const docRef = doc(db, "users", userAuthInfo.uid);
+    await setDoc(docRef, newUserProfile);
+    notifyUpdateProfile(socket);
+
+    AuthStore.update((store) => {
       store.userProfile = newUserProfile;
-    } catch (e) {
-      console.error("Error updating user profile: ", e);
-    }
-  });
-}
+    });
+  } catch (e) {
+    console.error("Error updating user profile: ", e);
+  }
+};
 
 onAuthStateChanged(auth, async (user) => {
   console.log("onAuthStateChanged", user);
@@ -57,15 +63,17 @@ onAuthStateChanged(auth, async (user) => {
         userProfile = docSnap.data() as UserProfile;
       } else {
         // Create user profile if not exists
-        await setDoc(docRef, userProfile = {
-          displayName: user.displayName || "New User",
-          profilePicture: 0,
-        });
+        await setDoc(
+          docRef,
+          (userProfile = {
+            displayName: user.displayName || "New User",
+            profilePicture: 0,
+          }),
+        );
       }
     } catch (e) {
       console.error("Error getting user profile: ", e);
     }
-
   } else {
     // User is signed out
   }
@@ -91,10 +99,13 @@ export const appSignIn = async (email: string, password: string) => {
         userProfile = docSnap.data() as UserProfile;
       } else {
         // Create user profile if not exists
-        await setDoc(docRef, userProfile = {
-          displayName: response.user.displayName || "New User",
-          profilePicture: 0,
-        });
+        await setDoc(
+          docRef,
+          (userProfile = {
+            displayName: response.user.displayName || "New User",
+            profilePicture: 0,
+          }),
+        );
       }
     } catch (e) {
       console.error("Error getting user profile: ", e);
@@ -142,10 +153,13 @@ export const appSignUp = async (email: string, password: string) => {
         userProfile = docSnap.data() as UserProfile;
       } else {
         // Create user profile if not exists
-        await setDoc(docRef, userProfile = {
-          displayName: response.user.displayName || "New User",
-          profilePicture: 0,
-        });
+        await setDoc(
+          docRef,
+          (userProfile = {
+            displayName: response.user.displayName || "New User",
+            profilePicture: 0,
+          }),
+        );
       }
     } catch (e) {
       console.error("Error getting user profile: ", e);

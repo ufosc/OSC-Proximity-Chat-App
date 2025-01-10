@@ -19,7 +19,10 @@ import { useState, useEffect } from "react";
 import React from "react";
 import NearbyUserDrawer from "@app/components/chat/NearbyUserDrawer";
 import { sendMessage } from "@app/services/SocketService";
-import { refreshNearbyUsers, useNearbyUsers } from "@app/contexts/NearbyUserContext";
+import {
+  refreshNearbyUsers,
+  useNearbyUsers,
+} from "@app/contexts/NearbyUserContext";
 
 const ChatScreen = () => {
   const settings = useSettings();
@@ -41,8 +44,10 @@ const ChatScreen = () => {
     const handleMessage = async (message: Message, ack?: any) => {
       console.log("Message received from server:", message);
       console.log(nearbyUsers);
-      if (message.author !in nearbyUsers) {
-        console.log(`${message.author} not in nearby users map. Requesting a new map of nearby users...`);
+      if (message.author! in nearbyUsers) {
+        console.log(
+          `${message.author} not in nearby users map. Requesting a new map of nearby users...`,
+        );
         await refreshNearbyUsers(socket);
       }
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -65,7 +70,7 @@ const ChatScreen = () => {
       author: String(userAuth.userAuthInfo?.uid),
       //msgId: Crypto.randomUUID(),
       timestamp: -1, // timestamp will be overridden by socket server
-      content: { text: messageContent.trim(), },
+      content: { text: messageContent.trim() },
       location: {
         lat: Number(location?.lat),
         lon: Number(location?.lon),
@@ -73,7 +78,6 @@ const ChatScreen = () => {
       replyTo: undefined,
       reactions: {},
     };
-
     sendMessage(socket, newMessage);
 
     setMessageContent("");

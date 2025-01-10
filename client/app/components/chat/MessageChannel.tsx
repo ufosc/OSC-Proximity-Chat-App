@@ -4,7 +4,10 @@ import { FlatList } from "react-native";
 import Message from "./ChatMessage";
 import { MessageChannelProps } from "../../types/Props";
 
-const MessageChannel: React.FC<MessageChannelProps> = ({ nearbyUsers, messages }) => {
+const MessageChannel: React.FC<MessageChannelProps> = ({
+  nearbyUsers,
+  messages,
+}) => {
   const reverseMessages = [...messages].reverse();
 
   return (
@@ -15,7 +18,7 @@ const MessageChannel: React.FC<MessageChannelProps> = ({ nearbyUsers, messages }
       data={reverseMessages}
       renderItem={({ item }) => {
         const user = nearbyUsers[item.author];
-        console.log(nearbyUsers);
+        // console.log(nearbyUsers);
         if (user === undefined) return null;
         return (
           <Message
@@ -26,7 +29,7 @@ const MessageChannel: React.FC<MessageChannelProps> = ({ nearbyUsers, messages }
         );
       }}
       inverted // This will render items from the bottom
-      onLayout={() => { }} // This will make sure the list is scrolled to the bottom on first render
+      onLayout={() => {}} // This will make sure the list is scrolled to the bottom on first render
     />
   );
 };

@@ -20,7 +20,9 @@ import {
   ColorInput,
   DisplayNameInput,
 } from "@app/components/settings/TextInputs";
-import { appSignOut } from "../../services/AuthStore";
+import { appSignOut, updateActiveUserProfile } from "../../services/AuthStore";
+import { useSocket } from "../../contexts/SocketContext";
+import { UserProfile } from "@app/types/User";
 
 // List of settings items
 // toggle type: a switch
@@ -33,6 +35,7 @@ const Sections = [
 ];
 
 const SettingsScreen: React.FC = () => {
+  const socket = useSocket();
   const [data, setData] = useState({
     displayName: "Display Name",
     profilePicIndex: 0, // index for icons array
@@ -94,6 +97,19 @@ const SettingsScreen: React.FC = () => {
       ],
       { cancelable: false },
     );
+  };
+
+  const handleProfilePic = async (index: number) => {
+    if (socket == null) return;
+    setData({
+      ...data,
+      ["profilePicIndex"]: index,
+    });
+    const profile: UserProfile = {
+      displayName: data.displayName,
+      profilePicture: data.profilePicIndex,
+    };
+    await updateActiveUserProfile(socket, profile);
   };
 
   return (
@@ -186,11 +202,8 @@ const SettingsScreen: React.FC = () => {
                         numColumns={6}
                         renderItem={(icon) => (
                           <Pressable
-                            onPress={() =>
-                              setData({
-                                ...data,
-                                ["profilePicIndex"]: icon.index,
-                              })
+                            onPress={async () =>
+                              await handleProfilePic(icon.index)
                             }>
                             <Image
                               style={[
