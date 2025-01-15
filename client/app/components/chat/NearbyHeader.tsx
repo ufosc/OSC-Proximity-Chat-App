@@ -1,3 +1,4 @@
+import { UserProfile } from "@app/types/User";
 import React from "react";
 import {
   View,
@@ -9,18 +10,25 @@ import {
 } from "react-native";
 import { ChevronLeft } from "react-native-feather";
 
-export const NearbyHeader: React.FC = () => {
+interface NearbyHeaderProps {
+  onClick: () => void;
+  nearbyUsers: { [uid: string]: UserProfile };
+}
+
+export const NearbyHeader: React.FC<NearbyHeaderProps> = ({ onClick, nearbyUsers }) => {
   return (
     <View style={styles.nearbyContainer}>
-      <ChevronLeft color="white" strokeWidth={1.4} width={40} height={40} />
       <Text style={styles.nearbyText}>Nearby</Text>
-      <View style={styles.iconContainer}>
-        <Image
-          style={styles.peopleIcon}
-          source={require("../../../assets/icons/misc/nearby_icon.png")}
-        />
-        <Text style={styles.countText}>{5}</Text>
-      </View>
+      <TouchableOpacity onPress={onClick}>
+        <View style={styles.iconContainer}>
+          <Image
+            style={styles.peopleIcon}
+            source={require("../../../assets/icons/misc/nearby_icon.png")}
+          />
+
+          <Text style={styles.countText}>{Object.keys(nearbyUsers).length}</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -38,9 +46,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 2,
     paddingVertical: 15,
-    paddingRight: 25,
-    paddingLeft: 10,
+    paddingRight: "5%",
+    paddingLeft: "10%",
     gap: 10,
+    zIndex: 1,
   },
   nearbyText: {
     fontFamily: "Quicksand",

@@ -7,61 +7,116 @@ import {
 } from "@firebase/auth";
 import { Store } from "pullstate";
 
-import { auth , db } from "../configs/firebaseConfig";
-import { doc , setDoc } from "@firebase/firestore"; // Import Firestore functions
+import { auth, db } from "../configs/firebaseConfig";
+import { doc, getDoc, setDoc } from "@firebase/firestore"; // Import Firestore functions
+import { UserProfile } from "@app/types/User";
+import { notifyUpdateProfile } from "./SocketService";
+import { Socket } from "socket.io-client";
 
 interface AuthStoreInterface {
   isLoggedin: boolean;
   initialized: boolean;
   userAuthInfo: User | null;
+  userProfile: UserProfile | null;
 }
 
 export const AuthStore = new Store<AuthStoreInterface>({
   isLoggedin: false,
   initialized: false,
   userAuthInfo: null,
+  userProfile: null,
 });
 
-const createUserConfig = async (userId: string) => {
+// Updates the signed in user profile in Firestore and notifies the socket server of the change
+export const updateActiveUserProfile = async (
+  socket: Socket,
+  newUserProfile: UserProfile,
+) => {
   try {
-    const docRef = doc(db, "UserConfigs", userId);
+    const userAuthInfo = AuthStore.getRawState().userAuthInfo;
+    if (!userAuthInfo) throw new Error("User is not authenticated");
 
-    await setDoc(docRef, {
-      // TODO: create a matching UserConfig type in the app/types folder.
-      // In documentation: make explicit that the key for UserConfig documents is the same as a uid from the user auth collection.
-      isConnected: false,
-      lastConnectionTime: "",
-      displayName: "",
-      userIcon: {
-        imageType: 0,
-        color: "#02efdb"
-      },
-      darkMode: false,
-      notificationsEnabled: false,
-      language: "English",
-      
+    const docRef = doc(db, "users", userAuthInfo.uid);
+    await setDoc(docRef, newUserProfile);
+    notifyUpdateProfile(socket);
+
+    AuthStore.update((store) => {
+      store.userProfile = newUserProfile;
     });
-  } catch (e){
-    console.error("Error creating UserConfig: ", e);
+  } catch (e) {
+    console.error("Error updating user profile: ", e);
   }
-}
+};
 
-const unsub = onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   console.log("onAuthStateChanged", user);
+
+  let userProfile: UserProfile | null = null;
+
+  if (!!user) {
+    // User is signed in
+
+    try {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        userProfile = docSnap.data() as UserProfile;
+      } else {
+        // Create user profile if not exists
+        await setDoc(
+          docRef,
+          (userProfile = {
+            displayName: user.displayName || "New User",
+            profilePicture: 0,
+          }),
+        );
+      }
+    } catch (e) {
+      console.error("Error getting user profile: ", e);
+    }
+  } else {
+    // User is signed out
+  }
+
   AuthStore.update((store) => {
-    (store.initialized = true),
-      (store.isLoggedin = !!user),
-      (store.userAuthInfo = user);
+    store.initialized = true;
+    store.isLoggedin = !!user;
+    store.userAuthInfo = user;
+    store.userProfile = userProfile;
   });
 });
 
 export const appSignIn = async (email: string, password: string) => {
   try {
     const response = await signInWithEmailAndPassword(auth, email, password);
+
+    let userProfile: UserProfile | null = null;
+
+    try {
+      const docRef = doc(db, "users", response.user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        userProfile = docSnap.data() as UserProfile;
+      } else {
+        // Create user profile if not exists
+        await setDoc(
+          docRef,
+          (userProfile = {
+            displayName: response.user.displayName || "New User",
+            profilePicture: 0,
+          }),
+        );
+      }
+    } catch (e) {
+      console.error("Error getting user profile: ", e);
+    }
+
     AuthStore.update((store) => {
       store.userAuthInfo = response?.user;
       store.isLoggedin = !!response?.user;
+      store.userProfile = userProfile;
     });
+
     return { user: auth.currentUser };
   } catch (e) {
     return { error: e };
@@ -89,14 +144,32 @@ export const appSignUp = async (email: string, password: string) => {
       password,
     );
 
+    let userProfile: UserProfile | null = null;
+
+    try {
+      const docRef = doc(db, "users", response.user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        userProfile = docSnap.data() as UserProfile;
+      } else {
+        // Create user profile if not exists
+        await setDoc(
+          docRef,
+          (userProfile = {
+            displayName: response.user.displayName || "New User",
+            profilePicture: 0,
+          }),
+        );
+      }
+    } catch (e) {
+      console.error("Error getting user profile: ", e);
+    }
+
     AuthStore.update((store) => {
       store.userAuthInfo = response.user;
       store.isLoggedin = !!response.user;
+      store.userProfile = userProfile;
     });
-
-    if (response.user) {
-      await createUserConfig(response.user.uid);
-    }
 
     return { user: auth.currentUser };
   } catch (e) {
