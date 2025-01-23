@@ -17,7 +17,7 @@ If you are interested in contributing to the UI/UX design of our app, please see
 
 ## Installation
 
-Unfortunately, as of Spring Semester of 2024, the app is still under development and you cannot download justttt yet. However, we promise it will be out soon! 🙏
+Unfortunately, as of Spring Semester of 2025, the app is still under development and you cannot download justttt yet. However, we promise it will be out soon! 🙏
 
 Want to speed up the development? Join our team by follow the instructions in [contributing](#contributing)!
 
@@ -29,7 +29,7 @@ If you want to set up the app for development follow the steps in the [documenta
 
 ## About Us
 
-The Echo app team was founded in Fall 2023 by 💻 [@h1dvp](https://github.com/h1divp) + ⚡ [@doigdaniels](https://github.com/doigdaniels) + 🦆 [@AlexanderWangY](https://github.com/AlexanderWangY).
+The Echo app team was founded in Fall 2023 by 💻 [@h1dvp](https://github.com/h1divp) + ⚡ [@doigdaniels](https://github.com/doigdaniels) + 🦆 [@AlexanderWangY](https://github.com/AlexanderWangY) + 🍵 [@Dyland88](https://github.com/dyland88).
 
 Our team consists of a handful of dedicated and talented developers from the University of Florida. We started out of and currently reside within UF's Open Source Club. We are always on the lookout for more developers trying to get their hands dirty on a real project! We would love to have **YOU** join our team! ❤️
 
