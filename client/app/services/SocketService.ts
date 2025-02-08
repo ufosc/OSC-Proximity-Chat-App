@@ -7,8 +7,10 @@ import { Completer } from "@app/utils/completer";
 import { Message } from "@app/types/Message";
 import { refreshNearbyUsers } from "@app/contexts/NearbyUserContext";
 
+const socketUrl = `http://${SOCKET_IP}:${SOCKET_PORT}`;
+
 export const initializeSocket = async (token: string): Promise<Socket> => {
-  const socketIo = io(`http://${SOCKET_IP}:${SOCKET_PORT}`, {
+  const socketIo = io(socketUrl, {
     auth: {
       token,
     },
