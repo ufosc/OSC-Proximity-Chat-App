@@ -1,31 +1,33 @@
-# Echo Chat App (formerly OSC Proximity Chat App)
+# Echo (formerly OSC Proximity Chat App)
 
 ![banner](/client/assets/images/github/Echo_banner_small2.png)
 
-Echo is a new chat messaging app aimed at allowing you to talk to strangers _(or as we like to say, friends who haven't met 😆)_ within a radius around you. This allows for more time/location relevant chats as well as allowing users to connect with the people who are closer to them. Unlike many chat apps, our app aims to keep interactions in real time and doesn't save chats/information after you are done chatting! Just like real conversations, we believe the best socializing happens on the spot!
+<div align="center">
+  <a href="https://osc-proximity-documentation.vercel.app/">Documentation 📖</a> | 
+  <a href="https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1">Figma Design 🖌️</a> | 
+  <a href="https://github.com/orgs/ufosc/projects/10">Project Board 🗃️</a>
+</div> 
+<br>
+
+Echo is a new messaging app aimed at allowing you to talk to strangers within a geo-radius around you. This allows for more time & location relevant chats: say at a lecture hall, large library or public event. Messages are sent in realtime, and aren't saved to servers while you're chatting. Just like real conversations, we believe that the best socializing happens on the spot!
 
 ## Overview
 
-This repository holds the all of the code that our Echo app utilizes (pretty cool right? 😎). This repository is public because we believe in the future of open source projects, the community is what makes developing so special ✨! It is split into the frontend/app `/client` and the backend/server `/server`. Take a look around, we're sure you'll find yourself wanting to help out! Ready? Head here 👉 [contributing](#contributing)
-
-If you are interested in contributing to the UI/UX design of our app, please see our Figma design [here](https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1). Improvements here are always welcome.
-
-## Useful Links
-
-- [Documentation](https://osc-proximity-documentation.vercel.app/) 📖
-- [Figma Design](https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1) 🖌️
+This repository is public because we believe in the future of open source projects, the community is what makes developing so special ✨! It is split into the frontend `client` (app) and the backend `server`. Take a look around, we're sure you'll find yourself wanting to help out! Ready? Head here 👉 [contributing](#contributing)
 
 ## Installation
 
-Unfortunately, as of Spring Semester of 2025, the app is still under development and you cannot download justttt yet. However, we promise it will be out soon! 🙏
+Unfortunately, as of Spring 2025, the app is still under development. However, we promise it will be out soon! 🙏
 
-Want to speed up the development? Join our team by follow the instructions in [contributing](#contributing)!
+If you would like for us to release faster, join our team and head over to [contributing](#contributing)!
 
 ## Contributing
 
 As an open source project, developers of all walks of life are encouraged to pick up issues and speed up the development of the app! However, it is probably a good idea to get yourself used to the app's structure!
 
-If you want to set up the app for development follow the steps in the [documentation](https://osc-proximity-documentation.vercel.app/). 📖
+If you want to set up the app for development follow the steps in the [documentation](https://osc-proximity-documentation.vercel.app/).
+
+If you are interested in contributing to the UI/UX design of our app, please see our [Figma design](https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1).
 
 ## About Us
 
