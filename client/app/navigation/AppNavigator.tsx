@@ -9,7 +9,7 @@ import ChatScreen from "../screens/chat/ChatScreen";
 import SettingsScreen from "../screens/settings/SettingsScreen";
 import { Home } from "react-native-feather";
 import { User } from "react-native-feather";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, NavigationIndependentTree } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const AppNavigator = () => {
@@ -17,34 +17,36 @@ const AppNavigator = () => {
     <LocationProvider>
       <SocketProvider>
         <NearbyUsersProvider>
-          <NavigationContainer>
-            <Tab.Navigator
-              screenOptions={{
-                headerShown: false,
-                tabBarLabelStyle: {
-                  fontSize: 15,
-                },
-              }}>
-              <Tab.Screen
-                name="Home"
-                component={ChatScreen}
-                options={{
-                  tabBarIcon: ({ focused, color, size }) => {
-                    return <Home width={size} stroke={color} />;
+          <NavigationIndependentTree>
+            <NavigationContainer>
+              <Tab.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  tabBarLabelStyle: {
+                    fontSize: 15,
                   },
-                }}
-              />
-              <Tab.Screen
-                name="Profile"
-                component={SettingsScreen}
-                options={{
-                  tabBarIcon: ({ focused, color, size }) => {
-                    return <User width={size} stroke={color} />;
-                  },
-                }}
-              />
-            </Tab.Navigator>
-          </NavigationContainer>
+                }}>
+                <Tab.Screen
+                  name="Home"
+                  component={ChatScreen}
+                  options={{
+                    tabBarIcon: ({ focused, color, size }) => {
+                      return <Home width={size} stroke={color} />;
+                    },
+                  }}
+                />
+                <Tab.Screen
+                  name="Profile"
+                  component={SettingsScreen}
+                  options={{
+                    tabBarIcon: ({ focused, color, size }) => {
+                      return <User width={size} stroke={color} />;
+                    },
+                  }}
+                />
+              </Tab.Navigator>
+            </NavigationContainer>
+          </NavigationIndependentTree>
         </NearbyUsersProvider>
       </SocketProvider>
     </LocationProvider>
