@@ -51,7 +51,6 @@ export const ChatScreenFooter: React.FC<ChatInputProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    flex: 1,
     alignItems: "center",
     borderColor: "#8E8E8E",
     borderWidth: 1,
@@ -81,12 +80,10 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   sendButtonContainer: {
-    alignItems: "flex-end",
+    alignItems: "center",
     justifyContent: "flex-end",
     flexDirection: "row",
     alignSelf: "stretch",
     marginRight: Dimensions.get("window").width * 0.01,
-    marginBottom: Dimensions.get("window").width * 0.01,
-    marginTop: Dimensions.get("window").width * 0.01,
   },
 });
