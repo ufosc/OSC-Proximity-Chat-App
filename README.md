@@ -3,8 +3,8 @@
 ![banner](/client/assets/images/github/Echo_banner_small2.png)
 
 <div align="center">
-  <a href="https://osc-proximity-documentation.vercel.app/">Documentation 📖</a> | 
-  <a href="https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1">Figma Design 🖌️</a> | 
+  <a href="https://osc-proximity-documentation.vercel.app/">Documentation 📖</a> ・ 
+  <a href="https://www.figma.com/file/2mvddKeA4XMODdCidYkDid/Proximity-Chat-App?type=design&node-id=0%3A1&mode=design&t=V5A9MVRhlmdxGH0M-1">Figma Design 🖌️</a> ・ 
   <a href="https://github.com/orgs/ufosc/projects/10">Project Board 📋</a>
 </div> 
 <br>
