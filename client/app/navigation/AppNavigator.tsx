@@ -25,6 +25,7 @@ const AppNavigator = () => {
                   tabBarLabelStyle: {
                     fontSize: 15,
                   },
+                  tabBarHideOnKeyboard: true,
                 }}>
                 <Tab.Screen
                   name="Home"
