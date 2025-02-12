@@ -8,6 +8,7 @@ import { Message } from "@app/types/Message";
 import { refreshNearbyUsers } from "@app/contexts/NearbyUserContext";
 
 const socketUrl = `http://${SOCKET_IP}:${SOCKET_PORT}`;
+console.log("socketUrl:", socketUrl);
 
 export const initializeSocket = async (token: string): Promise<Socket> => {
   const socketIo = io(socketUrl, {
