@@ -7,8 +7,8 @@ import { SocketProvider } from "../contexts/SocketContext";
 import { NearbyUsersProvider } from "../contexts/NearbyUserContext";
 import ChatScreen from "../screens/chat/ChatScreen";
 import SettingsScreen from "../screens/settings/SettingsScreen";
-import { Home } from "react-native-feather";
-import { User } from "react-native-feather";
+import { MessageSquare } from "react-native-feather";
+import { Settings } from "react-native-feather";
 import { NavigationContainer, NavigationIndependentTree } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
@@ -28,20 +28,20 @@ const AppNavigator = () => {
                   tabBarHideOnKeyboard: true,
                 }}>
                 <Tab.Screen
-                  name="Home"
+                  name="Chat"
                   component={ChatScreen}
                   options={{
                     tabBarIcon: ({ focused, color, size }) => {
-                      return <Home width={size} stroke={color} />;
+                      return <MessageSquare width={size} stroke={color} />;
                     },
                   }}
                 />
                 <Tab.Screen
-                  name="Profile"
+                  name="Settings"
                   component={SettingsScreen}
                   options={{
                     tabBarIcon: ({ focused, color, size }) => {
-                      return <User width={size} stroke={color} />;
+                      return <Settings width={size} stroke={color} />;
                     },
                   }}
                 />
